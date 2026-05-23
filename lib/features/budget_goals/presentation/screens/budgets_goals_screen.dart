@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../transactions/data/budget_model.dart';
 import '../../data/budget_goals_model.dart';
 import '../widgets/budget_category_card.dart';
 import '../widgets/summary_card.dart';
 import '../widgets/goal_card.dart';
 
 /// Budgets & Goals screen — displays budget categories, summary stats,
-/// and active savings goals.
+/// and active savings goals. All data computed from real transactions.
 class BudgetsGoalsScreen extends StatelessWidget {
   const BudgetsGoalsScreen({super.key});
 
@@ -34,13 +35,13 @@ class BudgetsGoalsScreen extends StatelessWidget {
                       horizontal: isDesktop ? 48 : 20,
                       vertical: 8,
                     ),
-                    child: Consumer<BudgetGoalsModel>(
-                      builder: (context, model, _) {
+                    child: Consumer2<BudgetGoalsModel, BudgetModel>(
+                      builder: (context, model, budgetModel, _) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8),
-                            _buildHeroSection(),
+                            _buildHeroSection(budgetModel),
                             const SizedBox(height: 40),
                             _buildStatsSection(model, isDesktop),
                             const SizedBox(height: 40),
@@ -108,7 +109,23 @@ class BudgetsGoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection() {
+  Widget _buildHeroSection(BudgetModel budgetModel) {
+    final netBalance = budgetModel.netBalance;
+    final monthlySpending = budgetModel.monthlySpending;
+    final monthlyIncome = budgetModel.totalIncome;
+    final savingsThisMonth = monthlyIncome - monthlySpending;
+
+    String subtitle;
+    if (budgetModel.transactions.isEmpty) {
+      subtitle = 'Add transactions to start tracking your budget!';
+    } else if (savingsThisMonth > 0) {
+      subtitle = 'You\'ve saved \$${_formatAmount(savingsThisMonth)} this month. Keep it up!';
+    } else if (savingsThisMonth == 0) {
+      subtitle = 'You\'re breaking even this month. Watch your spending!';
+    } else {
+      subtitle = 'You\'re \$${_formatAmount(savingsThisMonth.abs())} over budget this month.';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,21 +137,21 @@ class BudgetsGoalsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text(
-                  'Budgets & Goals',
-                  style: FortunaTextStyles.headlineLgMobile.copyWith(
-                    color: FortunaColors.primary,
+                  Text(
+                    'Budgets & Goals',
+                    style: FortunaTextStyles.headlineLgMobile.copyWith(
+                      color: FortunaColors.primary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "You've saved \$1,240 this month. Keep it up!",
-                  style: FortunaTextStyles.bodyLg.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: FortunaTextStyles.bodyLg.copyWith(
+                      color: FortunaColors.onSurfaceVariant,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
             ElevatedButton.icon(
               onPressed: () {},
@@ -280,5 +297,12 @@ class BudgetsGoalsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  static String _formatAmount(double amount) {
+    if (amount == amount.roundToDouble()) {
+      return amount.toStringAsFixed(0);
+    }
+    return amount.toStringAsFixed(2);
   }
 }

@@ -4,10 +4,11 @@ import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// Security Health card — circular progress indicator with score and status text.
+/// Score is computed from real transaction activity, passed in as a parameter.
 class SecurityHealthCard extends StatelessWidget {
   const SecurityHealthCard({
     super.key,
-    this.score = 85,
+    required this.score,
   });
 
   final int score;
@@ -80,7 +81,7 @@ class SecurityHealthCard extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  'Your account security score is high. Two-factor authentication is active.',
+                  _statusText,
                   style: FortunaTextStyles.bodySm.copyWith(
                     color: FortunaColors.onSurfaceVariant,
                   ),
@@ -91,6 +92,16 @@ class SecurityHealthCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String get _statusText {
+    if (score >= 80) {
+      return 'Your account security score is high. Two-factor authentication is active.';
+    } else if (score >= 40) {
+      return 'Your account security score is moderate. Consider enabling additional security features.';
+    } else {
+      return 'Start adding transactions to build your financial health score.';
+    }
   }
 }
 

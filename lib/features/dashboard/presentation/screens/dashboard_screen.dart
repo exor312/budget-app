@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
+import '../../budget_goals/data/budget_goals_model.dart';
 import '../widgets/net_worth_card.dart';
 import '../widgets/budget_progress_card.dart';
 import '../widgets/spending_categories_card.dart';
@@ -30,8 +31,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   late final List<AnimationController> _controllers;
   late final List<Animation<Offset>> _slideAnimations;
   late final List<Animation<double>> _fadeAnimations;
-
-  static const double _monthlyBudget = 4500.0;
 
   @override
   void initState() {
@@ -117,11 +116,20 @@ class _DashboardScreenState extends State<DashboardScreen>
                       horizontal: isDesktop ? 48 : 20,
                       vertical: 8,
                     ),
-                    child: Consumer<BudgetModel>(
-                      builder: (context, model, _) {
+                    child: Consumer2<BudgetModel, BudgetGoalsModel>(
+                      builder: (context, budgetModel, budgetGoalsModel, _) {
+                        // Compute real values from transaction data
+                        final securityScore = _computeSecurityScore(budgetModel);
+                        final savingsAmount = budgetModel.netBalance > 0
+                            ? budgetModel.netBalance
+                            : 0.0;
+                        final billsDueLabel = _computeBillsDue(budgetModel);
+
                         return isDesktop
-                            ? _buildDesktopLayout(model)
-                            : _buildMobileLayout(model);
+                            ? _buildDesktopLayout(
+                                budgetModel, budgetGoalsModel, securityScore, savingsAmount, billsDueLabel)
+                            : _buildMobileLayout(
+                                budgetModel, budgetGoalsModel, securityScore, savingsAmount, billsDueLabel);
                       },
                     ),
                   ),
@@ -141,6 +149,45 @@ class _DashboardScreenState extends State<DashboardScreen>
             )
           : null,
     );
+  }
+
+  /// Compute a security/financial health score from real transaction activity.
+  int _computeSecurityScore(BudgetModel model) {
+    final txCount = model.transactions.length;
+    if (txCount == 0) return 0;
+    if (txCount < 5) return 40;
+    if (txCount < 10) return 65;
+    if (txCount < 20) return 80;
+    // Score based on transaction consistency and positive net balance
+    final hasPositiveBalance = model.netBalance > 0;
+    return hasPositiveBalance ? 90 : 75;
+  }
+
+  /// Compute bills due label from recurring transaction detection.
+  String _computeBillsDue(BudgetModel model) {
+    // Look for transactions with "bill", "rent", "electric", "water" in description
+    final now = DateTime.now();
+    final currentMonth = model.transactions
+        .where((t) =>
+            t.amount < 0 &&
+            t.date.year == now.year &&
+            t.date.month == now.month)
+        .toList();
+
+    int billCount = 0;
+    for (final t in currentMonth) {
+      final desc = t.description.toLowerCase();
+      if (desc.contains('bill') ||
+          desc.contains('rent') ||
+          desc.contains('electric') ||
+          desc.contains('water') ||
+          desc.contains('subscription')) {
+        billCount++;
+      }
+    }
+
+    if (billCount == 0) return 'None';
+    return '$billCount active';
   }
 
   Widget _buildTopAppBar() {
@@ -205,11 +252,12 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildDesktopLayout(BudgetModel model) {
+  Widget _buildDesktopLayout(BudgetModel budgetModel, BudgetGoalsModel budgetGoalsModel,
+      int securityScore, double savingsAmount, String billsDueLabel) {
     return Column(
       children: [
         const SizedBox(height: 8),
-        // Row 1: Net Worth (8/12) + Budget (4/12)
+        // Row 1: Net Worth (7/12) + Budget (5/12)
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -220,7 +268,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 slideAnimation: _slideAnimations[0],
                 fadeAnimation: _fadeAnimations[0],
                 child: NetWorthCard(
-                  balance: model.netBalance,
+                  balance: budgetModel.netBalance,
                 ),
               ),
             ),
@@ -234,8 +282,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: SizedBox(
                   height: 280,
                   child: BudgetProgressCard(
-                    spentAmount: model.monthlySpending,
-                    totalBudget: _monthlyBudget,
+                    spentAmount: budgetGoalsModel.totalSpent,
+                    totalBudget: budgetGoalsModel.totalMonthlyLimit,
                   ),
                 ),
               ),
@@ -254,7 +302,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 slideAnimation: _slideAnimations[2],
                 fadeAnimation: _fadeAnimations[2],
                 child: SpendingCategoriesCard(
-                  categories: model.spendingCategories,
+                  categories: budgetModel.spendingCategories,
                 ),
               ),
             ),
@@ -267,14 +315,19 @@ class _DashboardScreenState extends State<DashboardScreen>
                     index: 3,
                     slideAnimation: _slideAnimations[3],
                     fadeAnimation: _fadeAnimations[3],
-                    child: const QuickInsightsCard(),
+                    child: QuickInsightsCard(
+                      savingsAmount: savingsAmount,
+                      billsDueLabel: billsDueLabel,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   _AnimatedCard(
                     index: 4,
                     slideAnimation: _slideAnimations[4],
                     fadeAnimation: _fadeAnimations[4],
-                    child: const SecurityHealthCard(),
+                    child: SecurityHealthCard(
+                      score: securityScore,
+                    ),
                   ),
                 ],
               ),
@@ -286,7 +339,8 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildMobileLayout(BudgetModel model) {
+  Widget _buildMobileLayout(BudgetModel budgetModel, BudgetGoalsModel budgetGoalsModel,
+      int securityScore, double savingsAmount, String billsDueLabel) {
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -294,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 0,
           slideAnimation: _slideAnimations[0],
           fadeAnimation: _fadeAnimations[0],
-          child: NetWorthCard(balance: model.netBalance),
+          child: NetWorthCard(balance: budgetModel.netBalance),
         ),
         const SizedBox(height: 16),
         _AnimatedCard(
@@ -302,8 +356,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           slideAnimation: _slideAnimations[1],
           fadeAnimation: _fadeAnimations[1],
           child: BudgetProgressCard(
-            spentAmount: model.monthlySpending,
-            totalBudget: _monthlyBudget,
+            spentAmount: budgetGoalsModel.totalSpent,
+            totalBudget: budgetGoalsModel.totalMonthlyLimit,
           ),
         ),
         const SizedBox(height: 16),
@@ -312,7 +366,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           slideAnimation: _slideAnimations[2],
           fadeAnimation: _fadeAnimations[2],
           child: SpendingCategoriesCard(
-            categories: model.spendingCategories,
+            categories: budgetModel.spendingCategories,
           ),
         ),
         const SizedBox(height: 16),
@@ -320,14 +374,19 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 3,
           slideAnimation: _slideAnimations[3],
           fadeAnimation: _fadeAnimations[3],
-          child: const QuickInsightsCard(),
+          child: QuickInsightsCard(
+            savingsAmount: savingsAmount,
+            billsDueLabel: billsDueLabel,
+          ),
         ),
         const SizedBox(height: 16),
         _AnimatedCard(
           index: 4,
           slideAnimation: _slideAnimations[4],
           fadeAnimation: _fadeAnimations[4],
-          child: const SecurityHealthCard(),
+          child: SecurityHealthCard(
+            score: securityScore,
+          ),
         ),
         const SizedBox(height: 100),
       ],

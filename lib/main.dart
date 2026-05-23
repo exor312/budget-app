@@ -7,15 +7,7 @@ import 'router/app_router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => BudgetModel()),
-        ChangeNotifierProvider(create: (_) => BudgetGoalsModel()),
-      ],
-      child: const FortunaApp(),
-    ),
-  );
+  runApp(const FortunaApp());
 }
 
 class FortunaApp extends StatelessWidget {
@@ -23,11 +15,23 @@ class FortunaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Fortuna',
-      debugShowCheckedModeBanner: false,
-      theme: FortunaTheme.light,
-      routerConfig: appRouter,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BudgetModel()),
+        ChangeNotifierProxyProvider<BudgetModel, BudgetGoalsModel>(
+          create: (context) => BudgetGoalsModel(
+            budgetModel: context.read<BudgetModel>(),
+          ),
+          update: (context, budgetModel, previous) =>
+              previous ?? BudgetGoalsModel(budgetModel: budgetModel),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Fortuna',
+        debugShowCheckedModeBanner: false,
+        theme: FortunaTheme.light,
+        routerConfig: appRouter,
+      ),
     );
   }
 }

@@ -6,18 +6,28 @@ import 'package:budget_app/features/budget_goals/presentation/screens/budgets_go
 import 'package:budget_app/features/budget_goals/presentation/widgets/budget_category_card.dart';
 import 'package:budget_app/features/budget_goals/presentation/widgets/summary_card.dart';
 import 'package:budget_app/features/budget_goals/presentation/widgets/goal_card.dart';
+import 'package:budget_app/features/transactions/data/budget_model.dart';
 
 void main() {
-  group('BudgetsGoalsScreen', () {
-    Widget buildTestApp() {
-      return ChangeNotifierProvider(
-        create: (_) => BudgetGoalsModel(),
-        child: const MaterialApp(
-          home: BudgetsGoalsScreen(),
+  Widget buildTestApp() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BudgetModel()),
+        ChangeNotifierProxyProvider<BudgetModel, BudgetGoalsModel>(
+          create: (context) => BudgetGoalsModel(
+            budgetModel: context.read<BudgetModel>(),
+          ),
+          update: (context, budgetModel, previous) =>
+              previous ?? BudgetGoalsModel(budgetModel: budgetModel),
         ),
-      );
-    }
+      ],
+      child: const MaterialApp(
+        home: BudgetsGoalsScreen(),
+      ),
+    );
+  }
 
+  group('BudgetsGoalsScreen', () {
     testWidgets('has correct routePath and routeName', (tester) async {
       expect(BudgetsGoalsScreen.routePath, equals('/budgets'));
       expect(BudgetsGoalsScreen.routeName, equals('Budgets'));
@@ -28,8 +38,15 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(buildTestApp());
       await tester.pump(const Duration(milliseconds: 100));
-      // Verify the screen builds and renders key text elements
       expect(find.text('Budgets & Goals'), findsOneWidget);
+    });
+
+    testWidgets('shows dynamic subtitle when no transactions', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(2400, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(buildTestApp());
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Add transactions to start tracking your budget!'), findsOneWidget);
     });
   });
 
@@ -49,20 +66,20 @@ void main() {
 
     testWidgets('renders category name and description', (tester) async {
       const cat = BudgetCategory(
-        name: 'Groceries',
-        description: 'Daily essentials',
+        name: 'Food & Dining',
+        description: 'Groceries & restaurants',
         icon: Icons.restaurant,
         spent: 452.20,
         limit: 800.0,
       );
       await tester.pumpWidget(buildCard(cat));
-      expect(find.text('Groceries'), findsOneWidget);
-      expect(find.text('Daily essentials'), findsOneWidget);
+      expect(find.text('Food & Dining'), findsOneWidget);
+      expect(find.text('Groceries & restaurants'), findsOneWidget);
     });
 
     testWidgets('renders spent and limit amounts', (tester) async {
       const cat = BudgetCategory(
-        name: 'Groceries',
+        name: 'Food & Dining',
         description: 'Test',
         icon: Icons.restaurant,
         spent: 452.20,
@@ -75,7 +92,7 @@ void main() {
 
     testWidgets('shows Under budget for healthy category', (tester) async {
       const cat = BudgetCategory(
-        name: 'Groceries',
+        name: 'Food & Dining',
         description: 'Test',
         icon: Icons.restaurant,
         spent: 452.20,
@@ -101,7 +118,7 @@ void main() {
 
     testWidgets('shows Over Limit for critical category', (tester) async {
       const cat = BudgetCategory(
-        name: 'Personal Care',
+        name: 'Other',
         description: 'Test',
         icon: Icons.shopping_cart,
         spent: 325.40,
@@ -138,17 +155,17 @@ void main() {
     }
 
     testWidgets('renders Total Monthly Limit label', (tester) async {
-      await tester.pumpWidget(buildCard(4800, 2150));
+      await tester.pumpWidget(buildCard(3750, 2150));
       expect(find.text('Total Monthly Limit'), findsOneWidget);
     });
 
     testWidgets('renders total limit amount', (tester) async {
-      await tester.pumpWidget(buildCard(4800, 2150));
-      expect(find.text('\$4800'), findsOneWidget);
+      await tester.pumpWidget(buildCard(3750, 2150));
+      expect(find.text('\$3750'), findsOneWidget);
     });
 
     testWidgets('renders utilized percentage', (tester) async {
-      await tester.pumpWidget(buildCard(4800, 2150));
+      await tester.pumpWidget(buildCard(3750, 2150));
       expect(find.textContaining('utilized'), findsOneWidget);
     });
   });
@@ -168,12 +185,12 @@ void main() {
 
     testWidgets('renders goal name', (tester) async {
       const goal = ActiveGoal(
-        name: 'New Car Fund',
-        targetAmount: 15000,
-        currentAmount: 8400,
+        name: 'Savings Goal',
+        targetAmount: 10000,
+        currentAmount: 5000,
       );
       await tester.pumpWidget(buildCard(goal));
-      expect(find.text('New Car Fund'), findsOneWidget);
+      expect(find.text('Savings Goal'), findsOneWidget);
     });
 
     testWidgets('renders Active Goal badge', (tester) async {
@@ -189,21 +206,21 @@ void main() {
     testWidgets('renders target amount', (tester) async {
       const goal = ActiveGoal(
         name: 'Test',
-        targetAmount: 15000,
-        currentAmount: 8400,
+        targetAmount: 10000,
+        currentAmount: 5000,
       );
       await tester.pumpWidget(buildCard(goal));
-      expect(find.text('Target: \$15000'), findsOneWidget);
+      expect(find.text('Target: \$10000'), findsOneWidget);
     });
 
     testWidgets('renders current saved amount', (tester) async {
       const goal = ActiveGoal(
         name: 'Test',
-        targetAmount: 15000,
-        currentAmount: 8400,
+        targetAmount: 10000,
+        currentAmount: 5000,
       );
       await tester.pumpWidget(buildCard(goal));
-      expect(find.text('\$8400'), findsOneWidget);
+      expect(find.text('\$5000'), findsOneWidget);
     });
 
     testWidgets('renders savings icon', (tester) async {

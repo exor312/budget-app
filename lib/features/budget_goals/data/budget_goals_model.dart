@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import '../../transactions/data/budget_model.dart';
 
-/// BudgetGoalsModel — ChangeNotifier providing sample budget categories
-/// and active savings goal data for the Budgets & Goals screen.
+/// BudgetGoalsModel — ChangeNotifier that computes budget categories,
+/// spending totals, and savings goals from real BudgetModel transaction data.
 class BudgetGoalsModel extends ChangeNotifier {
-  BudgetGoalsModel() {
-    _categories = _defaultCategories;
-    _totalMonthlyLimit = 4800.0;
-    _totalSpent = _categories.fold(0.0, (sum, c) => sum + c.spent);
-    _activeGoal = const ActiveGoal(
-      name: 'New Car Fund',
-      targetAmount: 15000.0,
-      currentAmount: 8400.0,
-    );
+  BudgetGoalsModel({required BudgetModel budgetModel})
+      : _budgetModel = budgetModel {
+    _budgetModel.addListener(_onBudgetModelChanged);
+    _recompute();
   }
 
-  late List<BudgetCategory> _categories;
-  late double _totalMonthlyLimit;
-  late double _totalSpent;
-  late ActiveGoal _activeGoal;
+  final BudgetModel _budgetModel;
+
+  List<BudgetCategory> _categories = [];
+  double _totalMonthlyLimit = 0.0;
+  double _totalSpent = 0.0;
+  ActiveGoal _activeGoal = const ActiveGoal(
+    name: 'Savings Goal',
+    targetAmount: 10000.0,
+    currentAmount: 0.0,
+  );
 
   List<BudgetCategory> get categories => List.unmodifiable(_categories);
   double get totalMonthlyLimit => _totalMonthlyLimit;
@@ -28,36 +30,135 @@ class BudgetGoalsModel extends ChangeNotifier {
       : 0.0;
   ActiveGoal get activeGoal => _activeGoal;
 
-  static const List<BudgetCategory> _defaultCategories = [
-    BudgetCategory(
-      name: 'Groceries',
-      description: 'Daily essentials',
-      icon: Icons.restaurant,
-      spent: 452.20,
-      limit: 800.0,
-    ),
-    BudgetCategory(
-      name: 'Entertainment',
-      description: 'Movies, dining out',
-      icon: Icons.movie,
-      spent: 210.0,
-      limit: 250.0,
-    ),
-    BudgetCategory(
-      name: 'Personal Care',
-      description: 'Clothing & self-care',
-      icon: Icons.shopping_cart,
-      spent: 325.40,
-      limit: 300.0,
-    ),
-    BudgetCategory(
-      name: 'Travel',
-      description: 'Commute & holidays',
-      icon: Icons.flight_takeoff,
-      spent: 150.0,
-      limit: 600.0,
-    ),
+  void _onBudgetModelChanged() {
+    _recompute();
+  }
+
+  void _recompute() {
+    final now = DateTime.now();
+    final currentMonthExpenses = _budgetModel.transactions
+        .where((t) =>
+            t.amount < 0 &&
+            t.date.year == now.year &&
+            t.date.month == now.month)
+        .toList();
+
+    // Group expenses by category keyword
+    final Map<String, double> categorySpent = {};
+    for (final t in currentMonthExpenses) {
+      final category = _categorize(t.description);
+      categorySpent[category] = (categorySpent[category] ?? 0) + t.amount.abs();
+    }
+
+    // Build categories with configurable limits and real spent amounts
+    _categories = _allCategoryNames.map((name) {
+      final spent = categorySpent[name] ?? 0.0;
+      final limit = _defaultLimits[name] ?? 500.0;
+      return BudgetCategory(
+        name: name,
+        description: _categoryDescriptions[name] ?? '',
+        icon: _categoryIcons[name] ?? Icons.category,
+        spent: spent,
+        limit: limit,
+      );
+    }).toList();
+
+    // Total monthly limit = sum of all category limits
+    _totalMonthlyLimit =
+        _allCategoryNames.fold(0.0, (sum, name) => sum + (_defaultLimits[name] ?? 500.0));
+
+    // Total spent = sum of all current-month expenses
+    _totalSpent = currentMonthExpenses.fold(0.0, (sum, t) => sum + t.amount.abs());
+
+    // Active goal: currentAmount = net balance (totalIncome - totalExpenses)
+    final netBalance = _budgetModel.netBalance;
+    _activeGoal = ActiveGoal(
+      name: 'Savings Goal',
+      targetAmount: 10000.0,
+      currentAmount: netBalance > 0 ? netBalance : 0.0,
+    );
+
+    notifyListeners();
+  }
+
+  /// All supported category names.
+  static const List<String> _allCategoryNames = [
+    'Food & Dining',
+    'Transport',
+    'Shopping',
+    'Entertainment',
+    'Bills',
+    'Other',
   ];
+
+  /// Configurable spending limits per category (not mock data — these are budget caps).
+  static const Map<String, double> _defaultLimits = {
+    'Food & Dining': 800.0,
+    'Transport': 400.0,
+    'Shopping': 500.0,
+    'Entertainment': 250.0,
+    'Bills': 1500.0,
+    'Other': 300.0,
+  };
+
+  static const Map<String, String> _categoryDescriptions = {
+    'Food & Dining': 'Groceries & restaurants',
+    'Transport': 'Gas, rides, transit',
+    'Shopping': 'Clothing & purchases',
+    'Entertainment': 'Fun & subscriptions',
+    'Bills': 'Rent & utilities',
+    'Other': 'Miscellaneous',
+  };
+
+  static const Map<String, IconData> _categoryIcons = {
+    'Food & Dining': Icons.restaurant,
+    'Transport': Icons.directions_car,
+    'Shopping': Icons.shopping_bag,
+    'Entertainment': Icons.movie,
+    'Bills': Icons.receipt,
+    'Other': Icons.category,
+  };
+
+  String _categorize(String description) {
+    final lower = description.toLowerCase();
+    if (lower.contains('food') ||
+        lower.contains('restaurant') ||
+        lower.contains('grocery') ||
+        lower.contains('meal')) {
+      return 'Food & Dining';
+    }
+    if (lower.contains('gas') ||
+        lower.contains('uber') ||
+        lower.contains('car') ||
+        lower.contains('transport')) {
+      return 'Transport';
+    }
+    if (lower.contains('shop') ||
+        lower.contains('buy') ||
+        lower.contains('purchase') ||
+        lower.contains('amazon')) {
+      return 'Shopping';
+    }
+    if (lower.contains('movie') ||
+        lower.contains('netflix') ||
+        lower.contains('game') ||
+        lower.contains('fun')) {
+      return 'Entertainment';
+    }
+    if (lower.contains('bill') ||
+        lower.contains('rent') ||
+        lower.contains('electric') ||
+        lower.contains('water')) {
+      return 'Bills';
+    }
+    return 'Other';
+  }
+
+  @override
+  void dispose() {
+    _budgetModel.removeListener(_onBudgetModelChanged);
+    super.dispose();
+  }
 }
 
 /// A budget category with spending data.

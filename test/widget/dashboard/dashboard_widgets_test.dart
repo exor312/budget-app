@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:budget_app/features/transactions/data/budget_model.dart';
 import 'package:budget_app/features/dashboard/presentation/widgets/net_worth_card.dart';
 import 'package:budget_app/features/dashboard/presentation/widgets/budget_progress_card.dart';
 import 'package:budget_app/features/dashboard/presentation/widgets/spending_categories_card.dart';
 import 'package:budget_app/features/dashboard/presentation/widgets/quick_insights_card.dart';
 import 'package:budget_app/features/dashboard/presentation/widgets/security_health_card.dart';
+import 'package:budget_app/features/transactions/data/budget_model.dart';
 
 void main() {
   group('NetWorthCard', () {
@@ -42,7 +41,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: BudgetProgressCard(spentAmount: 3420, totalBudget: 4500),
+            body: BudgetProgressCard(spentAmount: 3420, totalBudget: 3750),
           ),
         ),
       );
@@ -56,7 +55,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: BudgetProgressCard(spentAmount: 2250, totalBudget: 4500),
+            body: BudgetProgressCard(spentAmount: 1875, totalBudget: 3750),
           ),
         ),
       );
@@ -90,26 +89,45 @@ void main() {
   });
 
   group('QuickInsightsCard', () {
-    testWidgets('displays savings goal and bills due', (tester) async {
+    testWidgets('displays savings and bills due from real data', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: QuickInsightsCard(savingsGoal: 12000, billsDueDays: 3),
+            body: QuickInsightsCard(
+              savingsAmount: 3500.0,
+              billsDueLabel: '2 active',
+            ),
           ),
         ),
       );
 
       expect(find.text('Quick Insights'), findsOneWidget);
-      expect(find.text('Savings Goal'), findsOneWidget);
+      expect(find.text('Savings'), findsOneWidget);
       expect(find.text('Bills Due'), findsOneWidget);
-      expect(find.text('3 Days'), findsOneWidget);
+      expect(find.text('2 active'), findsOneWidget);
       expect(find.byIcon(Icons.savings), findsOneWidget);
       expect(find.byIcon(Icons.warning), findsOneWidget);
+    });
+
+    testWidgets('displays zero savings', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: QuickInsightsCard(
+              savingsAmount: 0.0,
+              billsDueLabel: 'None',
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Quick Insights'), findsOneWidget);
+      expect(find.text('None'), findsOneWidget);
     });
   });
 
   group('SecurityHealthCard', () {
-    testWidgets('displays security score', (tester) async {
+    testWidgets('displays computed security score', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(body: SecurityHealthCard(score: 85)),
@@ -119,7 +137,29 @@ void main() {
       expect(find.text('Security Health'), findsOneWidget);
       expect(find.text('85'), findsOneWidget);
       expect(find.byIcon(Icons.verified_user), findsOneWidget);
-      expect(find.textContaining('Two-factor authentication'), findsOneWidget);
+      expect(find.textContaining('high'), findsOneWidget);
+    });
+
+    testWidgets('displays low score message', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: SecurityHealthCard(score: 0)),
+        ),
+      );
+
+      expect(find.text('0'), findsOneWidget);
+      expect(find.textContaining('Start adding transactions'), findsOneWidget);
+    });
+
+    testWidgets('displays moderate score message', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: SecurityHealthCard(score: 50)),
+        ),
+      );
+
+      expect(find.text('50'), findsOneWidget);
+      expect(find.textContaining('moderate'), findsOneWidget);
     });
   });
 }

@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
-/// Quick Insights card — Savings Goal and Bills Due in a 2-column grid.
+/// Quick Insights card — Savings Goal and Bills Due.
+/// All values are computed from real transaction data, passed in as parameters.
 class QuickInsightsCard extends StatelessWidget {
   const QuickInsightsCard({
     super.key,
-    this.savingsGoal = 12000,
-    this.billsDueDays = 3,
+    required this.savingsAmount,
+    required this.billsDueLabel,
   });
 
-  final double savingsGoal;
-  final int billsDueDays;
+  final double savingsAmount;
+  final String billsDueLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +61,14 @@ class QuickInsightsCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Savings Goal',
+                        'Savings',
                         style: FortunaTextStyles.bodySm.copyWith(
                           color: FortunaColors.onTertiaryFixedVariant,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\$${_formatCurrency(savingsGoal)}',
+                        '\$${_formatCurrency(savingsAmount)}',
                         style: FortunaTextStyles.titleMd.copyWith(
                           color: FortunaColors.primary,
                         ),
@@ -103,7 +104,7 @@ class QuickInsightsCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '$billsDueDays Days',
+                        billsDueLabel,
                         style: FortunaTextStyles.titleMd.copyWith(
                           color: FortunaColors.primary,
                         ),
@@ -119,7 +120,7 @@ class QuickInsightsCard extends StatelessWidget {
     );
   }
 
-  String _formatCurrency(double value) {
+  static String _formatCurrency(double value) {
     final intPart = value.toInt().toString();
     String formatted = '';
     for (int i = 0; i < intPart.length; i++) {
