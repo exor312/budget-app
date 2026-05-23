@@ -1,0 +1,123 @@
+{
+  "prd": {
+    "version": "1.0",
+    "drafted_at": "2026-05-23T00:00:00Z",
+    "approved": false,
+    "approved_at": null,
+    "overview": {
+      "problem": "The existing budget app has a basic, unpolished UI that doesn't provide an at-a-glance financial overview or modern design language.",
+      "solution": "Redesign the app dashboard to match the Fortuna reference design — a polished wealth overview with bento grid layout, Material Design 3 colors, spending categories, budget tracking, and quick insights.",
+      "target_user": "Individuals who want a clean, modern budgeting app with instant visibility into their financial health.",
+      "success_metric": "The dashboard renders all key financial metrics (net worth, budget progress, top categories, insights) in a visually polished bento grid layout matching the reference HTML."
+    },
+    "screens": [
+      {
+        "id": "SCR-001",
+        "name": "Dashboard (Home)",
+        "purpose": "Main screen showing total net worth, monthly budget progress, top spending categories, quick insights, and security health in a bento grid layout.",
+        "primary_actions": ["View financial summary", "Navigate to transactions", "Add transaction via FAB"],
+        "navigation_to": ["SCR-002"]
+      },
+      {
+        "id": "SCR-002",
+        "name": "Transaction History",
+        "purpose": "View and manage all income/expense transactions with delete capability.",
+        "primary_actions": ["View transaction list", "Delete transaction", "Add transaction"],
+        "navigation_to": ["SCR-001"]
+      }
+    ],
+    "features": [
+      {
+        "id": "FEA-001",
+        "name": "Dashboard Overview",
+        "priority": "must_have",
+        "description": "Bento grid dashboard showing total net worth with trend indicator, monthly budget progress bar, top spending categories with percentage bars, quick insights (savings goal, bills due), and security health score.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given the user opens the app, when the dashboard loads, then the total net worth card displays with a trend indicator showing percentage change from last month.",
+          "Given monthly budget data exists, when the dashboard renders, then the budget card shows spent amount vs total budget with a progress bar and remaining amount.",
+          "Given transactions exist, when the dashboard renders, then top spending categories display with category icons, names, percentages, and progress bars.",
+          "Given the dashboard loads, when rendered, then quick insights section shows savings goal amount and bills due countdown.",
+          "Given the dashboard loads, when rendered, then security health section shows a circular score indicator with status text."
+        ]
+      },
+      {
+        "id": "FEA-002",
+        "name": "Transaction Management",
+        "priority": "must_have",
+        "description": "Add, view, and delete income/expense transactions. Persists via SharedPreferences. Existing BudgetModel logic is preserved.",
+        "screens_involved": ["SCR-001", "SCR-002"],
+        "acceptance_criteria": [
+          "Given the user fills the transaction form, when they submit, then the transaction is saved to SharedPreferences and appears in the list.",
+          "Given transactions exist, when the user views the history, then all transactions are displayed with amount, description, and income/expense indicator.",
+          "Given a transaction exists, when the user deletes it, then it is removed from SharedPreferences and the list updates.",
+          "Given the user enters an amount, when submitting, then positive amounts are income and negative amounts are expenses."
+        ]
+      },
+      {
+        "id": "FEA-003",
+        "name": "Bottom Navigation",
+        "priority": "must_have",
+        "description": "Mobile bottom nav bar with Home, History, Add, and Budgets tabs. Desktop FAB for adding transactions.",
+        "screens_involved": ["SCR-001", "SCR-002"],
+        "acceptance_criteria": [
+          "Given the app runs on mobile width, when rendered, then a bottom nav bar is visible with Home, History, Add, and Budgets icons.",
+          "Given the user taps a nav item, when selected, then the active tab is highlighted and navigates to the corresponding screen.",
+          "Given the app runs on desktop width, when rendered, then a floating action button is visible in the bottom-right corner."
+        ]
+      },
+      {
+        "id": "FEA-004",
+        "name": "Fortuna Design System",
+        "priority": "must_have",
+        "description": "Apply the Fortuna Material Design 3 color palette, typography scale, and component styling from the reference HTML throughout the app.",
+        "screens_involved": ["SCR-001", "SCR-002"],
+        "acceptance_criteria": [
+          "Given the app renders, when any screen is displayed, then all colors match the Fortuna MD3 palette (primary #041627, surface #f7f9fb, error #ba1a1a, etc.).",
+          "Given the app renders, when text is displayed, then typography uses the Inter font family with the defined size/weight scale.",
+          "Given cards render, when displayed, then they use rounded corners (xl/2xl), subtle shadows, and surface-container-lowest backgrounds."
+        ]
+      },
+      {
+        "id": "FEA-005",
+        "name": "Animations & Micro-interactions",
+        "priority": "should_have",
+        "description": "Entrance animations for dashboard cards and scroll shadow effect on the top app bar.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given the dashboard loads, when the screen renders, then cards animate in with staggered fade-up transitions.",
+          "Given the user scrolls down, when scroll position > 10px, then the top app bar gains a shadow."
+        ]
+      }
+    ],
+    "auth": {
+      "required": false,
+      "methods": [],
+      "guest_mode": false
+    },
+    "data": {
+      "storage": "local",
+      "backend_required": false,
+      "backend_notes": "Uses SharedPreferences for local transaction storage. No cloud sync."
+    },
+    "integrations": [],
+    "constraints": {
+      "platforms": ["android"],
+      "min_flutter_version": "3.19.0",
+      "target_sdk": { "android": 34, "ios": 17 },
+      "offline_support": true,
+      "accessibility": "basic"
+    },
+    "out_of_scope": [
+      "User authentication / login",
+      "Cloud sync / backend API",
+      "Bank account integration",
+      "Push notifications",
+      "Dark mode toggle (colors are light-mode only from reference)",
+      "Budget detail page (button can be placeholder)",
+      "Categories management",
+      "iOS-specific builds"
+    ],
+    "open_questions": []
+  }
+}

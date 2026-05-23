@@ -1,0 +1,139 @@
+{
+  "architecture": {
+    "version": "1.0",
+    "drafted_at": "2026-05-23T00:00:00Z",
+    "approved": false,
+    "approved_at": null,
+    "decisions": {
+      "state_management": {
+        "package": "provider",
+        "version": "^6.0.5",
+        "pattern": "ChangeNotifier + Consumer",
+        "justification": "Existing app already uses Provider (ChangeNotifier pattern). PRD has 2 screens, no real-time features, no complex shared state. Keeping existing BudgetModel as ChangeNotifier preserves data layer per PRD constraint."
+      },
+      "navigation": {
+        "package": "go_router",
+        "version": "^14.2.0",
+        "pattern": "simple named routes",
+        "justification": "Only 2 screens, no deep links, no complex auth flow. go_router provides clean navigation with minimal overhead."
+      },
+      "local_storage": {
+        "package": "shared_preferences",
+        "version": "^2.2.2",
+        "justification": "PRD data.storage == 'local', offline_support == true, data is simple structured list of transactions. Existing app already uses SharedPreferences. No complex queries needed."
+      },
+      "api_client": {
+        "package": "none",
+        "version": null,
+        "justification": "PRD data.backend_required == false. No external API calls needed."
+      },
+      "auth": {
+        "package": null,
+        "token_storage": null,
+        "justification": "PRD auth.required == false. No authentication needed."
+      },
+      "di": {
+        "package": "provider",
+        "justification": "Provider IS the DI system. ChangeNotifierProvider provides BudgetModel. No additional DI package needed."
+      },
+      "config": {
+        "packages": []
+      },
+      "observability": {
+        "packages": [],
+        "justification": "size_hint == 'small'. No remote error tracking needed."
+      }
+    },
+    "folder_structure": {
+      "lib": {
+        "main.dart": null,
+        "app.dart": null,
+        "core": {
+          "theme": {
+            "app_theme.dart": null,
+            "color_tokens.dart": null,
+            "text_styles.dart": null
+          },
+          "widgets": {
+            "loading_widget.dart": null,
+            "error_widget.dart": null,
+            "empty_state_widget.dart": null
+          }
+        },
+        "features": {
+          "dashboard": {
+            "presentation": {
+              "screens": {
+                "dashboard_screen.dart": null
+              },
+              "widgets": {
+                "net_worth_card.dart": null,
+                "budget_progress_card.dart": null,
+                "spending_categories_card.dart": null,
+                "quick_insights_card.dart": null,
+                "security_health_card.dart": null
+              }
+            }
+          },
+          "transactions": {
+            "data": {
+              "budget_model.dart": null
+            },
+            "presentation": {
+              "screens": {
+                "transaction_history_screen.dart": null
+              },
+              "widgets": {
+                "transaction_form.dart": null,
+                "transaction_list_item.dart": null
+              }
+            }
+          }
+        },
+        "router": {
+          "app_router.dart": null
+        }
+      },
+      "assets": {
+        "fonts": {},
+        "icons": {},
+        "images": {}
+      },
+      "test": {
+        "unit": {},
+        "widget": {},
+        "golden": {},
+        "integration": {}
+      }
+    },
+    "screen_file_map": [
+      {
+        "screen_id": "SCR-001",
+        "screen_name": "Dashboard",
+        "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+        "feature_group": "dashboard"
+      },
+      {
+        "screen_id": "SCR-002",
+        "screen_name": "TransactionHistory",
+        "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+        "feature_group": "transactions"
+      }
+    ],
+    "api_contracts": [],
+    "dependencies": {
+      "flutter_version": ">=3.19.0",
+      "dart_version": ">=3.3.0",
+      "packages": [
+        { "name": "provider", "version": "^6.0.5", "purpose": "State management (ChangeNotifier)", "dev_only": false },
+        { "name": "shared_preferences", "version": "^2.2.2", "purpose": "Local transaction storage", "dev_only": false },
+        { "name": "go_router", "version": "^14.2.0", "purpose": "Navigation", "dev_only": false },
+        { "name": "intl", "version": "^0.19.0", "purpose": "Date/number formatting", "dev_only": false },
+        { "name": "fl_chart", "version": "^0.68.0", "purpose": "Charts for spending visualization", "dev_only": false },
+        { "name": "flutter_test", "version": "sdk", "purpose": "Testing", "dev_only": true },
+        { "name": "flutter_lints", "version": "^4.0.0", "purpose": "Linting", "dev_only": true }
+      ]
+    },
+    "open_questions": []
+  }
+}

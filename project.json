@@ -1,0 +1,1114 @@
+{
+  "meta": {
+    "project_id": "budget-app-dashboard-redesign",
+    "project_name": "Fortuna Budget App",
+    "size_hint": "small",
+    "current_phase": "DONE",
+    "created_at": "2026-05-23T00:00:00Z",
+    "updated_at": "2026-05-23T00:00:00Z"
+  },
+  "phase_summary": {
+    "prd": {
+      "approved": true,
+      "approved_at": "2026-05-23T00:00:00Z"
+    },
+    "architecture": {
+      "approved": true,
+      "approved_at": "2026-05-23T00:00:00Z"
+    },
+    "tickets": {
+      "total": 18,
+      "done": 0,
+      "in_review": 0,
+      "failed": 0
+    },
+    "code": {
+      "total_files": 18,
+      "generated": 18
+    },
+    "review": {
+      "passed": 18,
+      "failed": 0,
+      "retries": 0
+    },
+    "tests": {
+      "total": 0,
+      "passed": 0,
+      "coverage_pct": 0
+    },
+    "build": {
+      "apk_ready": true,
+      "ipa_ready": false
+    }
+  },
+  "last_action": {
+    "action": "BUILD_COMPLETE",
+    "apk_path": "build/app/outputs/flutter-apk/app-release.apk",
+    "apk_size_mb": 31.2
+  },
+  "last_error": null,
+  "reviews": {
+    "T-001": {
+      "ticket_id": "T-001",
+      "file_path": "pubspec.yaml",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "provider ^6.0.5",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "shared_preferences ^2.2.2",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "go_router ^14.2.0",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "intl ^0.19.0",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "fl_chart ^0.68.0",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "flutter_lints ^4.0.0",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "uses-material-design: true",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-002": {
+      "ticket_id": "T-002",
+      "file_path": "lib/core/theme/color_tokens.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "primary Color(0xFF041627)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "surface Color(0xFFF7F9FB)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "surfaceContainerLowest Color(0xFFFFFFFF)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "surfaceContainer Color(0xFFECEEF0)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "error Color(0xFFBA1A1A)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "secondaryContainer Color(0xFFD5E0F7)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "tertiaryFixedDim Color(0xFF4EDEA3)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "onTertiaryContainer Color(0xFF00A572)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "outlineVariant Color(0xFFC4C6CD)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "primaryContainer Color(0xFF1A2B3C)",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-003": {
+      "ticket_id": "T-003",
+      "file_path": "lib/core/theme/text_styles.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "displayLarge 48px w700",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "headlineLg 32px w600",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "numericDisplay 24px w600",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "titleMd 20px w600",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "bodyLg 16px w400",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "bodySm 14px w400",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "labelCaps 12px w700",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "fontFamily Inter",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-004": {
+      "ticket_id": "T-004",
+      "file_path": "lib/core/theme/app_theme.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "ThemeData via static method",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "ColorScheme FortunaColors.primary",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "ColorScheme FortunaColors.surface",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "ColorScheme FortunaColors.error",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "CardTheme defined",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "AppBarTheme defined",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "scaffoldBackgroundColor",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-005": {
+      "ticket_id": "T-005",
+      "file_path": "lib/core/widgets/loading_widget.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "StatelessWidget",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "CircularProgressIndicator centered",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "FortunaColors.primary indicator",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-006": {
+      "ticket_id": "T-006",
+      "file_path": "lib/core/widgets/error_widget.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "StatelessWidget message onRetry",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Error icon FortunaColors.error",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows error message text",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Retry button calls onRetry",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-007": {
+      "ticket_id": "T-007",
+      "file_path": "lib/core/widgets/empty_state.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "StatelessWidget message parameter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Icon centered",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows message text",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "onSurfaceVariant text color",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-008": {
+      "ticket_id": "T-008",
+      "file_path": "lib/router/app_router.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "DashboardScreen route",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "TransactionHistoryScreen route",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Initial location /dashboard",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-009": {
+      "ticket_id": "T-009",
+      "file_path": "lib/features/transactions/data/budget_model.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "extends ChangeNotifier",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "transactions getter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "totalIncome getter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "totalExpenses getter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "netBalance getter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "addTransaction method",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "removeTransaction method",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "loadTransactions",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "_saveTransactions",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Transaction amount/description/date",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Transaction fromJson/toJson",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-010": {
+      "ticket_id": "T-010",
+      "file_path": "lib/features/dashboard/presentation/widgets/net_worth_card.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "surfaceContainerLowest background",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Rounded corners + shadow",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Total Net Worth' labelCaps",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "displayLarge balance primary",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Trending indicator",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Wallet icon secondaryContainer",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Mini chart CustomPaint",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "StatelessWidget balance/trendPercentage",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-011": {
+      "ticket_id": "T-011",
+      "file_path": "lib/features/dashboard/presentation/widgets/budget_progress_card.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "primaryContainer background",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Monthly Budget' labelCaps",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "numericDisplay spent/budget",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Progress bar tertiaryFixedDim",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Percentage consumed text",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "VIEW BUDGET DETAILS button",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-012": {
+      "ticket_id": "T-012",
+      "file_path": "lib/features/dashboard/presentation/widgets/spending_categories_card.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": false,
+        "criteria_results": [
+          {
+            "criterion": "surfaceContainerLowest + rounded + shadow",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Top Spending Categories' titleMd",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'ALL CATEGORIES' button",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Category icons secondaryFixedDim circles",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Progress bars",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Sample categories Food/Transport/Shopping",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-013": {
+      "ticket_id": "T-013",
+      "file_path": "lib/features/dashboard/presentation/widgets/quick_insights_card.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "surfaceContainerLowest background",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Quick Insights' titleMd",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "2-column grid Row+Expanded",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Savings Goal tertiaryFixed",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Bills Due errorContainer",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-014": {
+      "ticket_id": "T-014",
+      "file_path": "lib/features/dashboard/presentation/widgets/security_health_card.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "surfaceContainerLowest + rounded + shadow",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Security Health' titleMd",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "verified_user icon",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Circular progress CustomPaint score",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Status text",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-015": {
+      "ticket_id": "T-015",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "Scaffold FortunaColors.surface",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Top app bar Fortuna + avatar + notifications",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "SingleChildScrollView max-width 1200",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Bento grid layout",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Entrance animations",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Scroll shadow",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Consumer<BudgetModel>",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "FAB + bottom nav",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-005",
+            "status": "n/a",
+            "reason": "No auth required per PRD"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-016": {
+      "ticket_id": "T-016",
+      "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": false,
+        "criteria_results": [
+          {
+            "criterion": "Scaffold FortunaColors.surface",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "'Transactions' AppBar title",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Consumer<BudgetModel>",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Empty state for no transactions",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Transaction list with delete",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Income green / expense red arrows",
+            "status": "fail",
+            "reason": "Not found in code"
+          },
+          {
+            "criterion": "FAB to add transaction",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-017": {
+      "ticket_id": "T-017",
+      "file_path": "lib/features/transactions/presentation/widgets/transaction_form.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": false,
+        "criteria_results": [
+          {
+            "criterion": "Amount TextFormField with $ prefix",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Description TextFormField",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Income/Expense ChoiceChip toggle",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Amount validation double.tryParse",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Description validation",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "addTransaction with correct sign",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Clears form after submit",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      },
+      "architectural_note": "Form is inline in screen files (TransactionFormSheet in dashboard, _TransactionFormContent in history) rather than a separate file. Functionally equivalent."
+    },
+    "T-018": {
+      "ticket_id": "T-018",
+      "file_path": "lib/main.dart",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "ChangeNotifierProvider<BudgetModel>",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "MaterialApp.router FortunaTheme",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "routerConfig appRouter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "App title 'Fortuna'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "debugBanner false",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    }
+  }
+}

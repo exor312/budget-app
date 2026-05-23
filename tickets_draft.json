@@ -1,0 +1,502 @@
+{
+  "tickets": [
+    {
+      "id": "T-001",
+      "title": "Update pubspec.yaml with all dependencies",
+      "file_path": "pubspec.yaml",
+      "feature_group": "foundation",
+      "layer": "config",
+      "type": "pubspec",
+      "points": 1,
+      "status": "pending",
+      "depends_on": [],
+      "description": "Update pubspec.yaml to include go_router, intl, fl_chart dependencies while keeping existing provider, shared_preferences, flutter_lints.",
+      "inputs": [
+        "architecture.dependencies.packages",
+        "Existing pubspec.yaml at /home/chino/budget_app/pubspec.yaml"
+      ],
+      "acceptance_criteria": [
+        "pubspec.yaml includes provider ^6.0.5",
+        "pubspec.yaml includes shared_preferences ^2.2.2",
+        "pubspec.yaml includes go_router ^14.2.0",
+        "pubspec.yaml includes intl ^0.19.0",
+        "pubspec.yaml includes fl_chart ^0.68.0",
+        "pubspec.yaml includes flutter_lints ^4.0.0",
+        "flutter: uses-material-design: true is present"
+      ],
+      "coder_notes": "Preserve existing project name 'budget_app' and description. Keep sdk constraint >=2.19.0 <4.0.0."
+    },
+    {
+      "id": "T-002",
+      "title": "Create Fortuna color tokens",
+      "file_path": "lib/core/theme/color_tokens.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "config",
+      "points": 1,
+      "status": "pending",
+      "depends_on": [],
+      "description": "Define all Fortuna MD3 color constants from the reference HTML Tailwind config as Dart static const Color values.",
+      "inputs": [
+        "dashboard_overview_reference.html tailwind color config",
+        "FEA-004: Fortuna Design System"
+      ],
+      "acceptance_criteria": [
+        "File defines primary as Color(0xFF041627)",
+        "File defines surface as Color(0xFFF7F9FB)",
+        "File defines surfaceContainerLowest as Color(0xFFFFFFFF)",
+        "File defines surfaceContainer as Color(0xFFECEEF0)",
+        "File defines error as Color(0xFFBA1A1A)",
+        "File defines onPrimary as Color(0xFFFFFFFF)",
+        "File defines onSurface as Color(0xFF191C1E)",
+        "File defines secondaryContainer as Color(0xFFD5E0F7)",
+        "File defines tertiaryFixedDim as Color(0xFF4EDEA3)",
+        "File defines onTertiaryContainer as Color(0xFF00A572)",
+        "File defines outlineVariant as Color(0xFFC4C6CD)",
+        "File defines primaryContainer as Color(0xFF1A2B3C)",
+        "File defines secondary as Color(0xFF545F72)",
+        "File defines tertiaryContainer as Color(0xFF00311F)",
+        "File defines errorContainer as Color(0xFFFFDAD6)",
+        "File defines onSecondaryContainer as Color(0xFF586377)",
+        "File defines onTertiaryFixedVariant as Color(0xFF005236)",
+        "File defines onSurfaceVariant as Color(0xFF44474C)"
+      ],
+      "coder_notes": "Create a class FortunaColors with static const Color fields. Use exact hex values from the reference HTML tailwind config."
+    },
+    {
+      "id": "T-003",
+      "title": "Create Fortuna text styles",
+      "file_path": "lib/core/theme/text_styles.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "config",
+      "points": 1,
+      "status": "pending",
+      "depends_on": [],
+      "description": "Define the Fortuna typography scale from the reference HTML as Dart TextStyle constants using Inter font family.",
+      "inputs": [
+        "dashboard_overview_reference.html tailwind fontSize config",
+        "FEA-004: Fortuna Design System"
+      ],
+      "acceptance_criteria": [
+        "File defines displayLarge: 48px, w700, -0.02em letterSpacing",
+        "File defines headlineLg: 32px, w600, -0.01em letterSpacing",
+        "File defines headlineLgMobile: 28px, w600, -0.01em letterSpacing",
+        "File defines numericDisplay: 24px, w600",
+        "File defines titleMd: 20px, w600",
+        "File defines bodyLg: 16px, w400",
+        "File defines bodySm: 14px, w400",
+        "File defines labelCaps: 12px, w700, 0.05em letterSpacing",
+        "All styles use fontFamily 'Inter'",
+        "All styles use onSurface color from FortunaColors"
+      ],
+      "coder_notes": "Create a class FortunaTextStyles with static const TextStyle fields. Reference the exact fontSize/lineHeight/fontWeight/letterSpacing from the HTML tailwind config."
+    },
+    {
+      "id": "T-004",
+      "title": "Create Fortuna app theme",
+      "file_path": "lib/core/theme/app_theme.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "config",
+      "points": 2,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003"],
+      "description": "Define the MaterialApp ThemeData using Fortuna color tokens and text styles. Sets up light theme with MD3 color scheme.",
+      "inputs": [
+        "lib/core/theme/color_tokens.dart",
+        "lib/core/theme/text_styles.dart",
+        "FEA-004: Fortuna Design System"
+      ],
+      "acceptance_criteria": [
+        "File exports a ThemeData via a static method or const",
+        "ColorScheme uses FortunaColors.primary as primary",
+        "ColorScheme uses FortunaColors.surface as surface",
+        "ColorScheme uses FortunaColors.error as error",
+        "CardTheme defined with rounded corners and subtle shadow",
+        "AppBarTheme defined with transparent background, no elevation",
+        "Scaffold backgroundColor uses FortunaColors.surface",
+        "TextTheme maps to FortunaTextStyles"
+      ],
+      "coder_notes": "Use ThemeData.light() as base, then override with Fortuna colors. Keep it simple — no dark mode per PRD out_of_scope."
+    },
+    {
+      "id": "T-005",
+      "title": "Create loading widget",
+      "file_path": "lib/core/widgets/loading_widget.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "widget",
+      "points": 1,
+      "status": "pending",
+      "depends_on": ["T-002"],
+      "description": "Reusable centered CircularProgressIndicator widget with Fortuna styling.",
+      "inputs": ["lib/core/theme/color_tokens.dart"],
+      "acceptance_criteria": [
+        "Widget is a StatelessWidget",
+        "Displays a CircularProgressIndicator centered in the available space",
+        "Uses FortunaColors.primary as the indicator color"
+      ],
+      "coder_notes": "Simple wrapper — Center widget with CircularProgressIndicator."
+    },
+    {
+      "id": "T-006",
+      "title": "Create error widget",
+      "file_path": "lib/core/widgets/error_widget.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "widget",
+      "points": 1,
+      "status": "pending",
+      "depends_on": ["T-002"],
+      "description": "Reusable error display widget with message and retry button using Fortuna error colors.",
+      "inputs": ["lib/core/theme/color_tokens.dart"],
+      "acceptance_criteria": [
+        "Widget is a StatelessWidget accepting message and onRetry parameters",
+        "Displays error icon using FortunaColors.error",
+        "Shows the error message text",
+        "Includes a retry button that calls onRetry callback"
+      ],
+      "coder_notes": "Use Column with Icon, Text, and ElevatedButton. Style with FortunaColors.errorContainer background."
+    },
+    {
+      "id": "T-007",
+      "title": "Create empty state widget",
+      "file_path": "lib/core/widgets/empty_state_widget.dart",
+      "feature_group": "foundation",
+      "layer": "core",
+      "type": "widget",
+      "points": 1,
+      "status": "pending",
+      "depends_on": ["T-002"],
+      "description": "Reusable empty state widget with icon and message for lists with no data.",
+      "inputs": ["lib/core/theme/color_tokens.dart"],
+      "acceptance_criteria": [
+        "Widget is a StatelessWidget accepting a message parameter",
+        "Displays an appropriate icon centered",
+        "Shows the message text below the icon",
+        "Uses FortunaColors.onSurfaceVariant for text color"
+      ],
+      "coder_notes": "Simple centered Column with Icons.inbox and Text."
+    },
+    {
+      "id": "T-008",
+      "title": "Create app router with go_router",
+      "file_path": "lib/router/app_router.dart",
+      "feature_group": "foundation",
+      "layer": "router",
+      "type": "router",
+      "points": 2,
+      "status": "pending",
+      "depends_on": ["T-009", "T-015"],
+      "description": "Define go_router routes for Dashboard and Transaction History screens with bottom navigation shell.",
+      "inputs": [
+        "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+        "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+        "FEA-003: Bottom Navigation"
+      ],
+      "acceptance_criteria": [
+        "Router defines /dashboard route mapping to DashboardScreen",
+        "Router defines /transactions route mapping to TransactionHistoryScreen",
+        "Initial location is /dashboard",
+        "Uses ShellRoute for bottom navigation on mobile",
+        "Exports a GoRouter instance via a top-level function or provider"
+      ],
+      "coder_notes": "Use StatefulShellRoute.indexedStack for bottom nav with tabs: Dashboard, Transactions. Add placeholder routes for Add and Budgets tabs per FEA-003."
+    },
+    {
+      "id": "T-009",
+      "title": "Create BudgetModel data layer (preserve existing logic)",
+      "file_path": "lib/features/transactions/data/budget_model.dart",
+      "feature_group": "transactions",
+      "layer": "data",
+      "type": "model",
+      "points": 3,
+      "status": "pending",
+      "depends_on": [],
+      "description": "Migrate existing BudgetModel (ChangeNotifier) and Transaction classes from main.dart to their own file. Preserves all existing SharedPreferences CRUD logic.",
+      "inputs": [
+        "Existing /home/chino/budget_app/lib/main.dart BudgetModel class",
+        "Existing Transaction class with fromJson/toJson",
+        "FEA-002: Transaction Management"
+      ],
+      "acceptance_criteria": [
+        "BudgetModel extends ChangeNotifier",
+        "BudgetModel has transactions getter returning List<Transaction>",
+        "BudgetModel has totalIncome getter summing positive amounts",
+        "BudgetModel has totalExpenses getter summing negative amounts absolute",
+        "BudgetModel has netBalance getter summing all amounts",
+        "BudgetModel has addTransaction(amount, description) method",
+        "BudgetModel has removeTransaction(int index) method",
+        "BudgetModel has loadTransactions() loading from SharedPreferences",
+        "BudgetModel has _saveTransactions() persisting to SharedPreferences",
+        "Transaction class has amount (double), description (String), date (DateTime) fields",
+        "Transaction has fromJson factory and toJson method",
+        "All existing functionality from main.dart BudgetModel is preserved"
+      ],
+      "coder_notes": "Copy the BudgetModel and Transaction classes from the existing main.dart exactly. Do not change any logic — this is a pure migration to a separate file."
+    },
+    {
+      "id": "T-010",
+      "title": "Create Net Worth card widget",
+      "file_path": "lib/features/dashboard/presentation/widgets/net_worth_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003", "T-009"],
+      "description": "Total Net Worth card matching the reference HTML — large balance display, trend indicator with percentage, wallet icon, mini area chart placeholder.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Card uses FortunaColors.surfaceContainerLowest background",
+        "Card has rounded-xl corners and subtle shadow per reference",
+        "Displays 'Total Net Worth' label in labelCaps style uppercase",
+        "Displays net balance in displayLarge style with FortunaColors.primary",
+        "Shows trend indicator with 'trending_up' icon and '+X.X% from last month' text in tertiary color",
+        "Shows account_balance_wallet icon in secondaryContainer circle",
+        "Includes a mini SVG-style area chart placeholder at bottom",
+        "Card is a StatelessWidget accepting balance and trendPercentage parameters"
+      ],
+      "coder_notes": "Use CustomPaint or a simple Container with gradient for the mini chart placeholder. Match the reference HTML structure: label row, balance row with icon, chart area."
+    },
+    {
+      "id": "T-011",
+      "title": "Create Budget Progress card widget",
+      "file_path": "lib/features/dashboard/presentation/widgets/budget_progress_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003", "T-009"],
+      "description": "Monthly Budget progress card matching the reference HTML — spent vs budget amount, progress bar, percentage consumed, remaining amount, 'View Budget Details' button.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Card uses FortunaColors.primaryContainer background with onPrimary text",
+        "Displays 'Monthly Budget' label in labelCaps style with opacity",
+        "Shows spent amount in numericDisplay style with '/ $X,XXX' budget in bodySm",
+        "Progress bar uses white/10 background with tertiaryFixedDim fill",
+        "Shows 'XX% consumed' text and '$X,XXX remaining' in bold",
+        "Includes 'VIEW BUDGET DETAILS' button with white/10 background",
+        "Card is a StatelessWidget accepting spentAmount, totalBudget parameters"
+      ],
+      "coder_notes": "Use LinearProgressIndicator (or Container with fractional width) for the progress bar. Match the dark primaryContainer background from the reference."
+    },
+    {
+      "id": "T-012",
+      "title": "Create Spending Categories card widget",
+      "file_path": "lib/features/dashboard/presentation/widgets/spending_categories_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 5,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003", "T-009"],
+      "description": "Top Spending Categories card matching the reference HTML — category icons (restaurant, car, shopping bag), names, percentages, and horizontal progress bars.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Card uses FortunaColors.surfaceContainerLowest background with rounded corners and shadow",
+        "Displays 'Top Spending Categories' title in titleMd style",
+        "Shows 'ALL CATEGORIES' text button",
+        "Each category row has: icon in secondaryFixedDim/30 circle, category name, percentage",
+        "Each category has a progress bar (1.5px height) with primary color fill",
+        "Categories include: Food & Dining (40%), Transport (20%), Shopping (15%) as sample data",
+        "Card is a StatelessWidget accepting List<SpendingCategory> parameter"
+      ],
+      "coder_notes": "Create a SpendingCategory data class with name, icon, percentage, color fields. Use Material Icons: restaurant, directions_car, shopping_bag. Compute categories from transactions grouped by description prefix or use sample data for v1."
+    },
+    {
+      "id": "T-013",
+      "title": "Create Quick Insights card widget",
+      "file_path": "lib/features/dashboard/presentation/widgets/quick_insights_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003"],
+      "description": "Quick Insights card matching the reference HTML — Savings Goal and Bills Due in a 2-column grid with colored backgrounds.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System"
+      ],
+      "acceptance_criteria": [
+        "Card uses FortunaColors.surfaceContainerLowest background with rounded corners and shadow",
+        "Displays 'Quick Insights' title in titleMd style",
+        "2-column grid layout with Savings Goal and Bills Due cards",
+        "Savings Goal uses tertiaryFixed/10 background with savings icon and amount",
+        "Bills Due uses errorContainer/20 background with warning icon and days count",
+        "Card is a StatelessWidget accepting savingsGoal and billsDueDays parameters"
+      ],
+      "coder_notes": "Use GridView with 2 columns or Row with 2 Expanded children. Match the reference: savings icon in tertiary color, warning icon in error color."
+    },
+    {
+      "id": "T-014",
+      "title": "Create Security Health card widget",
+      "file_path": "lib/features/dashboard/presentation/widgets/security_health_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003"],
+      "description": "Security Health card matching the reference HTML — circular progress indicator with score, verified_user icon, status text.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System"
+      ],
+      "acceptance_criteria": [
+        "Card uses FortunaColors.surfaceContainerLowest background with rounded corners and shadow",
+        "Displays 'Security Health' title in titleMd style",
+        "Shows verified_user filled icon in tertiaryContainer color",
+        "Circular progress indicator shows score (85) with primary color stroke",
+        "Text describes security status: 'Your account security score is high. Two-factor authentication is active.'",
+        "Card is a StatelessWidget accepting score parameter"
+      ],
+      "coder_notes": "Use CustomPaint or a circular Container with Stack to create the ring indicator. Match the SVG circle progress from the reference HTML."
+    },
+    {
+      "id": "T-015",
+      "title": "Create Dashboard screen with bento grid layout",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 5,
+      "status": "pending",
+      "depends_on": ["T-009", "T-010", "T-011", "T-012", "T-013", "T-014"],
+      "description": "Main dashboard screen assembling all card widgets in a bento grid layout matching the reference HTML. Includes top app bar with Fortuna branding and notifications icon.",
+      "inputs": [
+        "SCR-001: Dashboard",
+        "FEA-001: Dashboard Overview",
+        "FEA-004: Fortuna Design System",
+        "FEA-005: Animations",
+        "All dashboard card widgets",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Screen uses Scaffold with FortunaColors.surface background",
+        "Top app bar shows 'Fortuna' title in displayLarge style with user avatar circle and notifications icon",
+        "Body uses SingleChildScrollView with max-width 1200px constraint (center on desktop)",
+        "Layout uses bento grid: Net Worth (7/12 cols) + Budget (5/12 cols) on first row",
+        "Second row: Spending Categories (6/12) + Quick Insights/Security (6/12)",
+        "Cards have entrance animation with staggered fade-up (FEA-005)",
+        "Top app bar gains shadow on scroll (FEA-005)",
+        "Uses Consumer<BudgetModel> to read transaction data",
+        "Passes computed values (netBalance, budget, categories) to card widgets",
+        "Includes FAB for adding transactions on desktop, bottom nav on mobile"
+      ],
+      "coder_notes": "Use LayoutBuilder to determine mobile vs desktop layout. On mobile, stack cards vertically. On desktop (md breakpoint), use the 12-column grid. For animations, use AnimationController with staggered Tween<Offset> and FadeTransition."
+    },
+    {
+      "id": "T-016",
+      "title": "Create Transaction History screen",
+      "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+      "feature_group": "transactions",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-009", "T-005", "T-006", "T-007"],
+      "description": "Transaction history screen showing all transactions in a list with income/expense indicators and delete functionality. Preserves existing list UI logic.",
+      "inputs": [
+        "SCR-002: Transaction History",
+        "FEA-002: Transaction Management",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Screen uses Scaffold with FortunaColors.surface background",
+        "AppBar shows 'Transactions' title",
+        "Uses Consumer<BudgetModel> to display transactions",
+        "Shows loading widget while data loads",
+        "Shows empty state widget when no transactions exist",
+        "Each transaction shows: arrow icon (up=green for income, down=red for expense), description, amount",
+        "Each transaction has delete button that calls removeTransaction",
+        "Amount is displayed in green for income, red for expense",
+        "Includes FAB to add new transaction"
+      ],
+      "coder_notes": "Migrate the ListView.builder logic from existing main.dart. Keep the same delete behavior (reversed list index). Style with Fortuna colors."
+    },
+    {
+      "id": "T-017",
+      "title": "Create Transaction Form widget",
+      "file_path": "lib/features/transactions/presentation/widgets/transaction_form.dart",
+      "feature_group": "transactions",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "pending",
+      "depends_on": ["T-002", "T-003", "T-009"],
+      "description": "Reusable transaction form with amount input, description input, income/expense toggle, and submit button. Preserves existing form validation logic.",
+      "inputs": [
+        "FEA-002: Transaction Management",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "Form has amount TextFormField with number keyboard and '$' prefix",
+        "Form has description TextFormField",
+        "Form has Income/Expense toggle (ChoiceChips or ToggleButtons)",
+        "Form validates amount is not empty and is a valid number",
+        "Form validates description is not empty",
+        "On submit, calls BudgetModel.addTransaction with correct sign (positive=income, negative=expense)",
+        "Clears form fields after successful submission",
+        "Styled with Fortuna colors and rounded corners"
+      ],
+      "coder_notes": "Migrate the _buildTransactionForm logic from existing main.dart. Use a GlobalKey<FormState> for validation. Show as modal bottom sheet or dialog."
+    },
+    {
+      "id": "T-018",
+      "title": "Create main.dart entry point",
+      "file_path": "lib/main.dart",
+      "feature_group": "foundation",
+      "layer": "config",
+      "type": "config",
+      "points": 2,
+      "status": "pending",
+      "depends_on": ["T-001", "T-004", "T-008", "T-009"],
+      "description": "App entry point wrapping the app in ChangeNotifierProvider<BudgetModel> and using go_router for navigation. Replaces the old main.dart.",
+      "inputs": [
+        "lib/core/theme/app_theme.dart",
+        "lib/router/app_router.dart",
+        "lib/features/transactions/data/budget_model.dart"
+      ],
+      "acceptance_criteria": [
+        "main() runs ChangeNotifierProvider<BudgetModel> wrapping the app",
+        "MaterialApp.router uses FortunaTheme from app_theme.dart",
+        "MaterialApp.router uses routerConfig from app_router.dart",
+        "App title is 'Fortuna'",
+        "debugBanner is false"
+      ],
+      "coder_notes": "Keep it minimal — just Provider setup + MaterialApp.router. All logic is in the feature files now."
+    }
+  ],
+  "sequence": [
+    { "step": 1, "tickets": ["T-001"], "parallel": false },
+    { "step": 2, "tickets": ["T-002", "T-003"], "parallel": true, "parallel_group": "P-01" },
+    { "step": 3, "tickets": ["T-004", "T-009"], "parallel": true, "parallel_group": "P-02" },
+    { "step": 4, "tickets": ["T-005", "T-006", "T-007"], "parallel": true, "parallel_group": "P-03" },
+    { "step": 5, "tickets": ["T-010", "T-011", "T-012", "T-013", "T-014"], "parallel": true, "parallel_group": "P-04" },
+    { "step": 6, "tickets": ["T-015"], "parallel": false },
+    { "step": 7, "tickets": ["T-016", "T-017"], "parallel": true, "parallel_group": "P-05" },
+    { "step": 8, "tickets": ["T-008"], "parallel": false },
+    { "step": 9, "tickets": ["T-018"], "parallel": false }
+  ]
+}
