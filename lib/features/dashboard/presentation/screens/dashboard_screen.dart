@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -132,7 +133,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       floatingActionButton: isDesktop
           ? FloatingActionButton(
-              onPressed: () => _showAddTransactionSheet(context),
+              onPressed: () => context.go('/add-transaction'),
               backgroundColor: FortunaColors.primary,
               foregroundColor: FortunaColors.onPrimary,
               shape: const CircleBorder(),
@@ -332,17 +333,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       ],
     );
   }
-
-  void _showAddTransactionSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: const TransactionFormSheet(),
-      ),
-    );
-  }
 }
 
 /// Animated card wrapper for staggered entrance animations.
@@ -366,135 +356,6 @@ class _AnimatedCard extends StatelessWidget {
       child: FadeTransition(
         opacity: fadeAnimation,
         child: child,
-      ),
-    );
-  }
-}
-
-/// Animated card wrapper for staggered entrance animations.
-class TransactionFormSheet extends StatefulWidget {
-  const TransactionFormSheet({super.key});
-
-  @override
-  State<TransactionFormSheet> createState() => _TransactionFormSheetState();
-}
-
-class _TransactionFormSheetState extends State<TransactionFormSheet> {
-  final _formKey = GlobalKey<FormState>();
-  final _amountController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  bool _isIncome = true;
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  void _addTransaction() {
-    if (_formKey.currentState!.validate()) {
-      final amount = double.parse(_amountController.text);
-      final description = _descriptionController.text;
-
-      context.read<BudgetModel>().addTransaction(
-            amount: _isIncome ? amount : -amount,
-            description: description,
-          );
-
-      _amountController.clear();
-      _descriptionController.clear();
-      Navigator.pop(context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Add Transaction',
-              style: FortunaTextStyles.titleMd.copyWith(
-                color: FortunaColors.primary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            TextFormField(
-              controller: _amountController,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                prefixText: '\$',
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter an amount';
-                }
-                if (double.tryParse(value) == null) {
-                  return 'Please enter a valid number';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Text('Type:'),
-                const SizedBox(width: 16),
-                ChoiceChip(
-                  label: const Text('Income'),
-                  selected: _isIncome,
-                  selectedColor: FortunaColors.secondaryContainer,
-                  onSelected: (selected) {
-                    setState(() => _isIncome = selected);
-                  },
-                ),
-                const SizedBox(width: 12),
-                ChoiceChip(
-                  label: const Text('Expense'),
-                  selected: !_isIncome,
-                  selectedColor: FortunaColors.secondaryContainer,
-                  onSelected: (selected) {
-                    setState(() => _isIncome = !selected);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: _addTransaction,
-                child: const Text('Add Transaction'),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
