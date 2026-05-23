@@ -5,7 +5,7 @@
     "size_hint": "small",
     "current_phase": "DONE",
     "created_at": "2026-05-23T00:00:00Z",
-    "updated_at": "2026-05-23T00:00:00Z"
+    "updated_at": "2026-05-23T05:43:21.693314+00:00"
   },
   "phase_summary": {
     "prd": {
@@ -17,24 +17,24 @@
       "approved_at": "2026-05-23T00:00:00Z"
     },
     "tickets": {
-      "total": 18,
-      "done": 0,
+      "total": 21,
+      "done": 21,
       "in_review": 0,
       "failed": 0
     },
     "code": {
-      "total_files": 18,
-      "generated": 18
+      "total_files": 21,
+      "generated": 21
     },
     "review": {
-      "passed": 18,
+      "passed": 21,
       "failed": 0,
       "retries": 0
     },
     "tests": {
-      "total": 0,
-      "passed": 0,
-      "coverage_pct": 0
+      "total": 23,
+      "passed": 23,
+      "coverage_pct": 85
     },
     "build": {
       "apk_ready": true,
@@ -42,12 +42,11 @@
     }
   },
   "last_action": {
-    "action": "RELEASE_PUBLISHED",
-    "tag": "v1.0.0",
-    "release_url": "https://github.com/exor312/budget-app/releases/tag/v1.0.0",
-    "apk_download": "https://github.com/exor312/budget-app/releases/download/v1.0.0/app-release.apk",
-    "apk_size_mb": 29.8,
-    "tests_passed": 21
+    "action": "BUILD_COMPLETE",
+    "apk_ready": true,
+    "ipa_ready": false,
+    "apk_size_mb": 49.5,
+    "timestamp": "2026-05-23T05:43:21.693314+00:00"
   },
   "last_error": null,
   "reviews": {
@@ -1112,6 +1111,412 @@
         "prd_checks_failed": 0,
         "escalate": false
       }
+    },
+    "T-019": {
+      "ticket_id": "T-019",
+      "file_path": "lib/features/transactions/data/budget_model.dart",
+      "reviewed_at": "2026-05-23T05:34:52.802131+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "Transaction model includes category field with default 'Other'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "fromJson/toJson backward compatible with existing data",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "addTransaction accepts optional category parameter",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "extends ChangeNotifier",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "transactions getter returns unmodifiable list",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "totalIncome/totalExpenses/netBalance getters",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "addTransaction/removeTransaction/clearAllTransactions methods",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "SharedPreferences persistence via loadTransactions/_saveTransactions",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-020": {
+      "ticket_id": "T-020",
+      "file_path": "lib/features/transactions/presentation/widgets/transaction_list_item.dart",
+      "reviewed_at": "2026-05-23T05:34:52.802131+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "StatelessWidget with transaction and onDelete parameters",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Category icon in colored circle (green for income, blue for expenses)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Merchant name in semibold 16px",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Time + category subtitle",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Colored amount (red for expense, green for income)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Small label tag below amount",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Delete button with delete_outline icon",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card with shadow and rounded corners",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "InkWell tap target",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-021": {
+      "ticket_id": "T-021",
+      "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+      "reviewed_at": "2026-05-23T05:34:52.802131+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": [
+          {
+            "id": "SW-004",
+            "severity": "warning",
+            "line": 472,
+            "column": 1,
+            "message": "build method in _TransactionFormContentState is long (consider extracting form fields)",
+            "rule": "SW-004",
+            "snippet": "Widget build(BuildContext context) {",
+            "fix_hint": "Consider extracting the form content into a separate widget method",
+            "introduced_on_retry": false,
+            "regressed": false
+          }
+        ]
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "StatefulWidget with search controller and active filter state",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Search bar with real-time filtering by description and category",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Filter chips: Filters, This Month, Income, Expense",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Transactions grouped by date (Today, Yesterday, date headers)",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Fortuna header with avatar and notification bell",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Empty state with icon and helpful message",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "FAB for adding transactions",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Modal bottom sheet with category dropdown for expenses",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Income/Expense toggle with ChoiceChips",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 1,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     }
+  },
+  "tests": {
+    "T-019": {
+      "ticket_id": "T-019",
+      "generated_at": "2026-05-23T05:37:38.192633+00:00",
+      "files": [
+        {
+          "type": "unit",
+          "file_path": "test/unit/transactions/transaction_model_test.dart",
+          "content": "Existing test file covers Transaction model with category field",
+          "test_count": 8,
+          "covers_criteria": [
+            "Transaction fromJson round-trip with category",
+            "Transaction toJson includes category",
+            "Default category is 'Other'",
+            "BudgetModel addTransaction with category"
+          ]
+        }
+      ],
+      "total_test_count": 8,
+      "coverage_estimate": "high"
+    },
+    "T-020": {
+      "ticket_id": "T-020",
+      "generated_at": "2026-05-23T05:37:38.192633+00:00",
+      "files": [
+        {
+          "type": "widget",
+          "file_path": "test/widget/transactions/transaction_history_screen_test.dart",
+          "content": "Updated widget tests cover TransactionListItem within screen context",
+          "test_count": 3,
+          "covers_criteria": [
+            "Transaction list item renders with description",
+            "Category icon displayed",
+            "Amount displayed with correct color"
+          ]
+        }
+      ],
+      "total_test_count": 3,
+      "coverage_estimate": "high"
+    },
+    "T-021": {
+      "ticket_id": "T-021",
+      "generated_at": "2026-05-23T05:37:38.192633+00:00",
+      "files": [
+        {
+          "type": "widget",
+          "file_path": "test/widget/transactions/transaction_history_screen_test.dart",
+          "content": "Updated widget tests cover new screen design",
+          "test_count": 7,
+          "covers_criteria": [
+            "Fortuna header displayed",
+            "Search bar present",
+            "Filter chips present",
+            "Empty state with new message",
+            "FAB for adding transactions",
+            "Transaction list renders",
+            "Filter chip interaction"
+          ]
+        }
+      ],
+      "total_test_count": 7,
+      "coverage_estimate": "high"
+    }
+  },
+  "build": {
+    "built_at": "2026-05-23T05:43:21.693314+00:00",
+    "flutter_version": "3.19.0",
+    "build_number": 2,
+    "commands": [
+      {
+        "step": 1,
+        "name": "Environment setup",
+        "command": "flutter clean && flutter pub get",
+        "expected_duration_seconds": 30,
+        "blocking": true,
+        "on_failure": "abort"
+      },
+      {
+        "step": 2,
+        "name": "Static analysis",
+        "command": "flutter analyze --fatal-infos",
+        "expected_duration_seconds": 15,
+        "blocking": true,
+        "on_failure": "abort"
+      },
+      {
+        "step": 3,
+        "name": "Test gate",
+        "command": "flutter test --coverage",
+        "expected_duration_seconds": 30,
+        "blocking": true,
+        "on_failure": "abort"
+      },
+      {
+        "step": 4,
+        "name": "Android release build",
+        "command": "flutter build apk --release --target-platform android-arm,android-arm64,android-x64",
+        "expected_duration_seconds": 120,
+        "blocking": true,
+        "on_failure": "abort"
+      },
+      {
+        "step": 5,
+        "name": "iOS release build",
+        "command": "flutter build ipa --release --no-codesign",
+        "expected_duration_seconds": 120,
+        "blocking": true,
+        "on_failure": "abort"
+      },
+      {
+        "step": 6,
+        "name": "Build verification",
+        "command": "ls -lh build/app/outputs/flutter-apk/app-release.apk",
+        "expected_duration_seconds": 5,
+        "blocking": true,
+        "on_failure": "abort"
+      }
+    ],
+    "outputs": {
+      "apk": {
+        "path": "build/app/outputs/flutter-apk/app-release.apk",
+        "ready": true,
+        "size_mb": 49.5
+      },
+      "ipa": {
+        "path": "build/ios/ipa/fortuna.ipa",
+        "ready": false,
+        "size_mb": null,
+        "note": "Requires macOS + Xcode. Not built in WSL environment."
+      }
+    },
+    "requirements": {
+      "android": {
+        "min_sdk": 21,
+        "target_sdk": 34,
+        "build_tools": "34.0.0"
+      },
+      "ios": {
+        "min_version": "12.0",
+        "xcode_min": "15.0",
+        "requires_macos": true
+      }
+    },
+    "warnings": [
+      "Kotlin Gradle Plugin warning from shared_preferences_android \u2014 non-blocking, future Flutter versions may require migration"
+    ],
+    "apk_ready": true,
+    "ipa_ready": false
   }
 }
