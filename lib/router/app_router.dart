@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../features/transactions/presentation/screens/transaction_history_screen.dart';
 import '../features/transactions/presentation/screens/add_transaction_screen.dart';
+import '../features/budget_goals/presentation/screens/budgets_goals_screen.dart';
 
 /// App router configuration using go_router with ShellRoute for tab navigation.
 final GoRouter appRouter = GoRouter(
@@ -23,6 +24,11 @@ final GoRouter appRouter = GoRouter(
           path: TransactionHistoryScreen.routePath,
           name: TransactionHistoryScreen.routeName,
           builder: (context, state) => const TransactionHistoryScreen(),
+        ),
+        GoRoute(
+          path: BudgetsGoalsScreen.routePath,
+          name: BudgetsGoalsScreen.routeName,
+          builder: (context, state) => const BudgetsGoalsScreen(),
         ),
       ],
     ),
