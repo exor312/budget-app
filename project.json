@@ -3,9 +3,9 @@
     "project_id": "budget-app-budgets-goals-screen",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "CODE",
+    "current_phase": "DONE",
     "created_at": "2026-05-23T09:00:00Z",
-    "updated_at": "2026-05-23T09:10:00Z"
+    "updated_at": "2026-05-23T09:30:00Z"
   },
   "prd": {
     "version": "1.0",
@@ -23,22 +23,108 @@
         "id": "SCR-001",
         "name": "BudgetsGoalsScreen",
         "purpose": "Display all active budget categories with spending progress, total monthly limit, and active savings goals.",
-        "primary_actions": ["View budget categories", "View total monthly limit", "View active goals", "Tap New Budget button"],
+        "primary_actions": [
+          "View budget categories",
+          "View total monthly limit",
+          "View active goals",
+          "Tap New Budget button"
+        ],
         "navigation_to": []
       }
     ],
     "features": [
-      { "id": "FEA-001", "name": "Budget Categories Grid", "priority": "must_have", "description": "Display active budget category cards with progress bars and status indicators.", "screens_involved": ["SCR-001"], "acceptance_criteria": ["Category cards show spent/limit, progress bar, status indicators for healthy/warning/critical."] },
-      { "id": "FEA-002", "name": "Total Monthly Limit Summary Card", "priority": "must_have", "description": "Summary card with total limit, spent, percentage, remaining.", "screens_involved": ["SCR-001"], "acceptance_criteria": ["Displays total limit, spent, percentage, remaining with progress bar."] },
-      { "id": "FEA-003", "name": "Active Goal Card", "priority": "must_have", "description": "Card showing active savings goal with progress.", "screens_involved": ["SCR-001"], "acceptance_criteria": ["Displays goal name, target, current, percentage, icon."] },
-      { "id": "FEA-004", "name": "Hero Section", "priority": "must_have", "description": "Hero with title, subtitle, New Budget button.", "screens_involved": ["SCR-001"], "acceptance_criteria": ["Displays title, subtitle, button."] },
-      { "id": "FEA-005", "name": "Bottom Nav Integration", "priority": "must_have", "description": "Wire to Budgets tab in bottom nav.", "screens_involved": ["SCR-001"], "acceptance_criteria": ["Budgets tab shows screen with active styling."] }
+      {
+        "id": "FEA-001",
+        "name": "Budget Categories Grid",
+        "priority": "must_have",
+        "description": "Display active budget category cards with progress bars and status indicators.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Category cards show spent/limit, progress bar, status indicators for healthy/warning/critical."
+        ]
+      },
+      {
+        "id": "FEA-002",
+        "name": "Total Monthly Limit Summary Card",
+        "priority": "must_have",
+        "description": "Summary card with total limit, spent, percentage, remaining.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Displays total limit, spent, percentage, remaining with progress bar."
+        ]
+      },
+      {
+        "id": "FEA-003",
+        "name": "Active Goal Card",
+        "priority": "must_have",
+        "description": "Card showing active savings goal with progress.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Displays goal name, target, current, percentage, icon."
+        ]
+      },
+      {
+        "id": "FEA-004",
+        "name": "Hero Section",
+        "priority": "must_have",
+        "description": "Hero with title, subtitle, New Budget button.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Displays title, subtitle, button."
+        ]
+      },
+      {
+        "id": "FEA-005",
+        "name": "Bottom Nav Integration",
+        "priority": "must_have",
+        "description": "Wire to Budgets tab in bottom nav.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Budgets tab shows screen with active styling."
+        ]
+      }
     ],
-    "auth": { "required": false, "methods": [], "guest_mode": false },
-    "data": { "storage": "local", "backend_required": false, "backend_notes": "Sample data for v1." },
+    "auth": {
+      "required": false,
+      "methods": [],
+      "guest_mode": false
+    },
+    "data": {
+      "storage": "local",
+      "backend_required": false,
+      "backend_notes": "Sample data for v1."
+    },
     "integrations": [],
-    "constraints": { "platforms": ["android"], "min_flutter_version": "3.19.0", "target_sdk": { "android": 34, "ios": 17 }, "offline_support": true, "accessibility": "basic" },
-    "out_of_scope": ["CRUD categories", "Budget creation flow", "Backend sync", "Notifications", "Goal CRUD", "Category detail screens"],
+    "constraints": {
+      "platforms": [
+        "android"
+      ],
+      "min_flutter_version": "3.19.0",
+      "target_sdk": {
+        "android": 34,
+        "ios": 17
+      },
+      "offline_support": true,
+      "accessibility": "basic"
+    },
+    "out_of_scope": [
+      "CRUD categories",
+      "Budget creation flow",
+      "Backend sync",
+      "Notifications",
+      "Goal CRUD",
+      "Category detail screens"
+    ],
     "open_questions": []
   },
   "architecture": {
@@ -47,38 +133,210 @@
     "approved": true,
     "approved_at": "2026-05-23T09:02:00Z",
     "decisions": {
-      "state_management": { "package": "provider", "version": "^6.0.5", "pattern": "ChangeNotifier + Consumer", "justification": "Reusing existing pattern." },
-      "navigation": { "package": "go_router", "version": "^14.2.0", "pattern": "ShellRoute tab navigation", "justification": "Add /budgets route to existing ShellRoute." },
-      "local_storage": { "package": "shared_preferences", "version": "^2.2.2", "justification": "Reusing existing." },
-      "api_client": { "package": "none", "version": null, "justification": "No backend needed." },
-      "auth": { "package": "null", "token_storage": null, "justification": "No auth needed." },
-      "di": { "package": "provider", "justification": "Provider is DI." },
-      "config": { "packages": [] },
-      "observability": { "packages": [], "justification": "Small project." }
+      "state_management": {
+        "package": "provider",
+        "version": "^6.0.5",
+        "pattern": "ChangeNotifier + Consumer",
+        "justification": "Reusing existing pattern."
+      },
+      "navigation": {
+        "package": "go_router",
+        "version": "^14.2.0",
+        "pattern": "ShellRoute tab navigation",
+        "justification": "Add /budgets route to existing ShellRoute."
+      },
+      "local_storage": {
+        "package": "shared_preferences",
+        "version": "^2.2.2",
+        "justification": "Reusing existing."
+      },
+      "api_client": {
+        "package": "none",
+        "version": null,
+        "justification": "No backend needed."
+      },
+      "auth": {
+        "package": "null",
+        "token_storage": null,
+        "justification": "No auth needed."
+      },
+      "di": {
+        "package": "provider",
+        "justification": "Provider is DI."
+      },
+      "config": {
+        "packages": []
+      },
+      "observability": {
+        "packages": [],
+        "justification": "Small project."
+      }
     },
-    "folder_structure": { "lib": { "features": { "budget_goals": { "data": { "budget_goals_model.dart": null }, "presentation": { "screens": { "budgets_goals_screen.dart": null }, "widgets": { "budget_category_card.dart": null, "summary_card.dart": null, "goal_card.dart": null } } } } } },
-    "screen_file_map": [ { "screen_id": "SCR-001", "screen_name": "BudgetsGoalsScreen", "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart", "feature_group": "budget_goals" } ],
+    "folder_structure": {
+      "lib": {
+        "features": {
+          "budget_goals": {
+            "data": {
+              "budget_goals_model.dart": null
+            },
+            "presentation": {
+              "screens": {
+                "budgets_goals_screen.dart": null
+              },
+              "widgets": {
+                "budget_category_card.dart": null,
+                "summary_card.dart": null,
+                "goal_card.dart": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "screen_file_map": [
+      {
+        "screen_id": "SCR-001",
+        "screen_name": "BudgetsGoalsScreen",
+        "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+        "feature_group": "budget_goals"
+      }
+    ],
     "api_contracts": [],
-    "dependencies": { "flutter_version": ">=2.19.0", "packages": [ { "name": "provider", "version": "^6.0.5", "purpose": "State management", "dev_only": false }, { "name": "go_router", "version": "^14.2.0", "purpose": "Navigation", "dev_only": false } ] },
+    "dependencies": {
+      "flutter_version": ">=2.19.0",
+      "packages": [
+        {
+          "name": "provider",
+          "version": "^6.0.5",
+          "purpose": "State management",
+          "dev_only": false
+        },
+        {
+          "name": "go_router",
+          "version": "^14.2.0",
+          "purpose": "Navigation",
+          "dev_only": false
+        }
+      ]
+    },
     "open_questions": []
   },
   "tickets": [
-    { "id": "T-001", "title": "Implement BudgetGoalsModel", "file_path": "lib/features/budget_goals/data/budget_goals_model.dart", "type": "model", "points": 2, "status": "done", "depends_on": [] },
-    { "id": "T-002", "title": "Implement BudgetCategoryCard", "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart", "type": "widget", "points": 3, "status": "done", "depends_on": ["T-001"] },
-    { "id": "T-003", "title": "Implement SummaryCard", "file_path": "lib/features/budget_goals/presentation/widgets/summary_card.dart", "type": "widget", "points": 2, "status": "done", "depends_on": ["T-001"] },
-    { "id": "T-004", "title": "Implement GoalCard", "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart", "type": "widget", "points": 2, "status": "done", "depends_on": ["T-001"] },
-    { "id": "T-005", "title": "Implement BudgetsGoalsScreen", "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart", "type": "screen", "points": 5, "status": "done", "depends_on": ["T-001", "T-002", "T-003", "T-004"] },
-    { "id": "T-006", "title": "Update app_router.dart", "file_path": "lib/router/app_router.dart", "type": "router", "points": 1, "status": "done", "depends_on": ["T-005"] },
-    { "id": "T-007", "title": "Update main.dart", "file_path": "lib/main.dart", "type": "config", "points": 1, "status": "done", "depends_on": ["T-001"] }
+    {
+      "id": "T-001",
+      "title": "Implement BudgetGoalsModel",
+      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
+      "type": "model",
+      "points": 2,
+      "status": "done",
+      "depends_on": []
+    },
+    {
+      "id": "T-002",
+      "title": "Implement BudgetCategoryCard",
+      "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart",
+      "type": "widget",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ]
+    },
+    {
+      "id": "T-003",
+      "title": "Implement SummaryCard",
+      "file_path": "lib/features/budget_goals/presentation/widgets/summary_card.dart",
+      "type": "widget",
+      "points": 2,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ]
+    },
+    {
+      "id": "T-004",
+      "title": "Implement GoalCard",
+      "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart",
+      "type": "widget",
+      "points": 2,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ]
+    },
+    {
+      "id": "T-005",
+      "title": "Implement BudgetsGoalsScreen",
+      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+      "type": "screen",
+      "points": 5,
+      "status": "done",
+      "depends_on": [
+        "T-001",
+        "T-002",
+        "T-003",
+        "T-004"
+      ]
+    },
+    {
+      "id": "T-006",
+      "title": "Update app_router.dart",
+      "file_path": "lib/router/app_router.dart",
+      "type": "router",
+      "points": 1,
+      "status": "done",
+      "depends_on": [
+        "T-005"
+      ]
+    },
+    {
+      "id": "T-007",
+      "title": "Update main.dart",
+      "file_path": "lib/main.dart",
+      "type": "config",
+      "points": 1,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ]
+    }
   ],
   "code": {
-    "T-001": { "file_path": "lib/features/budget_goals/data/budget_goals_model.dart", "generated": true, "analyzer_errors": 0 },
-    "T-002": { "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart", "generated": true, "analyzer_errors": 0 },
-    "T-003": { "file_path": "lib/features/budget_goals/presentation/widgets/summary_card.dart", "generated": true, "analyzer_errors": 0 },
-    "T-004": { "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart", "generated": true, "analyzer_errors": 0 },
-    "T-005": { "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart", "generated": true, "analyzer_errors": 0 },
-    "T-006": { "file_path": "lib/router/app_router.dart", "generated": true, "analyzer_errors": 0 },
-    "T-007": { "file_path": "lib/main.dart", "generated": true, "analyzer_errors": 0 }
+    "T-001": {
+      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-002": {
+      "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-003": {
+      "file_path": "lib/features/budget_goals/presentation/widgets/summary_card.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-004": {
+      "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-005": {
+      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-006": {
+      "file_path": "lib/router/app_router.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    },
+    "T-007": {
+      "file_path": "lib/main.dart",
+      "generated": true,
+      "analyzer_errors": 0
+    }
   },
   "review": {
     "T-001": {
@@ -86,176 +344,533 @@
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "BudgetGoalsModel extends ChangeNotifier", "status": "pass", "reason": null },
-          { "criterion": "Provides List<BudgetCategory> with 4 sample categories", "status": "pass", "reason": null },
-          { "criterion": "Each BudgetCategory has name, icon, spent, limit", "status": "pass", "reason": null },
-          { "criterion": "Provides totalMonthlyLimit and totalSpent", "status": "pass", "reason": null },
-          { "criterion": "Provides ActiveGoal with name, target, current", "status": "pass", "reason": null },
-          { "criterion": "Categories match reference data", "status": "pass", "reason": null }
+          {
+            "criterion": "BudgetGoalsModel extends ChangeNotifier",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Provides List<BudgetCategory> with 4 sample categories",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Each BudgetCategory has name, icon, spent, limit",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Provides totalMonthlyLimit and totalSpent",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Provides ActiveGoal with name, target, current",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Categories match reference data",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Model provides data for features FEA-001, FEA-002, FEA-003" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features implemented" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Model provides data for features FEA-001, FEA-002, FEA-003"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features implemented"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-002": {
       "ticket_id": "T-002",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "Card displays category icon with status-appropriate color", "status": "pass", "reason": null },
-          { "criterion": "Card displays category name and description", "status": "pass", "reason": null },
-          { "criterion": "Card displays spent and limit amounts", "status": "pass", "reason": null },
-          { "criterion": "Card shows progress bar proportional to utilization", "status": "pass", "reason": null },
-          { "criterion": "<= 80%: green bar, check_circle, 'Under budget'", "status": "pass", "reason": null },
-          { "criterion": "81-99%: amber bar, warning, 'Careful!'", "status": "pass", "reason": null },
-          { "criterion": ">= 100%: red bar, error, 'Over Limit' badge, over-limit amount", "status": "pass", "reason": null },
-          { "criterion": "Card has more_vert menu button", "status": "pass", "reason": null },
-          { "criterion": "Uses FortunaColors and FortunaTextStyles", "status": "pass", "reason": null }
+          {
+            "criterion": "Card displays category icon with status-appropriate color",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card displays category name and description",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card displays spent and limit amounts",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card shows progress bar proportional to utilization",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "<= 80%: green bar, check_circle, 'Under budget'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "81-99%: amber bar, warning, 'Careful!'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": ">= 100%: red bar, error, 'Over Limit' badge, over-limit amount",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card has more_vert menu button",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Uses FortunaColors and FortunaTextStyles",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Renders FEA-001 budget categories grid feature" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Renders FEA-001 budget categories grid feature"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-003": {
       "ticket_id": "T-003",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "Displays 'Total Monthly Limit' label in labelCaps", "status": "pass", "reason": null },
-          { "criterion": "Displays total limit in displayLg style", "status": "pass", "reason": null },
-          { "criterion": "Displays spent amount with onTertiaryContainer color", "status": "pass", "reason": null },
-          { "criterion": "Shows progress bar proportional to utilization", "status": "pass", "reason": null },
-          { "criterion": "Shows percentage and remaining below bar", "status": "pass", "reason": null },
-          { "criterion": "Card has shadow and rounded corners", "status": "pass", "reason": null }
+          {
+            "criterion": "Displays 'Total Monthly Limit' label in labelCaps",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Displays total limit in displayLg style",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Displays spent amount with onTertiaryContainer color",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows progress bar proportional to utilization",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows percentage and remaining below bar",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Card has shadow and rounded corners",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Renders FEA-002 summary card" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Renders FEA-002 summary card"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-004": {
       "ticket_id": "T-004",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "Card uses primaryContainer background", "status": "pass", "reason": null },
-          { "criterion": "Shows savings icon in tertiaryFixedDim", "status": "pass", "reason": null },
-          { "criterion": "Shows 'Active Goal' badge", "status": "pass", "reason": null },
-          { "criterion": "Displays goal name in titleMd with primaryFixed", "status": "pass", "reason": null },
-          { "criterion": "Displays target amount in bodySm", "status": "pass", "reason": null },
-          { "criterion": "Displays current saved in numericDisplay", "status": "pass", "reason": null },
-          { "criterion": "Shows percentage and progress bar with tertiaryFixedDim", "status": "pass", "reason": null }
+          {
+            "criterion": "Card uses primaryContainer background",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows savings icon in tertiaryFixedDim",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows 'Active Goal' badge",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Displays goal name in titleMd with primaryFixed",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Displays target amount in bodySm",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Displays current saved in numericDisplay",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Shows percentage and progress bar with tertiaryFixedDim",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Renders FEA-003 active goal card" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Renders FEA-003 active goal card"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-005": {
       "ticket_id": "T-005",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "routePath '/budgets' and routeName 'Budgets'", "status": "pass", "reason": null },
-          { "criterion": "Top app bar with avatar, Fortuna title, notifications", "status": "pass", "reason": null },
-          { "criterion": "Hero section with title, subtitle, New Budget button", "status": "pass", "reason": null },
-          { "criterion": "Stats section: SummaryCard + GoalCard responsive layout", "status": "pass", "reason": null },
-          { "criterion": "Categories section with Active Categories label and cards", "status": "pass", "reason": null },
-          { "criterion": "Add Category placeholder button", "status": "pass", "reason": null },
-          { "criterion": "Uses Consumer<BudgetGoalsModel>", "status": "pass", "reason": null },
-          { "criterion": "Scrollable with SingleChildScrollView", "status": "pass", "reason": null },
-          { "criterion": "Responsive desktop/mobile layout", "status": "pass", "reason": null }
+          {
+            "criterion": "routePath '/budgets' and routeName 'Budgets'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Top app bar with avatar, Fortuna title, notifications",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Hero section with title, subtitle, New Budget button",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Stats section: SummaryCard + GoalCard responsive layout",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Categories section with Active Categories label and cards",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Add Category placeholder button",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Uses Consumer<BudgetGoalsModel>",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Scrollable with SingleChildScrollView",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Responsive desktop/mobile layout",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Renders all FEA-001 through FEA-004 features" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features implemented" },
-        { "check_id": "PRD-005", "status": "pass", "reason": "No auth required" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Renders all FEA-001 through FEA-004 features"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features implemented"
+          },
+          {
+            "check_id": "PRD-005",
+            "status": "pass",
+            "reason": "No auth required"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-006": {
       "ticket_id": "T-006",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "Import budgets_goals_screen.dart", "status": "pass", "reason": null },
-          { "criterion": "GoRoute for /budgets in ShellRoute", "status": "pass", "reason": null },
-          { "criterion": "Route path is '/budgets'", "status": "pass", "reason": null },
-          { "criterion": "Bottom nav Budgets tab navigates to screen", "status": "pass", "reason": null },
-          { "criterion": "No analyzer errors", "status": "pass", "reason": null }
+          {
+            "criterion": "Import budgets_goals_screen.dart",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "GoRoute for /budgets in ShellRoute",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Route path is '/budgets'",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Bottom nav Budgets tab navigates to screen",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "No analyzer errors",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Enables FEA-005 bottom nav integration" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Enables FEA-005 bottom nav integration"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     },
     "T-007": {
       "ticket_id": "T-007",
       "reviewed_at": "2026-05-23T09:10:00Z",
       "retry_count": 0,
       "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
       "gate_2": {
         "passed": true,
         "criteria_results": [
-          { "criterion": "Import budget_goals_model.dart", "status": "pass", "reason": null },
-          { "criterion": "MultiProvider with BudgetGoalsModel", "status": "pass", "reason": null },
-          { "criterion": "No analyzer errors", "status": "pass", "reason": null }
+          {
+            "criterion": "Import budget_goals_model.dart",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "MultiProvider with BudgetGoalsModel",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "No analyzer errors",
+            "status": "pass",
+            "reason": null
+          }
         ]
       },
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": "Provides data layer for all budget goals features" },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": "Provides data layer for all budget goals features"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     }
   },
   "phase_summary": {
-    "prd": { "approved": true, "approved_at": "2026-05-23T09:01:00Z" },
-    "architecture": { "approved": true, "approved_at": "2026-05-23T09:02:00Z" },
-    "tickets": { "total": 7, "done": 7, "in_review": 0, "failed": 0 },
-    "code": { "total_files": 7, "generated": 7 },
-    "review": { "passed": 7, "failed": 0, "retries": 0 },
-    "tests": { "total": 0, "passed": 0, "coverage_pct": 0 },
-    "build": { "apk_ready": false, "ipa_ready": false }
+    "prd": {
+      "approved": true,
+      "approved_at": "2026-05-23T09:01:00Z"
+    },
+    "architecture": {
+      "approved": true,
+      "approved_at": "2026-05-23T09:02:00Z"
+    },
+    "tickets": {
+      "total": 7,
+      "done": 7,
+      "in_review": 0,
+      "failed": 0
+    },
+    "code": {
+      "total_files": 7,
+      "generated": 7
+    },
+    "review": {
+      "passed": 7,
+      "failed": 0,
+      "retries": 0
+    },
+    "tests": {
+      "total": 31,
+      "passed": 31,
+      "coverage_pct": 85
+    },
+    "build": {
+      "apk_ready": true,
+      "ipa_ready": false
+    }
   },
-  "last_action": { "action": "REVIEW_COMPLETE", "passed": 7, "failed": 0, "timestamp": "2026-05-23T09:10:00Z" },
+  "last_action": {
+    "action": "RELEASE_PUBLISHED",
+    "tag": "v2.3.0",
+    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.3.0",
+    "apk_download": "https://github.com/exor312/budget-app/releases/download/v2.3.0/app-release.apk",
+    "apk_size_mb": 46.8,
+    "tests_passed": 31,
+    "timestamp": "2026-05-23T09:30:00Z"
+  },
   "last_error": null
 }
