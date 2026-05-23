@@ -113,11 +113,13 @@ class BudgetModel extends ChangeNotifier {
   void addTransaction({
     required double amount,
     required String description,
+    String category = 'Other',
   }) {
     final transaction = Transaction(
       amount: amount,
       description: description,
       date: DateTime.now(),
+      category: category,
     );
     _transactions.add(transaction);
     _saveTransactions();
@@ -145,11 +147,13 @@ class Transaction {
   final double amount;
   final String description;
   final DateTime date;
+  final String category;
 
   Transaction({
     required this.amount,
     required this.description,
     required this.date,
+    this.category = 'Other',
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -157,6 +161,7 @@ class Transaction {
       amount: (json['amount'] as num).toDouble(),
       description: json['description'] as String,
       date: DateTime.parse(json['date'] as String),
+      category: json['category'] as String? ?? 'Other',
     );
   }
 
@@ -165,6 +170,7 @@ class Transaction {
       'amount': amount,
       'description': description,
       'date': date.toIso8601String(),
+      'category': category,
     };
   }
 }

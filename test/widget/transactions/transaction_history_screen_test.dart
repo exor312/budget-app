@@ -28,8 +28,8 @@ void main() {
     testWidgets('shows empty state when no transactions', (tester) async {
       await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
 
-      expect(find.text('No transactions yet'), findsOneWidget);
-      expect(find.text('Tap + to add your first transaction'), findsOneWidget);
+      expect(find.text('No transactions found'), findsOneWidget);
+      expect(find.text('Try adjusting your filters or add a transaction'), findsOneWidget);
     });
 
     testWidgets('shows transaction list when transactions exist', (tester) async {
@@ -46,10 +46,25 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('displays Transactions title in app bar', (tester) async {
+    testWidgets('displays Fortuna header', (tester) async {
       await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
 
-      expect(find.text('Transactions'), findsOneWidget);
+      expect(find.text('Fortuna'), findsOneWidget);
+    });
+
+    testWidgets('has search bar', (tester) async {
+      await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
+
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.text('Search transactions, merchants...'), findsOneWidget);
+    });
+
+    testWidgets('has filter chips', (tester) async {
+      await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
+
+      expect(find.text('Filters'), findsOneWidget);
+      expect(find.text('This Month'), findsOneWidget);
+      expect(find.text('Income'), findsOneWidget);
     });
   });
 }
