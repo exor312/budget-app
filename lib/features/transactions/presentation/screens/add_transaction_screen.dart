@@ -24,12 +24,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String? _selectedCategory;
 
   static const List<_CategoryInfo> _categories = [
-    _CategoryInfo(name: 'Groceries', icon: Icons.shopping_basket),
-    _CategoryInfo(name: 'Fun', icon: Icons.sports_esports),
-    _CategoryInfo(name: 'Health', icon: Icons.medical_services),
-    _CategoryInfo(name: 'Rent', icon: Icons.home),
-    _CategoryInfo(name: 'Transport', icon: Icons.directions_car),
-    _CategoryInfo(name: 'Subs', icon: Icons.subscriptions),
+    _CategoryInfo(name: 'Groceries', icon: Icons.shopping_basket, categoryName: 'Food & Dining'),
+    _CategoryInfo(name: 'Fun', icon: Icons.sports_esports, categoryName: 'Entertainment'),
+    _CategoryInfo(name: 'Health', icon: Icons.medical_services, categoryName: 'Other'),
+    _CategoryInfo(name: 'Rent', icon: Icons.home, categoryName: 'Bills'),
+    _CategoryInfo(name: 'Transport', icon: Icons.directions_car, categoryName: 'Transport'),
+    _CategoryInfo(name: 'Subs', icon: Icons.subscriptions, categoryName: 'Entertainment'),
   ];
 
   void _appendNum(String num) {
@@ -53,22 +53,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     });
   }
 
-  void _submitTransaction() {
+  Future<void> _submitTransaction() async {
     final amount = double.tryParse(_currentAmount);
     if (amount == null || amount <= 0) return;
 
     final signedAmount = _isExpense ? -amount : amount;
-    final category = _isExpense
+    final displayCategory = _isExpense
         ? (_selectedCategory ?? 'Other')
         : 'Income';
+    // Map display name to BudgetGoalsModel category name
+    final category = _isExpense
+        ? _categories
+            .firstWhere((c) => c.name == displayCategory,
+                orElse: () => _CategoryInfo(name: 'Other', icon: Icons.category, categoryName: 'Other'))
+            .categoryName
+        : 'Income';
 
-    context.read<BudgetModel>().addTransaction(
+    await context.read<BudgetModel>().addTransaction(
           amount: signedAmount,
           description: category,
           category: category,
         );
 
-    context.pop();
+    if (mounted) context.pop();
   }
 
   @override
@@ -423,7 +430,8 @@ class _TypeButton extends StatelessWidget {
 class _CategoryInfo {
   final String name;
   final IconData icon;
-  const _CategoryInfo({required this.name, required this.icon});
+  final String categoryName;
+  const _CategoryInfo({required this.name, required this.icon, required this.categoryName});
 }
 
 class _CategoryChip extends StatelessWidget {

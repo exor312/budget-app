@@ -124,6 +124,7 @@ class BudgetGoalsModel extends ChangeNotifier {
     if (lower.contains('food') ||
         lower.contains('restaurant') ||
         lower.contains('grocery') ||
+        lower.contains('groceries') ||
         lower.contains('meal')) {
       return 'Food & Dining';
     }
@@ -142,7 +143,10 @@ class BudgetGoalsModel extends ChangeNotifier {
     if (lower.contains('movie') ||
         lower.contains('netflix') ||
         lower.contains('game') ||
-        lower.contains('fun')) {
+        lower.contains('fun') ||
+        lower.contains('subscription') ||
+        lower.contains('subs') ||
+        lower.contains('sub')) {
       return 'Entertainment';
     }
     if (lower.contains('bill') ||
@@ -150,6 +154,12 @@ class BudgetGoalsModel extends ChangeNotifier {
         lower.contains('electric') ||
         lower.contains('water')) {
       return 'Bills';
+    }
+    // Health/medical keywords — map to Other (no dedicated Health category yet)
+    if (lower.contains('health') ||
+        lower.contains('pharmacy') ||
+        lower.contains('medical')) {
+      return 'Other';
     }
     return 'Other';
   }

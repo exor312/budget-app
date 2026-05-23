@@ -37,7 +37,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2400, 1600));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(buildTestApp());
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
       expect(find.text('Budgets & Goals'), findsOneWidget);
     });
 
@@ -45,7 +45,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2400, 1600));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(buildTestApp());
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
       expect(find.text('Add transactions to start tracking your budget!'), findsOneWidget);
     });
   });

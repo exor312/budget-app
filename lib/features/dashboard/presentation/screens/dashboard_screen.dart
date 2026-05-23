@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
-import '../../budget_goals/data/budget_goals_model.dart';
+import '../../../budget_goals/data/budget_goals_model.dart';
 import '../widgets/net_worth_card.dart';
 import '../widgets/budget_progress_card.dart';
 import '../widgets/spending_categories_card.dart';

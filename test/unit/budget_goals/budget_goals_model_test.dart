@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:budget_app/features/budget_goals/data/budget_goals_model.dart';
 import 'package:budget_app/features/transactions/data/budget_model.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('BudgetGoalsModel', () {
     late BudgetModel budgetModel;
     late BudgetGoalsModel model;
 
     setUp(() {
+      SharedPreferences.setMockInitialValues({});
       budgetModel = BudgetModel();
       model = BudgetGoalsModel(budgetModel: budgetModel);
     });
@@ -60,9 +64,9 @@ void main() {
       expect(model.activeGoal.targetAmount, equals(10000.0));
     });
 
-    test('computes spent from real transactions', () {
-      budgetModel.addTransaction(amount: -50.0, description: 'grocery food');
-      budgetModel.addTransaction(amount: -30.0, description: 'uber transport');
+    test('computes spent from real transactions', () async {
+      await budgetModel.addTransaction(amount: -50.0, description: 'grocery food');
+      await budgetModel.addTransaction(amount: -30.0, description: 'uber transport');
       // Force recompute
       model = BudgetGoalsModel(budgetModel: budgetModel);
 
@@ -72,9 +76,9 @@ void main() {
       expect(transportCat.spent, equals(30.0));
     });
 
-    test('activeGoal currentAmount equals net balance', () {
-      budgetModel.addTransaction(amount: 5000.0, description: 'salary Income');
-      budgetModel.addTransaction(amount: -2000.0, description: 'rent Bill');
+    test('activeGoal currentAmount equals net balance', () async {
+      await budgetModel.addTransaction(amount: 5000.0, description: 'salary Income');
+      await budgetModel.addTransaction(amount: -2000.0, description: 'rent Bill');
       model = BudgetGoalsModel(budgetModel: budgetModel);
 
       expect(model.activeGoal.currentAmount, equals(3000.0));

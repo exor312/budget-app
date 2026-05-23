@@ -65,7 +65,7 @@ class BudgetModel extends ChangeNotifier {
 
   String _categorize(String description) {
     final lower = description.toLowerCase();
-    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('grocery') || lower.contains('meal')) {
+    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('grocery') || lower.contains('groceries') || lower.contains('meal')) {
       return 'Food & Dining';
     }
     if (lower.contains('gas') || lower.contains('uber') || lower.contains('car') || lower.contains('transport')) {
@@ -110,11 +110,11 @@ class BudgetModel extends ChangeNotifier {
     await prefs.setString(_transactionsKey, jsonString);
   }
 
-  void addTransaction({
+  Future<void> addTransaction({
     required double amount,
     required String description,
     String category = 'Other',
-  }) {
+  }) async {
     final transaction = Transaction(
       amount: amount,
       description: description,
@@ -122,22 +122,22 @@ class BudgetModel extends ChangeNotifier {
       category: category,
     );
     _transactions.add(transaction);
-    _saveTransactions();
+    await _saveTransactions();
     notifyListeners();
   }
 
-  void removeTransaction(int index) {
+  Future<void> removeTransaction(int index) async {
     final originalIndex = _transactions.length - 1 - index;
     if (originalIndex >= 0 && originalIndex < _transactions.length) {
       _transactions.removeAt(originalIndex);
-      _saveTransactions();
+      await _saveTransactions();
       notifyListeners();
     }
   }
 
-  void clearAllTransactions() {
+  Future<void> clearAllTransactions() async {
     _transactions.clear();
-    _saveTransactions();
+    await _saveTransactions();
     notifyListeners();
   }
 }
