@@ -141,7 +141,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       floatingActionButton: isDesktop
           ? FloatingActionButton(
-              onPressed: () => context.go('/add-transaction'),
+              onPressed: () => context.push('/add-transaction'),
               backgroundColor: FortunaColors.primary,
               foregroundColor: FortunaColors.onPrimary,
               shape: const CircleBorder(),

@@ -97,7 +97,7 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
               return GestureDetector(
                 onTap: () {
                   if (tab.path == '/add') {
-                    context.go(AddTransactionScreen.routePath);
+                    context.push(AddTransactionScreen.routePath);
                   } else {
                     context.go(tab.path);
                   }

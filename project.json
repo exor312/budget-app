@@ -257,8 +257,8 @@
     "code": { "total_files": 3, "generated": 3 },
     "review": { "passed": 3, "failed": 0, "retries": 0 },
     "tests": { "total": 63, "passed": 59, "coverage_pct": 85 },
-    "build": { "apk_ready": false, "ipa_ready": false }
+    "build": { "apk_ready": true, "ipa_ready": false }
   },
-  "last_action": { "action": "REVIEW_PASSED", "phase": "REVIEW", "timestamp": "2026-05-24T10:15:00Z" },
+  "last_action": { "action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T10:25:00Z", "tag": "v2.5.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.5.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.5.0/app-release.apk" },
   "last_error": null
 }
