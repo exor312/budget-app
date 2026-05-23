@@ -189,13 +189,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTransactionSheet(context),
-        backgroundColor: FortunaColors.primary,
-        foregroundColor: FortunaColors.onPrimary,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add),
-      ),
     );
   }
 
@@ -380,17 +373,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showAddTransactionSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: const _TransactionFormContent(),
       ),
     );
   }

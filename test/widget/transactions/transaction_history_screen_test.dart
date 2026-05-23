@@ -39,13 +39,6 @@ void main() {
       expect(find.textContaining('50'), findsOneWidget);
     });
 
-    testWidgets('has FAB for adding transactions', (tester) async {
-      await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
-
-      expect(find.byType(FloatingActionButton), findsOneWidget);
-      expect(find.byIcon(Icons.add), findsOneWidget);
-    });
-
     testWidgets('displays Fortuna header', (tester) async {
       await tester.pumpWidget(createTestWidget(EmptyBudgetModel()));
 

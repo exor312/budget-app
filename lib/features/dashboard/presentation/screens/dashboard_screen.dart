@@ -139,7 +139,6 @@ class _DashboardScreenState extends State<DashboardScreen>
               child: const Icon(Icons.add, size: 32),
             )
           : null,
-      bottomNavigationBar: isDesktop ? null : _buildBottomNav(),
     );
   }
 
@@ -334,56 +333,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
-        boxShadow: [
-          BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: 64,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.home,
-                label: 'Home',
-                isActive: true,
-                onTap: () {},
-              ),
-              _NavItem(
-                icon: Icons.receipt_long,
-                label: 'History',
-                isActive: false,
-                onTap: () => Navigator.pushNamed(context, '/transactions'),
-              ),
-              _NavItem(
-                icon: Icons.add_circle,
-                label: 'Add',
-                isActive: false,
-                onTap: () => _showAddTransactionSheet(context),
-              ),
-              _NavItem(
-                icon: Icons.track_changes,
-                label: 'Budgets',
-                isActive: false,
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showAddTransactionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -422,61 +371,7 @@ class _AnimatedCard extends StatelessWidget {
   }
 }
 
-/// Bottom navigation item.
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        decoration: isActive
-            ? BoxDecoration(
-                color: FortunaColors.secondaryContainer,
-                borderRadius: BorderRadius.circular(9999),
-              )
-            : null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isActive
-                  ? FortunaColors.onSecondaryContainer
-                  : FortunaColors.onSurfaceVariant,
-              size: 24,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: FortunaTextStyles.labelCaps.copyWith(
-                color: isActive
-                    ? FortunaColors.onSecondaryContainer
-                    : FortunaColors.onSurfaceVariant,
-                fontSize: 10,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Transaction add form shown as modal bottom sheet.
+/// Animated card wrapper for staggered entrance animations.
 class TransactionFormSheet extends StatefulWidget {
   const TransactionFormSheet({super.key});
 

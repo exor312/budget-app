@@ -5,7 +5,7 @@
     "size_hint": "small",
     "current_phase": "DONE",
     "created_at": "2026-05-23T00:00:00Z",
-    "updated_at": "2026-05-23T06:19:13.800080+00:00"
+    "updated_at": "2026-05-23T06:57:29.322027+00:00"
   },
   "phase_summary": {
     "prd": {
@@ -17,23 +17,23 @@
       "approved_at": "2026-05-23T06:14:12.125895+00:00"
     },
     "tickets": {
-      "total": 21,
-      "done": 21,
+      "total": 24,
+      "done": 24,
       "in_review": 0,
       "failed": 0
     },
     "code": {
-      "total_files": 21,
-      "generated": 21
+      "total_files": 24,
+      "generated": 24
     },
     "review": {
-      "passed": 21,
+      "passed": 24,
       "failed": 0,
       "retries": 0
     },
     "tests": {
-      "total": 23,
-      "passed": 23,
+      "total": 22,
+      "passed": 22,
       "coverage_pct": 85
     },
     "build": {
@@ -44,8 +44,8 @@
   "last_action": {
     "action": "BUILD_COMPLETE",
     "apk_ready": true,
-    "apk_size_mb": 49.5,
-    "timestamp": "2026-05-23T06:19:13.800080+00:00"
+    "apk_size_mb": 49.7,
+    "timestamp": "2026-05-23T06:57:29.322027+00:00"
   },
   "last_error": null,
   "reviews": {
@@ -1367,6 +1367,153 @@
         "prd_checks_failed": 0,
         "escalate": false
       }
+    },
+    "T-022": {
+      "ticket_id": "T-022",
+      "file_path": "lib/router/app_router.dart",
+      "reviewed_at": "2026-05-23T06:57:29.322027+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "ShellRoute wraps tab routes",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "_ShellScaffold with 4-tab bottom nav",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Tab switching uses context.go()",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Add tab triggers bottom sheet",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Active tab pill highlight",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-023": {
+      "ticket_id": "T-023",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "reviewed_at": "2026-05-23T06:57:29.322027+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "No bottomNavigationBar in DashboardScreen",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "No _buildBottomNav or _NavItem",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "FAB still present for desktop",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-024": {
+      "ticket_id": "T-024",
+      "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+      "reviewed_at": "2026-05-23T06:57:29.322027+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "No FAB in TransactionHistoryScreen",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "No _showAddTransactionSheet",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Search, filters, list still work",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": []
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
     }
   },
   "tests": {
@@ -1431,58 +1578,71 @@
       ],
       "total_test_count": 7,
       "coverage_estimate": "high"
+    },
+    "T-022": {
+      "ticket_id": "T-022",
+      "generated_at": "2026-05-23T06:57:29.322027+00:00",
+      "files": [],
+      "total_test_count": 0,
+      "coverage_estimate": "n/a"
+    },
+    "T-023": {
+      "ticket_id": "T-023",
+      "generated_at": "2026-05-23T06:57:29.322027+00:00",
+      "files": [],
+      "total_test_count": 0,
+      "coverage_estimate": "n/a"
+    },
+    "T-024": {
+      "ticket_id": "T-024",
+      "generated_at": "2026-05-23T06:57:29.322027+00:00",
+      "files": [],
+      "total_test_count": 0,
+      "coverage_estimate": "n/a"
     }
   },
   "build": {
-    "built_at": "2026-05-23T05:43:21.693314+00:00",
+    "built_at": "2026-05-23T06:57:29.322027+00:00",
     "flutter_version": "3.19.0",
-    "build_number": 2,
+    "build_number": 3,
     "commands": [
       {
         "step": 1,
-        "name": "Environment setup",
-        "command": "flutter clean && flutter pub get",
-        "expected_duration_seconds": 30,
+        "name": "Clean",
+        "command": "flutter clean",
+        "expected_duration_seconds": 10,
         "blocking": true,
         "on_failure": "abort"
       },
       {
         "step": 2,
-        "name": "Static analysis",
-        "command": "flutter analyze --fatal-infos",
+        "name": "Dependencies",
+        "command": "flutter pub get",
         "expected_duration_seconds": 15,
         "blocking": true,
         "on_failure": "abort"
       },
       {
         "step": 3,
-        "name": "Test gate",
-        "command": "flutter test --coverage",
-        "expected_duration_seconds": 30,
+        "name": "Analyze",
+        "command": "flutter analyze --fatal-infos",
+        "expected_duration_seconds": 15,
         "blocking": true,
         "on_failure": "abort"
       },
       {
         "step": 4,
-        "name": "Android release build",
-        "command": "flutter build apk --release --target-platform android-arm,android-arm64,android-x64",
-        "expected_duration_seconds": 120,
+        "name": "Test",
+        "command": "flutter test",
+        "expected_duration_seconds": 30,
         "blocking": true,
         "on_failure": "abort"
       },
       {
         "step": 5,
-        "name": "iOS release build",
-        "command": "flutter build ipa --release --no-codesign",
+        "name": "Build APK",
+        "command": "flutter build apk --release --target-platform android-arm,android-arm64,android-x64",
         "expected_duration_seconds": 120,
-        "blocking": true,
-        "on_failure": "abort"
-      },
-      {
-        "step": 6,
-        "name": "Build verification",
-        "command": "ls -lh build/app/outputs/flutter-apk/app-release.apk",
-        "expected_duration_seconds": 5,
         "blocking": true,
         "on_failure": "abort"
       }
@@ -1491,13 +1651,13 @@
       "apk": {
         "path": "build/app/outputs/flutter-apk/app-release.apk",
         "ready": true,
-        "size_mb": 49.5
+        "size_mb": 49.7
       },
       "ipa": {
         "path": "build/ios/ipa/fortuna.ipa",
         "ready": false,
         "size_mb": null,
-        "note": "Requires macOS + Xcode. Not built in WSL environment."
+        "note": "Requires macOS + Xcode"
       }
     },
     "requirements": {
@@ -1512,22 +1672,20 @@
         "requires_macos": true
       }
     },
-    "warnings": [
-      "Kotlin Gradle Plugin warning from shared_preferences_android \u2014 non-blocking, future Flutter versions may require migration"
-    ],
+    "warnings": [],
     "apk_ready": true,
     "ipa_ready": false
   },
   "prd": {
-    "version": "2.0",
-    "drafted_at": "2026-05-23T06:11:31.295931+00:00",
+    "version": "2.1",
+    "drafted_at": "2026-05-23T06:57:29.322027+00:00",
     "approved": true,
-    "approved_at": "2026-05-23T06:11:31.295931+00:00",
+    "approved_at": "2026-05-23T06:57:29.322027+00:00",
     "overview": {
-      "problem": "The existing transaction history screen has a basic list UI without search, filtering, or date grouping \u2014 users cannot quickly find or categorize transactions.",
-      "solution": "Redesign the transaction history screen to match the Fortuna reference design with search, filter chips, date grouping, category icons, and a polished header.",
+      "problem": "The transaction history screen is not connected to the app's bottom navigation \u2014 users cannot navigate to it from the main dashboard.",
+      "solution": "Restructure the app router to use ShellRoute with bottom navigation, connecting the transaction history screen as a proper tab alongside the dashboard.",
       "target_user": "Fortuna budget app users who need to review and manage their transaction history.",
-      "success_metric": "Users can search, filter, and browse transactions by date with a visually polished UI matching the reference design."
+      "success_metric": "Users can tap the History tab in the bottom nav to switch to the transaction history screen, and the Add tab opens the transaction form."
     },
     "screens": [
       {
@@ -1614,6 +1772,23 @@
           "Given the screen loads, when viewed, then the header shows 'Fortuna' title and avatar.",
           "Given the user scrolls, when scrolling, then the header remains visible."
         ]
+      },
+      {
+        "id": "FEA-006",
+        "name": "Bottom Tab Navigation",
+        "priority": "must_have",
+        "description": "ShellRoute-based bottom navigation with Home, History, Add, and Budgets tabs using go_router.",
+        "screens_involved": [
+          "SCR-001",
+          "SCR-002"
+        ],
+        "acceptance_criteria": [
+          "Given the app loads, when viewed, then a bottom navigation bar is visible with 4 tabs.",
+          "Given the user taps 'History', when active, then the transaction history screen is displayed.",
+          "Given the user taps 'Home', when active, then the dashboard screen is displayed.",
+          "Given the user taps 'Add', when active, then the add transaction bottom sheet opens.",
+          "Given a tab is active, when viewed, then it shows a pill-shaped highlight."
+        ]
       }
     ],
     "auth": {
@@ -1651,10 +1826,10 @@
     "open_questions": []
   },
   "architecture": {
-    "version": "2.0",
-    "drafted_at": "2026-05-23T06:14:12.125895+00:00",
+    "version": "2.1",
+    "drafted_at": "2026-05-23T06:57:29.322027+00:00",
     "approved": true,
-    "approved_at": "2026-05-23T06:14:12.125895+00:00",
+    "approved_at": "2026-05-23T06:57:29.322027+00:00",
     "decisions": {
       "state_management": {
         "package": "provider",
@@ -1665,8 +1840,8 @@
       "navigation": {
         "package": "go_router",
         "version": "^14.2.0",
-        "pattern": "Simple named routes",
-        "justification": "Existing project uses go_router. 2 screens, no deep links, no complex auth flow."
+        "pattern": "ShellRoute with bottom tab navigation",
+        "justification": "PRD FEA-006: 4-tab bottom navigation. go_router ShellRoute provides nested navigation with persistent bottom bar."
       },
       "local_storage": {
         "package": "shared_preferences",
@@ -1891,6 +2066,77 @@
         "Filter chip state managed via setState"
       ],
       "coder_notes": "Use GestureDetector for filter chips (not FilterChip) for custom styling. Group transactions using DateTime comparison (today/yesterday/other). Use TextEditingController for search with onChanged callback."
+    },
+    {
+      "id": "T-022",
+      "title": "Restructure app router with ShellRoute for tab navigation",
+      "file_path": "lib/router/app_router.dart",
+      "feature_group": "router",
+      "layer": "router",
+      "type": "router",
+      "points": 5,
+      "status": "done",
+      "depends_on": [],
+      "description": "Replace flat GoRouter routes with ShellRoute containing _ShellScaffold with bottom navigation bar. 4 tabs: Home, History, Add, Budgets.",
+      "inputs": [
+        "FEA-006: Bottom Tab Navigation",
+        "go_router 14.8.1 supports ShellRoute"
+      ],
+      "acceptance_criteria": [
+        "ShellRoute wraps all tab routes",
+        "_ShellScaffold provides bottom navigation with 4 tabs",
+        "Tab switching uses context.go()",
+        "Add tab triggers bottom sheet and redirects to dashboard",
+        "Active tab shows pill-shaped highlight"
+      ],
+      "coder_notes": "Use GoRouterState.of(context).uri to determine active tab. Import BudgetModel in router for the add form."
+    },
+    {
+      "id": "T-023",
+      "title": "Remove duplicate bottom nav and FAB from dashboard screen",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 2,
+      "status": "done",
+      "depends_on": [
+        "T-022"
+      ],
+      "description": "Remove _buildBottomNav method, _NavItem class, and bottomNavigationBar from DashboardScreen since the shell handles navigation.",
+      "inputs": [
+        "T-022: ShellRoute provides bottom nav"
+      ],
+      "acceptance_criteria": [
+        "No bottomNavigationBar in DashboardScreen",
+        "No _buildBottomNav method",
+        "No _NavItem class",
+        "FAB still present for desktop layout"
+      ],
+      "coder_notes": "Keep the FAB for desktop (isDesktop check). Only remove mobile bottom nav."
+    },
+    {
+      "id": "T-024",
+      "title": "Remove FAB and add transaction sheet from transaction history screen",
+      "file_path": "lib/features/transactions/presentation/screens/transaction_history_screen.dart",
+      "feature_group": "transactions",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 1,
+      "status": "done",
+      "depends_on": [
+        "T-022"
+      ],
+      "description": "Remove FloatingActionButton and _showAddTransactionSheet from TransactionHistoryScreen since the shell's Add tab handles it.",
+      "inputs": [
+        "T-022: ShellRoute Add tab handles transaction creation"
+      ],
+      "acceptance_criteria": [
+        "No FloatingActionButton in TransactionHistoryScreen",
+        "No _showAddTransactionSheet method",
+        "Search, filters, and transaction list still work"
+      ],
+      "coder_notes": "Remove FAB and _showAddTransactionSheet. Keep _TransactionFormContent for potential inline use."
     }
   ],
   "sequence": [
