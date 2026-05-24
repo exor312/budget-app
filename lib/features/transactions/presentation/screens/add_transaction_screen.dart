@@ -5,10 +5,11 @@ import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../../settings/data/category_settings_model.dart';
+import '../../../settings/data/account_settings_model.dart';
 
 /// Full-screen Add Transaction page.
 /// Matches the reference design: expense/income toggle, custom keypad,
-/// category chips, and submit button.
+/// category chips, account selector, and submit button.
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
 
@@ -23,6 +24,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   bool _isExpense = true;
   String _currentAmount = '0';
   String? _selectedCategory;
+  String _selectedAccountId = 'cash';
 
   /// Maps a category display name to its icon.
   IconData _iconForCategory(String name) {
@@ -90,7 +92,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     });
   }
 
-  Future<void> _submitTransaction(CategorySettingsModel settings) async {
+  Future<void> _submitTransaction(
+    CategorySettingsModel categorySettings,
+    AccountSettingsModel accountSettings,
+  ) async {
     final amount = double.tryParse(_currentAmount);
     if (amount == null || amount <= 0) return;
 
@@ -98,21 +103,26 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
     // Look up the category name from the dynamic list
     final categories = _isExpense
-        ? _buildExpenseCategories(settings)
-        : _buildIncomeCategories(settings);
+        ? _buildExpenseCategories(categorySettings)
+        : _buildIncomeCategories(categorySettings);
     final defaultCategory = 'Other';
     final selectedName = _selectedCategory ?? defaultCategory;
 
     // Verify the selected category exists in the list; fallback if not
     final matchedCategory = categories.firstWhere(
       (c) => c.name == selectedName,
-      orElse: () => _CategoryInfo(name: defaultCategory, icon: Icons.category, categoryName: defaultCategory),
+      orElse: () =>
+          _CategoryInfo(name: defaultCategory, icon: Icons.category, categoryName: defaultCategory),
     );
+
+    // Validate the account exists
+    final account = accountSettings.findById(_selectedAccountId);
 
     await context.read<BudgetModel>().addTransaction(
           amount: signedAmount,
           description: matchedCategory.categoryName,
           category: matchedCategory.categoryName,
+          accountId: account.id,
         );
 
     if (mounted) context.pop();
@@ -122,8 +132,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
-    return Consumer<CategorySettingsModel>(
-      builder: (context, settings, _) {
+    return Consumer2<CategorySettingsModel, AccountSettingsModel>(
+      builder: (context, categorySettings, accountSettings, _) {
         return Scaffold(
           backgroundColor: FortunaColors.surface,
           body: SafeArea(
@@ -146,11 +156,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             const SizedBox(height: 32),
                             _buildAmountDisplay(),
                             const SizedBox(height: 24),
-                            _buildCategorySection(settings),
+                            _buildAccountSection(accountSettings),
+                            const SizedBox(height: 16),
+                            _buildCategorySection(categorySettings),
                             const SizedBox(height: 24),
                             _buildKeypad(),
                             const Spacer(),
-                            _buildSubmitButton(settings),
+                            _buildSubmitButton(categorySettings, accountSettings),
                             const SizedBox(height: 24),
                           ],
                         ),
@@ -264,6 +276,82 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           'Enter amount',
           style: FortunaTextStyles.bodySm.copyWith(
             color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.6),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAccountSection(AccountSettingsModel accountSettings) {
+    final accounts = accountSettings.accounts;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            'Account',
+            style: FortunaTextStyles.labelCaps.copyWith(
+              color: FortunaColors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 48,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: accounts.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final account = accounts[index];
+              final isSelected = _selectedAccountId == account.id;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedAccountId = account.id;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? FortunaColors.secondaryContainer
+                        : FortunaColors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? FortunaColors.primary
+                          : FortunaColors.outlineVariant.withValues(alpha: 0.3),
+                      width: isSelected ? 2 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        account.icon,
+                        size: 20,
+                        color: isSelected
+                            ? FortunaColors.primary
+                            : FortunaColors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        account.name,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected
+                              ? FortunaColors.primary
+                              : FortunaColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -406,12 +494,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildSubmitButton(CategorySettingsModel settings) {
+  Widget _buildSubmitButton(
+    CategorySettingsModel settings,
+    AccountSettingsModel accountSettings,
+  ) {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: () => _submitTransaction(settings),
+        onPressed: () => _submitTransaction(settings, accountSettings),
         style: ElevatedButton.styleFrom(
           backgroundColor: FortunaColors.primary,
           foregroundColor: FortunaColors.onPrimary,
@@ -517,9 +608,7 @@ class _CategoryChip extends StatelessWidget {
                   : FortunaColors.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected
-                    ? FortunaColors.primary
-                    : Colors.transparent,
+                color: isSelected ? FortunaColors.primary : Colors.transparent,
                 width: 2,
               ),
             ),

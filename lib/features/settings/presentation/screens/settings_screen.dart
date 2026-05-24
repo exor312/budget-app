@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../settings/data/category_settings_model.dart';
+import '../../../settings/data/account_settings_model.dart';
 import '../widgets/category_list_item.dart';
 
-/// Settings screen — manage custom expense and income categories.
+/// Settings screen — manage custom expense/income categories and accounts.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -18,11 +19,13 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _expenseController = TextEditingController();
   final TextEditingController _incomeController = TextEditingController();
+  final TextEditingController _accountController = TextEditingController();
 
   @override
   void dispose() {
     _expenseController.dispose();
     _incomeController.dispose();
+    _accountController.dispose();
     super.dispose();
   }
 
@@ -47,6 +50,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     _buildHeader(),
                     const SizedBox(height: 24),
+                    _buildAccountsSection(context),
+                    const SizedBox(height: 32),
                     _buildExpenseSection(context),
                     const SizedBox(height: 32),
                     _buildIncomeSection(context),
@@ -69,6 +74,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
         fontWeight: FontWeight.w600,
         color: FortunaColors.primary,
       ),
+    );
+  }
+
+  Widget _buildAccountsSection(BuildContext context) {
+    return Consumer<AccountSettingsModel>(
+      builder: (context, model, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Accounts',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: FortunaColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildAddRow(
+              controller: _accountController,
+              hint: 'Add account (e.g. Chase Debit)',
+              onAdd: () async {
+                final name = _accountController.text.trim();
+                if (name.isEmpty) return;
+                await model.addAccount(name: name);
+                _accountController.clear();
+              },
+            ),
+            const SizedBox(height: 12),
+            ...model.accounts.map((account) {
+              final isDefault = account.id == 'cash';
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                child: Row(
+                  children: [
+                    Icon(
+                      account.icon,
+                      size: 20,
+                      color: FortunaColors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        account.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF1C1B1F),
+                        ),
+                      ),
+                    ),
+                    if (!isDefault)
+                      IconButton(
+                        onPressed: () => model.removeAccount(account.id),
+                        icon: const Icon(Icons.delete_outline, color: Color(0xFFB3261E)),
+                        tooltip: 'Delete account',
+                      ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        );
+      },
     );
   }
 

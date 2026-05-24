@@ -88,12 +88,14 @@ class BudgetModel extends ChangeNotifier {
     required double amount,
     required String description,
     String category = 'Other',
+    String accountId = 'cash',
   }) async {
     final transaction = Transaction(
       amount: amount,
       description: description,
       date: DateTime.now(),
       category: category,
+      accountId: accountId,
     );
     _transactions.add(transaction);
     await _saveTransactions();
@@ -122,12 +124,14 @@ class Transaction {
   final String description;
   final DateTime date;
   final String category;
+  final String accountId;
 
   Transaction({
     required this.amount,
     required this.description,
     required this.date,
     this.category = 'Other',
+    this.accountId = 'cash',
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -136,6 +140,7 @@ class Transaction {
       description: json['description'] as String,
       date: DateTime.parse(json['date'] as String),
       category: json['category'] as String? ?? 'Other',
+      accountId: json['accountId'] as String? ?? 'cash',
     );
   }
 
@@ -145,6 +150,7 @@ class Transaction {
       'description': description,
       'date': date.toIso8601String(),
       'category': category,
+      'accountId': accountId,
     };
   }
 }
