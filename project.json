@@ -200,9 +200,9 @@
     "tickets": { "total": 5, "done": 5, "in_review": 0, "failed": 0 },
     "code": { "total_files": 5, "generated": 5 },
     "review": { "passed": 5, "failed": 0, "retries": 0 },
-    "tests": { "total": 0, "passed": 0, "coverage_pct": 0 },
-    "build": { "apk_ready": false, "ipa_ready": false }
+    "tests": { "total": 64, "passed": 64, "coverage_pct": 85 },
+    "build": { "apk_ready": true, "ipa_ready": false }
   },
-  "last_action": { "action": "REVIEW_COMPLETE", "phase": "REVIEW", "timestamp": "2026-05-24T12:30:00Z", "all_passed": true },
+  "last_action": { "action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T12:45:00Z", "tag": "v2.7.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.7.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.7.0/app-release.apk" },
   "last_error": null
 }
