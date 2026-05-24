@@ -1,80 +1,146 @@
 {
   "meta": {
-    "project_id": "budget-app-account-type",
-    "project_name": "Fortuna Budget App - Account Type Feature",
+    "project_id": "budget-app-dark-mode",
+    "project_name": "Fortuna Budget App - Dark Mode",
     "size_hint": "small",
-    "current_phase": "REVIEW",
-    "created_at": "2026-05-24T12:00:00.000000+00:00",
-    "updated_at": "2026-05-24T19:55:06.558623"
+    "current_phase": "RELEASE",
+    "created_at": "2026-05-24T21:00:00.000000+00:00",
+    "updated_at": "2026-05-24T21:35:00.000000+00:00"
   },
   "idea": {
-    "title": "Account Type Classification",
-    "description": "Each account (card/bank account) should have a type: cash, debit, credit card, loan, or stocks. When adding a transaction the user selects which account it belongs to (already implemented). The account type should be visible throughout the UI.",
+    "title": "Dark Mode Theme",
+    "description": "Add a dark mode toggle to the budget tracker app. Users should be able to switch between light and dark themes from Settings, and the preference should persist across app restarts.",
     "requested_by": "Shin (GRAPES)",
     "features": [
-      "Add account type field to Account model (cash, debit, credit_card, loan, stocks)",
-      "Persist account type in SharedPreferences",
-      "Type dropdown when adding account in Settings",
-      "Show type label on account cards in Accounts screen",
-      "Show type in Account Detail screen header",
-      "Show type label on account selector chips in Add Transaction screen"
+      "Add dark theme definition to FortunaTheme",
+      "Persist theme preference (light/dark/system) in SharedPreferences",
+      "Add theme toggle in Settings screen",
+      "Apply theme dynamically across all screens using Provider",
+      "Follow Material 3 dark color scheme guidelines"
     ],
     "out_of_scope": [
-      "Changing the transaction date/time picker (already done in v2.13.0)",
-      "Account balance calculations by type",
-      "Type-based filtering on transaction history"
+      "Per-screen theme overrides",
+      "Custom accent color selection",
+      "AMOLED pure black theme",
+      "Scheduled/auto theme switching based on time of day"
     ]
   },
   "prd": {
-    "problem": "Users can add multiple accounts but have no way to classify them by type (cash, debit, credit card, loan, stocks). This makes it hard to understand the nature of each account at a glance.",
-    "solution": "Each account gets a type at creation time. The type is displayed alongside the account name throughout the UI: Accounts list, Account Detail header, and Add Transaction account selector.",
-    "screens_affected": [
-      "Settings Screen (add account dialog + account list)",
-      "Accounts Screen (account cards show type)",
-      "Account Detail Screen (header shows type)",
-      "Add Transaction Screen (account chips show type)"
+    "version": "1.0",
+    "drafted_at": "2026-05-24T21:00:00.000000+00:00",
+    "approved": true,
+    "approved_at": "2026-05-24T21:05:00.000000+00:00",
+    "overview": {
+      "problem": "Users who prefer dark interfaces or use the app in low-light conditions experience eye strain and reduced battery life on OLED screens because the app only supports a light theme.",
+      "solution": "Add a full dark mode theme that users can toggle from Settings, with the preference persisted across app restarts.",
+      "target_user": "All Fortuna budget app users, especially those who use the app at night or prefer dark interfaces.",
+      "success_metric": "Users can toggle dark mode in Settings and the entire app responds immediately; preference persists after app restart."
+    },
+    "screens": [
+      {
+        "id": "SCR-001",
+        "name": "Settings Screen",
+        "purpose": "User selects theme preference (Light / Dark / System default).",
+        "primary_actions": [
+          "Select theme mode",
+          "Toggle dark mode on/off"
+        ],
+        "navigation_to": []
+      }
     ],
     "features": [
       {
-        "id": "F-001",
-        "name": "Account Model Type Field",
-        "description": "Add 'type' enum/string field to Account class with values: cash, debit, credit_card, loan, stocks. Default to 'cash' for existing accounts."
+        "id": "FEA-001",
+        "name": "Dark Theme Definition",
+        "priority": "must_have",
+        "description": "Define a complete dark ColorScheme and ThemeData in FortunaTheme.dark following Material 3 dark theme guidelines. All surface, primary, secondary, error, and container colors must have dark variants.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given the app is running, when dark mode is active, then all screens use dark surface colors (dark backgrounds, light text).",
+          "Given the app is running, when dark mode is active, then the ColorScheme.brightness is Brightness.dark.",
+          "Given the app is running, when dark mode is active, then all Material 3 color tokens (surface, primary, secondary, error, outline, containers) have appropriate dark values."
+        ]
       },
       {
-        "id": "F-002",
-        "name": "Persist Account Type",
-        "description": "Update Account encode/decode and AccountSettingsModel to persist the type field. Migration: existing accounts without type default to 'cash'."
+        "id": "FEA-002",
+        "name": "Theme State Management",
+        "priority": "must_have",
+        "description": "Create a ThemeModel (ChangeNotifier) that manages the current theme mode (light/dark/system) and persists the choice via SharedPreferences.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given the app starts, when ThemeModel initializes, then it loads the saved theme preference from SharedPreferences.",
+          "Given the user selects a dark mode option, when the selection changes, then ThemeModel notifies listeners and persists the new value.",
+          "Given the user selects 'system', when the device is in dark mode, then the app renders dark theme."
+        ]
       },
       {
-        "id": "F-003",
-        "name": "Settings Type Dropdown",
-        "description": "When adding an account in Settings, show a type dropdown/selector. Default to 'debit' for new non-cash accounts."
+        "id": "FEA-003",
+        "name": "Settings Theme Toggle",
+        "priority": "must_have",
+        "description": "Add a theme selector section to the Settings screen with Light / Dark / System options, visually indicating the current selection.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given the user opens Settings, when the screen renders, then a theme selector section is visible with Light/Dark/System options.",
+          "Given the user taps a theme option, when the selection changes, then the app theme updates immediately without restart.",
+          "Given a theme option is selected, when the Settings screen renders, then the selected option is visually highlighted."
+        ]
       },
       {
-        "id": "F-004",
-        "name": "Accounts Screen Type Label",
-        "description": "Show type chip/label on each account card in the Accounts list screen."
-      },
-      {
-        "id": "F-005",
-        "name": "Account Detail Type Badge",
-        "description": "Show account type badge in the Account Detail screen header next to the account name."
-      },
-      {
-        "id": "F-006",
-        "name": "Add Transaction Type Indicator",
-        "description": "Show type label on each account chip in the Add Transaction screen selector."
+        "id": "FEA-004",
+        "name": "App-Wide Theme Application",
+        "priority": "must_have",
+        "description": "Update main.dart to wrap the app with the ThemeModel provider and set MaterialApp.router's theme and darkTheme properties so all screens respond to theme changes.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given the user toggles dark mode in Settings, when the theme changes, then all visible screens update to the new theme instantly.",
+          "Given the app restarts, when the user had dark mode enabled, then the app launches in dark mode."
+        ]
       }
     ],
+    "auth": {
+      "required": false,
+      "methods": [],
+      "guest_mode": false
+    },
+    "data": {
+      "storage": "local",
+      "backend_required": false,
+      "backend_notes": null
+    },
+    "integrations": [],
+    "constraints": {
+      "platforms": [
+        "android"
+      ],
+      "min_flutter_version": "3.19.0",
+      "target_sdk": {
+        "android": 34,
+        "ios": 17
+      },
+      "offline_support": true,
+      "accessibility": "basic"
+    },
     "out_of_scope": [
-      "Date/time picker on transactions (already in v2.13.0)",
-      "Account type filtering",
-      "Type-based analytics"
+      "Per-screen theme overrides",
+      "Custom accent color selection",
+      "AMOLED pure black theme",
+      "Scheduled/auto theme switching based on time of day"
     ],
-    "approved": true,
-    "approved_at": "2026-05-24T19:43:29.797258"
+    "open_questions": []
   },
   "architecture": {
+    "version": "1.0",
+    "drafted_at": "2026-05-24T21:05:00.000000+00:00",
+    "approved": true,
+    "approved_at": "2026-05-24T21:05:00.000000+00:00",
     "stack": {
       "framework": "Flutter 3.x",
       "language": "Dart 3.x",
@@ -82,154 +148,381 @@
       "persistence": "SharedPreferences",
       "routing": "go_router"
     },
-    "data_model_changes": {
-      "Account": {
-        "new_field": "type (String) \u2014 one of: cash, debit, credit_card, loan, stocks",
-        "migration": "Existing encoded accounts (id|name|iconKey) \u2014 on decode, default type to 'cash'. New encode: id|name|iconKey|type"
-      }
+    "decisions": {
+      "state_management": {
+        "package": "provider",
+        "version": "^6.1.1",
+        "pattern": "ChangeNotifier + ChangeNotifierProvider",
+        "justification": "Existing app uses Provider. Dark mode toggle is a simple boolean/enum state \u2014 no need for Riverpod migration."
+      },
+      "navigation": {
+        "package": "go_router",
+        "version": "^14.2.0",
+        "pattern": "Existing go_router setup \u2014 no changes needed",
+        "justification": "No new screens. Only modifying Settings screen."
+      },
+      "local_storage": {
+        "package": "shared_preferences",
+        "version": "^2.2.2",
+        "justification": "Existing app uses SharedPreferences. Theme preference (light/dark/system) is a simple string key-value."
+      },
+      "api_client": null,
+      "auth": null,
+      "di": {
+        "package": "provider",
+        "justification": "Provider IS the DI system for this app."
+      },
+      "config": {
+        "packages": [
+          [
+            "shared_preferences",
+            "^2.2.2"
+          ]
+        ]
+      },
+      "observability": null
     },
-    "icon_mapping": {
-      "cash": "Icons.account_balance_wallet",
-      "debit": "Icons.credit_card",
-      "credit_card": "Icons.credit_card",
-      "loan": "Icons.account_balance",
-      "stocks": "Icons.trending_up"
+    "theme_approach": {
+      "pattern": "ThemeMode + MaterialApp.router theme/darkTheme",
+      "description": "Add FortunaTheme.dark with Material 3 dark color scheme. Add ThemeMode to MaterialApp.router. Create ThemeModel (ChangeNotifier) with ThemeMode persistence via SharedPreferences.",
+      "color_strategy": "Define dark variants of all FortunaColors in color_tokens.dart, then use them in FortunaTheme.dark with ColorScheme.dark()."
     },
-    "type_display_labels": {
-      "cash": "Cash",
-      "debit": "Debit",
-      "credit_card": "Credit Card",
-      "loan": "Loan",
-      "stocks": "Stocks"
-    },
-    "files_to_modify": [
-      "lib/features/settings/data/account_settings_model.dart",
-      "lib/features/settings/presentation/screens/settings_screen.dart",
-      "lib/features/accounts/presentation/screens/accounts_screen.dart",
-      "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-      "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-      "lib/features/accounts/presentation/widgets/account_balance_card.dart"
+    "files_to_create": [
+      "lib/core/theme/theme_model.dart"
     ],
-    "approved": true,
-    "approved_at": "2026-05-24T19:43:29.797272"
+    "files_to_modify": [
+      "lib/core/theme/color_tokens.dart",
+      "lib/core/theme/app_theme.dart",
+      "lib/main.dart",
+      "lib/features/settings/presentation/screens/settings_screen.dart"
+    ]
   },
   "tickets": {
-    "total": 6,
-    "done": 6,
+    "total": 5,
+    "done": 5,
     "in_review": 0,
     "failed": 0,
     "items": [
       {
         "id": "T-001",
-        "title": "Add type field to Account model",
-        "description": "Add 'type' field to Account class (String, one of: cash, debit, credit_card, loan, stocks). Update encode/decode to handle migration. Default existing accounts to 'cash'.",
-        "file_path": "lib/features/settings/data/account_settings_model.dart",
+        "title": "Add dark color tokens to color_tokens.dart",
+        "description": "Add dark theme color variants to FortunaColors class. Each existing color needs a dark variant following Material 3 dark theme guidelines.",
+        "file_path": "lib/core/theme/color_tokens.dart",
         "status": "done",
-        "review_passed": false,
+        "review_passed": true,
         "reviewed": true
       },
       {
         "id": "T-002",
-        "title": "Update AccountSettingsModel for type",
-        "description": "Update addAccount to accept type parameter. Update _load migration for old format. Add type to icon key mapping based on type.",
-        "file_path": "lib/features/settings/data/account_settings_model.dart",
+        "title": "Add dark theme to FortunaTheme",
+        "description": "Add static ThemeData get dark method to FortunaTheme class using the new dark color tokens and ColorScheme.dark().",
+        "file_path": "lib/core/theme/app_theme.dart",
         "status": "done",
-        "review_passed": false,
+        "review_passed": true,
         "reviewed": true
       },
       {
         "id": "T-003",
-        "title": "Settings screen type dropdown",
-        "description": "Add type dropdown to add-account form in SettingsScreen. Show type chip next to each account in the list.",
-        "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
+        "title": "Create ThemeModel with persistence",
+        "description": "Create ThemeModel (ChangeNotifier) that manages ThemeMode state (light/dark/system), persists via SharedPreferences, and loads saved preference on init.",
+        "file_path": "lib/core/theme/theme_model.dart",
         "status": "done",
-        "review_passed": false,
+        "review_passed": true,
         "reviewed": true
       },
       {
         "id": "T-004",
-        "title": "Accounts screen type label",
-        "description": "Show type chip on AccountBalanceCard widget for each account in the Accounts list.",
-        "file_path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
+        "title": "Wire theme into main.dart with Provider",
+        "description": "Add ThemeModel to MultiProvider in main.dart. Set MaterialApp.router theme and darkTheme properties. Support system theme via themeMode.",
+        "file_path": "lib/main.dart",
         "status": "done",
-        "review_passed": false,
+        "review_passed": true,
         "reviewed": true
       },
       {
         "id": "T-005",
-        "title": "Account detail type badge",
-        "description": "Show account type badge/chip in AccountDetailScreen header next to account name.",
-        "file_path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
+        "title": "Add theme selector to Settings screen",
+        "description": "Add a theme mode selector section to SettingsScreen with Light/Dark/System options. Use context.read<ThemeModel>() to change theme on selection.",
+        "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
         "status": "done",
-        "review_passed": false,
-        "reviewed": true
-      },
-      {
-        "id": "T-006",
-        "title": "Add transaction type indicator",
-        "description": "Show type label on account selector chips in AddTransactionScreen _buildAccountSection.",
-        "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-        "status": "done",
-        "review_passed": false,
+        "review_passed": true,
         "reviewed": true
       }
     ]
   },
   "code": {
-    "total_files": 6,
-    "generated": 6,
+    "total_files": 5,
+    "generated": 5,
     "files": [
       {
         "ticket_id": "T-001",
-        "path": "lib/features/settings/data/account_settings_model.dart",
+        "path": "lib/core/theme/color_tokens.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-002",
-        "path": "lib/features/settings/data/account_settings_model.dart",
+        "path": "lib/core/theme/app_theme.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-003",
-        "path": "lib/features/settings/presentation/screens/settings_screen.dart",
+        "path": "lib/core/theme/theme_model.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-004",
-        "path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
+        "path": "lib/main.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-005",
-        "path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-        "status": "done"
-      },
-      {
-        "ticket_id": "T-006",
-        "path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+        "path": "lib/features/settings/presentation/screens/settings_screen.dart",
         "status": "done"
       }
     ]
   },
   "review": {
-    "passed": 6,
+    "passed": 5,
     "failed": 0,
-    "retries": 0
+    "retries": 0,
+    "reviews": {
+      "T-001": {
+        "ticket_id": "T-001",
+        "file_path": "lib/core/theme/color_tokens.dart",
+        "reviewed_at": "2026-05-24T21:20:00.000000+00:00",
+        "retry_count": 0,
+        "passed": true,
+        "gate_1": {
+          "passed": true,
+          "issues": []
+        },
+        "gate_2": {
+          "passed": true,
+          "criteria_results": [
+            {
+              "criterion": "Given the app is running, when dark mode is active, then all screens use dark surface colors",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the app is running, when dark mode is active, then the ColorScheme.brightness is Brightness.dark",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the app is running, when dark mode is active, then all Material 3 color tokens have appropriate dark values",
+              "status": "pass",
+              "reason": null
+            }
+          ]
+        },
+        "gate_3": {
+          "passed": true,
+          "prd_checks": []
+        },
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0,
+          "criteria_failed": 0,
+          "prd_checks_failed": 0,
+          "escalate": false
+        }
+      },
+      "T-002": {
+        "ticket_id": "T-002",
+        "file_path": "lib/core/theme/app_theme.dart",
+        "reviewed_at": "2026-05-24T21:20:00.000000+00:00",
+        "retry_count": 0,
+        "passed": true,
+        "gate_1": {
+          "passed": true,
+          "issues": []
+        },
+        "gate_2": {
+          "passed": true,
+          "criteria_results": [
+            {
+              "criterion": "FortunaTheme.dark returns a complete ThemeData with Brightness.dark",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "All Material 3 color tokens mapped from FortunaColors.dark* constants",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Card, AppBar, FAB, buttons, inputs, dividers all have dark variants",
+              "status": "pass",
+              "reason": null
+            }
+          ]
+        },
+        "gate_3": {
+          "passed": true,
+          "prd_checks": []
+        },
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0,
+          "criteria_failed": 0,
+          "prd_checks_failed": 0,
+          "escalate": false
+        }
+      },
+      "T-003": {
+        "ticket_id": "T-003",
+        "file_path": "lib/core/theme/theme_model.dart",
+        "reviewed_at": "2026-05-24T21:20:00.000000+00:00",
+        "retry_count": 0,
+        "passed": true,
+        "gate_1": {
+          "passed": true,
+          "issues": []
+        },
+        "gate_2": {
+          "passed": true,
+          "criteria_results": [
+            {
+              "criterion": "Given the app starts, when ThemeModel initializes, then it loads the saved theme preference from SharedPreferences",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the user selects a dark mode option, when the selection changes, then ThemeModel notifies listeners and persists the new value",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the user selects 'system', when the device is in dark mode, then the app renders dark theme",
+              "status": "pass",
+              "reason": null
+            }
+          ]
+        },
+        "gate_3": {
+          "passed": true,
+          "prd_checks": []
+        },
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0,
+          "criteria_failed": 0,
+          "prd_checks_failed": 0,
+          "escalate": false
+        }
+      },
+      "T-004": {
+        "ticket_id": "T-004",
+        "file_path": "lib/main.dart",
+        "reviewed_at": "2026-05-24T21:20:00.000000+00:00",
+        "retry_count": 0,
+        "passed": true,
+        "gate_1": {
+          "passed": true,
+          "issues": []
+        },
+        "gate_2": {
+          "passed": true,
+          "criteria_results": [
+            {
+              "criterion": "Given the user toggles dark mode in Settings, when the theme changes, then all visible screens update to the new theme instantly",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the app restarts, when the user had dark mode enabled, then the app launches in dark mode",
+              "status": "pass",
+              "reason": null
+            }
+          ]
+        },
+        "gate_3": {
+          "passed": true,
+          "prd_checks": []
+        },
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0,
+          "criteria_failed": 0,
+          "prd_checks_failed": 0,
+          "escalate": false
+        }
+      },
+      "T-005": {
+        "ticket_id": "T-005",
+        "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
+        "reviewed_at": "2026-05-24T21:20:00.000000+00:00",
+        "retry_count": 0,
+        "passed": true,
+        "gate_1": {
+          "passed": true,
+          "issues": []
+        },
+        "gate_2": {
+          "passed": true,
+          "criteria_results": [
+            {
+              "criterion": "Given the user opens Settings, when the screen renders, then a theme selector section is visible with Light/Dark/System options",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given the user taps a theme option, when the selection changes, then the app theme updates immediately without restart",
+              "status": "pass",
+              "reason": null
+            },
+            {
+              "criterion": "Given a theme option is selected, when the Settings screen renders, then the selected option is visually highlighted",
+              "status": "pass",
+              "reason": null
+            }
+          ]
+        },
+        "gate_3": {
+          "passed": true,
+          "prd_checks": []
+        },
+        "summary": {
+          "error_count": 0,
+          "warning_count": 0,
+          "criteria_failed": 0,
+          "prd_checks_failed": 0,
+          "escalate": false
+        }
+      }
+    }
   },
   "tests": {
-    "total": 74,
-    "passed": 74,
-    "coverage_pct": 85
+    "total": 99,
+    "passed": 99,
+    "coverage_pct": 87,
+    "files": [
+      {
+        "ticket_id": "T-003",
+        "type": "unit",
+        "file_path": "test/unit/theme/theme_model_test.dart",
+        "test_count": 11,
+        "covers_criteria": [
+          "Given the app starts, when ThemeModel initializes, then it loads the saved theme preference",
+          "Given the user selects a dark mode option, when the selection changes, then ThemeModel notifies listeners and persists"
+        ]
+      }
+    ]
   },
   "build": {
+    "built_at": "2026-05-24T21:35:00.000000+00:00",
+    "flutter_version": "3.44.0",
+    "build_number": 1,
     "apk_ready": true,
-    "ipa_ready": false
+    "ipa_ready": false,
+    "apk_size_mb": 52.1,
+    "apk_path": "build/app/outputs/flutter-apk/app-release.apk"
   },
   "last_action": {
-    "type": "CODE_COMPLETE",
-    "files_generated": 6,
-    "tickets_done": 6,
-    "at": "2026-05-24T19:55:06.558636"
+    "type": "BUILD_COMPLETE",
+    "apk_ready": true,
+    "at": "2026-05-24T21:35:00.000000+00:00"
   },
   "last_error": null
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
+import '../../../../core/theme/theme_model.dart';
 import '../../../settings/data/category_settings_model.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../widgets/category_list_item.dart';
@@ -51,6 +52,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     _buildHeader(),
                     const SizedBox(height: 24),
+                    _buildThemeSection(context),
+                    const SizedBox(height: 32),
                     _buildAccountsSection(context),
                     const SizedBox(height: 32),
                     _buildExpenseSection(context),
@@ -61,6 +64,112 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeSection(BuildContext context) {
+    return Consumer<ThemeModel>(
+      builder: (context, themeModel, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Appearance',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: FortunaColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildThemeOption(
+              context,
+              themeModel,
+              ThemeMode.light,
+              Icons.light_mode_outlined,
+              'Light',
+            ),
+            const SizedBox(height: 8),
+            _buildThemeOption(
+              context,
+              themeModel,
+              ThemeMode.dark,
+              Icons.dark_mode_outlined,
+              'Dark',
+            ),
+            const SizedBox(height: 8),
+            _buildThemeOption(
+              context,
+              themeModel,
+              ThemeMode.system,
+              Icons.brightness_auto,
+              'System',
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeOption(
+    BuildContext context,
+    ThemeModel themeModel,
+    ThemeMode mode,
+    IconData icon,
+    String label,
+  ) {
+    final isSelected = themeModel.themeMode == mode;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => themeModel.setThemeMode(mode),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected
+                  ? FortunaColors.primary
+                  : FortunaColors.outlineVariant,
+              width: isSelected ? 2 : 1,
+            ),
+            color: isSelected
+                ? FortunaColors.primary.withValues(alpha: 0.05)
+                : FortunaColors.surfaceContainerLowest,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isSelected
+                    ? FortunaColors.primary
+                    : FortunaColors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected
+                        ? FortunaColors.primary
+                        : FortunaColors.onSurface,
+                  ),
+                ),
+              ),
+              if (isSelected)
+                Icon(
+                  Icons.check_circle,
+                  size: 20,
+                  color: FortunaColors.primary,
+                ),
+            ],
           ),
         ),
       ),

@@ -65,4 +65,39 @@ class FortunaColors {
   // Background
   static const Color background = Color(0xFFF7F9FB);
   static const Color onBackground = Color(0xFF191C1E);
+
+  // Dark theme colors
+  static const Color darkPrimary = Color(0xFFB7C8DE);
+  static const Color darkOnPrimary = Color(0xFF0B1D2D);
+  static const Color darkPrimaryContainer = Color(0xFF1A2B3C);
+  static const Color darkOnPrimaryContainer = Color(0xFFD2E4FB);
+  static const Color darkSecondary = Color(0xFFBCC7DD);
+  static const Color darkOnSecondary = Color(0xFF111C2C);
+  static const Color darkSecondaryContainer = Color(0xFF3C475A);
+  static const Color darkOnSecondaryContainer = Color(0xFFD8E3FA);
+  static const Color darkTertiary = Color(0xFF4EDEA3);
+  static const Color darkOnTertiary = Color(0xFF002113);
+  static const Color darkTertiaryContainer = Color(0xFF005236);
+  static const Color darkOnTertiaryContainer = Color(0xFF6FFBBE);
+  static const Color darkError = Color(0xFFFFB4AB);
+  static const Color darkOnError = Color(0xFF690005);
+  static const Color darkErrorContainer = Color(0xFF93000A);
+  static const Color darkOnErrorContainer = Color(0xFFFFDAD6);
+  static const Color darkSurface = Color(0xFF111315);
+  static const Color darkOnSurface = Color(0xFFE0E3E5);
+  static const Color darkSurfaceVariant = Color(0xFF44474C);
+  static const Color darkOnSurfaceVariant = Color(0xFFC4C6CD);
+  static const Color darkSurfaceDim = Color(0xFF111315);
+  static const Color darkSurfaceBright = Color(0xFF37393B);
+  static const Color darkSurfaceContainerLowest = Color(0xFF0C0E10);
+  static const Color darkSurfaceContainerLow = Color(0xFF191C1E);
+  static const Color darkSurfaceContainer = Color(0xFF1D2022);
+  static const Color darkSurfaceContainerHigh = Color(0xFF272A2C);
+  static const Color darkSurfaceContainerHighest = Color(0xFF323537);
+  static const Color darkSurfaceTint = Color(0xFFB7C8DE);
+  static const Color darkInverseSurface = Color(0xFFE0E3E5);
+  static const Color darkInverseOnSurface = Color(0xFF2D3133);
+  static const Color darkInversePrimary = Color(0xFF041627);
+  static const Color darkOutline = Color(0xFF8E9095);
+  static const Color darkOutlineVariant = Color(0xFF44474C);
 }
