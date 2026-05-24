@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
+import '../../../settings/data/category_settings_model.dart';
 import '../../data/budget_goals_model.dart';
 import '../../data/savings_goal_model.dart';
 import '../widgets/budget_category_card.dart';
@@ -39,8 +40,8 @@ class BudgetsGoalsScreen extends StatelessWidget {
                       horizontal: isDesktop ? 48 : 16,
                       vertical: 8,
                     ),
-                    child: Consumer3<BudgetGoalsModel, BudgetModel, SavingsGoalModel>(
-                      builder: (context, model, budgetModel, goalsModel, _) {
+                    child: Consumer4<BudgetGoalsModel, BudgetModel, SavingsGoalModel, CategorySettingsModel>(
+                      builder: (context, model, budgetModel, goalsModel, categorySettings, _) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -388,11 +389,17 @@ class BudgetsGoalsScreen extends StatelessWidget {
 
   void _showAddBudgetDialog(BuildContext context) {
     final model = context.read<BudgetGoalsModel>();
+    final categorySettings = context.read<CategorySettingsModel>();
+    final existingBudgetNames = model.categories.map((c) => c.name).toSet();
+    final availableCategories = categorySettings.allExpenseCategories
+        .where((cat) => !existingBudgetNames.contains(cat))
+        .toList();
     showDialog<EditBudgetResult>(
       context: context,
       builder: (_) => EditBudgetDialog(
         isAdd: true,
         existingNames: model.categories.map((c) => c.name).toList(),
+        availableCategories: availableCategories,
       ),
     ).then((result) {
       if (result != null) {

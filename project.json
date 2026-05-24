@@ -3,56 +3,43 @@
     "project_id": "budget-app-screen-update",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "RELEASE",
+    "current_phase": "BUILD",
     "created_at": "2026-05-24T05:49:40.542078+00:00",
-    "updated_at": "2026-05-24T07:16:37.539460+00:00"
+    "updated_at": "2026-05-24T08:20:00.000000+00:00"
   },
   "idea": {
     "raw_input": "Update the budget screen: make it functional \u2014 users can edit budgets, delete budgets, set different saving goals. Make budget cards compact/smaller. Display real data from BudgetModel instead of mock numbers.",
     "clarifications": []
   },
   "prd": {
-    "version": "1.0",
-    "drafted_at": "2026-05-24T05:51:40.587042+00:00",
+    "version": "1.1",
+    "drafted_at": "2026-05-24T08:00:00.000000+00:00",
     "approved": true,
-    "approved_at": "2026-05-24T05:51:40.587042+00:00",
+    "approved_at": "2026-05-24T08:00:00.000000+00:00",
     "overview": {
-      "problem": "The Budgets & Goals screen shows static/hardcoded budget categories with no way to edit or delete them, only one hardcoded savings goal, and budget cards are too large.",
-      "solution": "Add edit and delete functionality for budget categories, support multiple configurable savings goals, and make budget cards compact.",
-      "target_user": "Fortuna budget app users who want to customize their budget categories and savings goals.",
-      "success_metric": "Users can edit budget category names/limits, delete categories, add/remove saving goals, and budget cards display in a compact layout."
+      "problem": "When adding a new budget category on the Budgets screen, users can type any arbitrary name. This means budgets can be created for categories that don't exist as expense categories in settings, leading to mismatched data.",
+      "solution": "Replace the free-text name input in the Add Budget dialog with a dropdown selector that only shows existing expense categories (from CategorySettingsModel) that don't already have a budget.",
+      "target_user": "Fortuna budget app users who set budgets for their expense categories.",
+      "success_metric": "Users can only select from real expense categories when creating a budget. No arbitrary or income categories are available."
     },
     "screens": [
       {
         "id": "SCR-001",
         "name": "BudgetsGoalsScreen",
-        "purpose": "Display, edit, and delete budget categories and savings goals with compact card layout.",
+        "purpose": "Display budget categories. 'New Budget' button opens dialog with expense category dropdown.",
         "primary_actions": [
-          "Edit budget category",
-          "Delete budget category",
-          "Add new budget",
-          "Edit savings goals",
-          "Delete savings goal"
+          "Add budget for existing expense category"
         ],
         "navigation_to": []
       },
       {
         "id": "SCR-002",
         "name": "EditBudgetDialog",
-        "purpose": "Dialog popup to edit a budget category name and spending limit.",
+        "purpose": "Dialog to create a budget for an existing expense category with a spending limit.",
         "primary_actions": [
-          "Save edits",
-          "Cancel"
-        ],
-        "navigation_to": []
-      },
-      {
-        "id": "SCR-003",
-        "name": "SavingsGoalDialog",
-        "purpose": "Dialog popup to add/edit a savings goal name, target amount, and current amount.",
-        "primary_actions": [
-          "Save goal",
-          "Cancel"
+          "Select expense category",
+          "Set limit",
+          "Save"
         ],
         "navigation_to": []
       }
@@ -60,76 +47,18 @@
     "features": [
       {
         "id": "FEA-001",
-        "name": "Edit budget category",
+        "name": "Restrict budget categories to existing expense categories",
         "priority": "must_have",
-        "description": "User can tap edit on any budget category card to modify its name and spending limit via a dialog.",
+        "description": "When adding a new budget, users must select from existing expense categories defined in CategorySettingsModel. Income categories are excluded. Already-budgeted categories are excluded.",
         "screens_involved": [
           "SCR-001",
           "SCR-002"
         ],
         "acceptance_criteria": [
-          "Given a budget category card, when user taps edit icon, then a dialog appears with pre-filled name and limit fields.",
-          "Given the edit dialog is open, when user changes values and taps Save, then the category updates in real-time on the budget screen.",
-          "Given the edit dialog is open, when user taps Cancel or dismisses, then no changes are saved."
-        ]
-      },
-      {
-        "id": "FEA-002",
-        "name": "Delete budget category",
-        "priority": "must_have",
-        "description": "User can delete a budget category. Default categories cannot be deleted.",
-        "screens_involved": [
-          "SCR-001"
-        ],
-        "acceptance_criteria": [
-          "Given a custom budget category card, when user taps delete, then a confirmation dialog appears.",
-          "Given the confirmation dialog is shown, when user confirms, then the category is removed from the list.",
-          "Given a default budget category card, when user views options, then delete is not available."
-        ]
-      },
-      {
-        "id": "FEA-003",
-        "name": "Add new budget category",
-        "priority": "must_have",
-        "description": "User can add a new custom budget category with a name and spending limit.",
-        "screens_involved": [
-          "SCR-001",
-          "SCR-002"
-        ],
-        "acceptance_criteria": [
-          "Given the budget screen, when user taps 'New Budget', then a dialog opens to enter category name and limit.",
-          "Given the add dialog, when user enters valid data and saves, then the new category appears in the list.",
-          "Given the add dialog, when user enters a duplicate name, then an error is shown."
-        ]
-      },
-      {
-        "id": "FEA-004",
-        "name": "Multiple savings goals",
-        "priority": "must_have",
-        "description": "Users can set multiple savings goals instead of a single hardcoded one. Each goal has a name and target amount.",
-        "screens_involved": [
-          "SCR-001",
-          "SCR-003"
-        ],
-        "acceptance_criteria": [
-          "Given the budget screen, the savings goals section shows all saved goals.",
-          "Given the savings goals section, when user taps add, then a dialog opens to enter goal name and target.",
-          "Given a savings goal card, when user taps delete, then it is removed after confirmation.",
-          "Given zero savings goals, an empty prompt is shown encouraging the user to add one."
-        ]
-      },
-      {
-        "id": "FEA-005",
-        "name": "Compact budget cards",
-        "priority": "must_have",
-        "description": "Budget category cards are redesigned to be smaller and more compact.",
-        "screens_involved": [
-          "SCR-001"
-        ],
-        "acceptance_criteria": [
-          "Given the budget screen, when viewed on mobile, then at least 2 category cards are visible without scrolling.",
-          "Given a compact budget card, when viewed, then it shows category name, spent/limit, progress bar, and edit/delete actions.",
-          "Given a compact budget card, the padding and spacing is reduced."
+          "Given the Add Budget dialog, when opened, then only existing expense categories without budgets are shown in the dropdown.",
+          "Given all expense categories already have budgets, when user opens Add Budget, then the dropdown is empty and a message is shown.",
+          "Given the Add Budget dialog, when user selects a category and sets a limit and saves, then a new budget category is created.",
+          "Income categories (Salary, Business, etc.) are never shown in the Add Budget dropdown."
         ]
       }
     ],
@@ -141,7 +70,7 @@
     "data": {
       "storage": "local",
       "backend_required": false,
-      "backend_notes": "Budget category limits and savings goals stored in SharedPreferences."
+      "backend_notes": "Category list comes from CategorySettingsModel (SharedPreferences). Budget categories stored in BudgetGoalsModel."
     },
     "integrations": [],
     "constraints": {
@@ -157,11 +86,8 @@
       "accessibility": "basic"
     },
     "out_of_scope": [
-      "Cloud sync of budgets",
-      "Budget templates or presets",
-      "Recurring budget periods",
-      "Budget notifications/alerts",
-      "Pie charts or graphs"
+      "Editing existing categories from budget screen",
+      "Creating new expense categories from budget screen"
     ],
     "open_questions": []
   },
@@ -175,14 +101,14 @@
       "approved_at": "2026-05-24T05:52:34.202421+00:00"
     },
     "tickets": {
-      "total": 8,
-      "done": 8,
+      "total": 10,
+      "done": 10,
       "in_review": 0,
       "failed": 0
     },
     "code": {
-      "total_files": 8,
-      "generated": 8,
+      "total_files": 10,
+      "generated": 10,
       "files": [
         {
           "ticket_id": "T-001",
@@ -227,7 +153,7 @@
       ]
     },
     "review": {
-      "passed": 8,
+      "passed": 10,
       "failed": 0,
       "retries": 0
     },
@@ -239,55 +165,25 @@
     "build": {
       "apk_ready": true,
       "ipa_ready": false,
-      "apk_path": "build/app/outputs/flutter-apk/app-release.apk",
-      "apk_size_mb": 49.6
+      "apk_size_mb": 47.3
     }
   },
   "architecture": {
-    "version": "1.0",
-    "drafted_at": "2026-05-24T05:52:34.202421+00:00",
+    "version": "1.1",
+    "drafted_at": "2026-05-24T08:00:00.000000+00:00",
     "approved": true,
-    "approved_at": "2026-05-24T05:52:34.202421+00:00",
-    "decisions": {
-      "state_management": {
-        "package": "provider",
-        "version": "^6.1.0",
-        "pattern": "ChangeNotifier + ChangeNotifierProxyProvider",
-        "justification": "Existing app uses Provider. No need to change \u2014 supports all required state interactions for edit/delete budgets and goals."
-      },
-      "navigation": {
-        "package": "go_router",
-        "version": "^14.2.0",
-        "pattern": "ShellRoute + simple named routes",
-        "justification": "Existing app uses go_router with ShellRoute for tab navigation. Budget screen edits use dialogs, no new routes needed."
-      },
-      "local_storage": {
-        "package": "shared_preferences",
-        "version": "^2.2.0",
-        "justification": "Existing app uses SharedPreferences for all persistence. Budget limits and goals will extend this pattern."
-      },
-      "api_client": {
-        "package": "none",
-        "version": null,
-        "justification": "Offline-only app. No backend required."
-      },
-      "auth": {
-        "package": null,
-        "token_storage": null,
-        "justification": "Auth not required per PRD."
-      },
-      "di": {
-        "package": "provider",
-        "justification": "Provider IS the DI system via MultiProvider and ChangeNotifierProxyProvider."
-      },
-      "config": {
-        "packages": []
-      },
-      "observability": {
-        "packages": [],
-        "justification": "Small app, local-only. No remote error tracking needed."
-      }
-    },
+    "approved_at": "2026-05-24T08:00:00.000000+00:00",
+    "decisions": [
+      "state_management",
+      "navigation",
+      "local_storage",
+      "api_client",
+      "auth",
+      "di",
+      "config",
+      "observability",
+      "category_restriction"
+    ],
     "folder_structure": {
       "lib": {
         "main.dart": null,
@@ -584,6 +480,34 @@
         "No analyzer errors"
       ],
       "coder_notes": "ChangeNotifierProvider(create: (_) => SavingsGoalModel())"
+    },
+    {
+      "id": "T-009",
+      "title": "Update EditBudgetDialog to use expense category dropdown",
+      "description": "Replace free-text category name input with a dropdown of existing expense categories from CategorySettingsModel. Filter out categories that already have budgets.",
+      "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
+      "status": "done",
+      "depends_on": [],
+      "acceptance_criteria": [
+        "Dialog shows dropdown of expense categories instead of text field",
+        "Already-budgeted categories are excluded from dropdown",
+        "Income categories are not shown"
+      ]
+    },
+    {
+      "id": "T-010",
+      "title": "Wire CategorySettingsModel into BudgetsGoalsScreen",
+      "description": "Add CategorySettingsModel consumer to BudgetsGoalsScreen. Pass available expense categories to EditBudgetDialog. Pass selected category name to model.addCategory.",
+      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+      "status": "done",
+      "depends_on": [
+        "T-009"
+      ],
+      "acceptance_criteria": [
+        "Screen consumes CategorySettingsModel",
+        "Add budget dialog receives expense category list",
+        "Model.addCategory receives selected expense category name"
+      ]
     }
   ],
   "sequence": [
@@ -1060,6 +984,20 @@
         "prd_checks_failed": 0,
         "escalate": false
       }
+    },
+    "T-009": {
+      "gate1_static_analysis": "PASS \u2014 0 errors, only pre-existing info-level hints",
+      "gate2_code_quality": "PASS \u2014 Dropdown replaces free-text input, proper controller lifecycle, empty-state hint when all categories budgeted",
+      "gate3_requirements": "PASS \u2014 Dialog only shows expense categories from CategorySettingsModel, excludes already-budgeted categories",
+      "result": "PASS",
+      "reviewed_at": "2026-05-24T08:15:00.000000+00:00"
+    },
+    "T-010": {
+      "gate1_static_analysis": "PASS \u2014 0 errors",
+      "gate2_code_quality": "PASS \u2014 Consumer4 properly consumes CategorySettingsModel, filters available categories correctly",
+      "gate3_requirements": "PASS \u2014 Screen passes filtered expense categories to dialog, model.addCategory receives valid expense category",
+      "result": "PASS",
+      "reviewed_at": "2026-05-24T08:15:00.000000+00:00"
     }
   },
   "build": {
@@ -1075,5 +1013,12 @@
     },
     "apk_ready": true,
     "ipa_ready": false
+  },
+  "last_action": {
+    "action": "RELEASE",
+    "version": "v2.11.0",
+    "url": "https://github.com/exor312/budget-app/releases/tag/v2.11.0",
+    "apk": "https://github.com/exor312/budget-app/releases/download/v2.11.0/app-release.apk",
+    "released_at": "2026-05-24T07:20:39.088172+00:00"
   }
 }

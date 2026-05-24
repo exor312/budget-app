@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:budget_app/features/budget_goals/data/budget_goals_model.dart';
 import 'package:budget_app/features/budget_goals/data/savings_goal_model.dart';
 import 'package:budget_app/features/budget_goals/presentation/screens/budgets_goals_screen.dart';
@@ -8,13 +9,21 @@ import 'package:budget_app/features/budget_goals/presentation/widgets/budget_cat
 import 'package:budget_app/features/budget_goals/presentation/widgets/summary_card.dart';
 import 'package:budget_app/features/budget_goals/presentation/widgets/goal_card.dart';
 import 'package:budget_app/features/transactions/data/budget_model.dart';
+import 'package:budget_app/features/settings/data/category_settings_model.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   Widget buildTestApp() {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BudgetModel()),
         ChangeNotifierProvider(create: (_) => SavingsGoalModel()),
+        ChangeNotifierProvider(create: (_) => CategorySettingsModel()),
         ChangeNotifierProxyProvider<BudgetModel, BudgetGoalsModel>(
           create: (context) => BudgetGoalsModel(
             budgetModel: context.read<BudgetModel>(),
