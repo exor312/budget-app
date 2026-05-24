@@ -1,34 +1,58 @@
 {
   "meta": {
-    "project_id": "budget-app-bugfix-button-visibility",
+    "project_id": "budget-app-screen-update",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "DONE",
-    "created_at": "2026-05-24T13:00:00Z",
-    "updated_at": "2026-05-24T13:10:00Z"
+    "current_phase": "RELEASE",
+    "created_at": "2026-05-24T05:49:40.542078+00:00",
+    "updated_at": "2026-05-24T07:16:37.539460+00:00"
   },
   "idea": {
-    "raw_input": "Fix a bug in budget tracker app: the add transaction button in the add transaction page is not being seen, it's at the very bottom of the screen",
+    "raw_input": "Update the budget screen: make it functional \u2014 users can edit budgets, delete budgets, set different saving goals. Make budget cards compact/smaller. Display real data from BudgetModel instead of mock numbers.",
     "clarifications": []
   },
   "prd": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T13:00:00Z",
+    "drafted_at": "2026-05-24T05:51:40.587042+00:00",
     "approved": true,
-    "approved_at": "2026-05-24T13:00:00Z",
+    "approved_at": "2026-05-24T05:51:40.587042+00:00",
     "overview": {
-      "problem": "On the Add Transaction screen, the submit button is pushed below the visible area.",
-      "solution": "Remove the Spacer() and wrap content in SingleChildScrollView.",
-      "target_user": "Fortuna budget app users.",
-      "success_metric": "The submit button is visible and reachable."
+      "problem": "The Budgets & Goals screen shows static/hardcoded budget categories with no way to edit or delete them, only one hardcoded savings goal, and budget cards are too large.",
+      "solution": "Add edit and delete functionality for budget categories, support multiple configurable savings goals, and make budget cards compact.",
+      "target_user": "Fortuna budget app users who want to customize their budget categories and savings goals.",
+      "success_metric": "Users can edit budget category names/limits, delete categories, add/remove saving goals, and budget cards display in a compact layout."
     },
     "screens": [
       {
         "id": "SCR-001",
-        "name": "AddTransactionScreen",
-        "purpose": "Add transactions",
+        "name": "BudgetsGoalsScreen",
+        "purpose": "Display, edit, and delete budget categories and savings goals with compact card layout.",
         "primary_actions": [
-          "Submit transaction"
+          "Edit budget category",
+          "Delete budget category",
+          "Add new budget",
+          "Edit savings goals",
+          "Delete savings goal"
+        ],
+        "navigation_to": []
+      },
+      {
+        "id": "SCR-002",
+        "name": "EditBudgetDialog",
+        "purpose": "Dialog popup to edit a budget category name and spending limit.",
+        "primary_actions": [
+          "Save edits",
+          "Cancel"
+        ],
+        "navigation_to": []
+      },
+      {
+        "id": "SCR-003",
+        "name": "SavingsGoalDialog",
+        "purpose": "Dialog popup to add/edit a savings goal name, target amount, and current amount.",
+        "primary_actions": [
+          "Save goal",
+          "Cancel"
         ],
         "navigation_to": []
       }
@@ -36,17 +60,76 @@
     "features": [
       {
         "id": "FEA-001",
-        "name": "Submit button visible after keypad",
+        "name": "Edit budget category",
         "priority": "must_have",
-        "description": "Submit button appears after keypad without Spacer pushing it off-screen.",
+        "description": "User can tap edit on any budget category card to modify its name and spending limit via a dialog.",
+        "screens_involved": [
+          "SCR-001",
+          "SCR-002"
+        ],
+        "acceptance_criteria": [
+          "Given a budget category card, when user taps edit icon, then a dialog appears with pre-filled name and limit fields.",
+          "Given the edit dialog is open, when user changes values and taps Save, then the category updates in real-time on the budget screen.",
+          "Given the edit dialog is open, when user taps Cancel or dismisses, then no changes are saved."
+        ]
+      },
+      {
+        "id": "FEA-002",
+        "name": "Delete budget category",
+        "priority": "must_have",
+        "description": "User can delete a budget category. Default categories cannot be deleted.",
         "screens_involved": [
           "SCR-001"
         ],
         "acceptance_criteria": [
-          "Spacer removed",
-          "Button after keypad",
-          "Content scrollable",
-          "No analyzer errors"
+          "Given a custom budget category card, when user taps delete, then a confirmation dialog appears.",
+          "Given the confirmation dialog is shown, when user confirms, then the category is removed from the list.",
+          "Given a default budget category card, when user views options, then delete is not available."
+        ]
+      },
+      {
+        "id": "FEA-003",
+        "name": "Add new budget category",
+        "priority": "must_have",
+        "description": "User can add a new custom budget category with a name and spending limit.",
+        "screens_involved": [
+          "SCR-001",
+          "SCR-002"
+        ],
+        "acceptance_criteria": [
+          "Given the budget screen, when user taps 'New Budget', then a dialog opens to enter category name and limit.",
+          "Given the add dialog, when user enters valid data and saves, then the new category appears in the list.",
+          "Given the add dialog, when user enters a duplicate name, then an error is shown."
+        ]
+      },
+      {
+        "id": "FEA-004",
+        "name": "Multiple savings goals",
+        "priority": "must_have",
+        "description": "Users can set multiple savings goals instead of a single hardcoded one. Each goal has a name and target amount.",
+        "screens_involved": [
+          "SCR-001",
+          "SCR-003"
+        ],
+        "acceptance_criteria": [
+          "Given the budget screen, the savings goals section shows all saved goals.",
+          "Given the savings goals section, when user taps add, then a dialog opens to enter goal name and target.",
+          "Given a savings goal card, when user taps delete, then it is removed after confirmation.",
+          "Given zero savings goals, an empty prompt is shown encouraging the user to add one."
+        ]
+      },
+      {
+        "id": "FEA-005",
+        "name": "Compact budget cards",
+        "priority": "must_have",
+        "description": "Budget category cards are redesigned to be smaller and more compact.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given the budget screen, when viewed on mobile, then at least 2 category cards are visible without scrolling.",
+          "Given a compact budget card, when viewed, then it shows category name, spent/limit, progress bar, and edit/delete actions.",
+          "Given a compact budget card, the padding and spacing is reduced."
         ]
       }
     ],
@@ -58,7 +141,7 @@
     "data": {
       "storage": "local",
       "backend_required": false,
-      "backend_notes": "No data changes needed."
+      "backend_notes": "Budget category limits and savings goals stored in SharedPreferences."
     },
     "integrations": [],
     "constraints": {
@@ -74,57 +157,481 @@
       "accessibility": "basic"
     },
     "out_of_scope": [
-      "Changing keypad design",
-      "Changing category chips layout"
+      "Cloud sync of budgets",
+      "Budget templates or presets",
+      "Recurring budget periods",
+      "Budget notifications/alerts",
+      "Pie charts or graphs"
     ],
     "open_questions": []
   },
+  "phase_summary": {
+    "prd": {
+      "approved": true,
+      "approved_at": "2026-05-24T05:51:40.587042+00:00"
+    },
+    "architecture": {
+      "approved": true,
+      "approved_at": "2026-05-24T05:52:34.202421+00:00"
+    },
+    "tickets": {
+      "total": 8,
+      "done": 8,
+      "in_review": 0,
+      "failed": 0
+    },
+    "code": {
+      "total_files": 8,
+      "generated": 8,
+      "files": [
+        {
+          "ticket_id": "T-001",
+          "path": "lib/features/budget_goals/data/savings_goal_model.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-002",
+          "path": "lib/features/budget_goals/data/budget_goals_model.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-003",
+          "path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-004",
+          "path": "lib/features/budget_goals/presentation/widgets/savings_goal_dialog.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-005",
+          "path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-006",
+          "path": "lib/features/budget_goals/presentation/widgets/goal_card.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-007",
+          "path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+          "status": "done"
+        },
+        {
+          "ticket_id": "T-008",
+          "path": "lib/main.dart",
+          "status": "done"
+        }
+      ]
+    },
+    "review": {
+      "passed": 8,
+      "failed": 0,
+      "retries": 0
+    },
+    "tests": {
+      "total": 74,
+      "passed": 74,
+      "coverage_pct": 85
+    },
+    "build": {
+      "apk_ready": true,
+      "ipa_ready": false,
+      "apk_path": "build/app/outputs/flutter-apk/app-release.apk",
+      "apk_size_mb": 49.6
+    }
+  },
   "architecture": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T13:00:00Z",
+    "drafted_at": "2026-05-24T05:52:34.202421+00:00",
     "approved": true,
-    "approved_at": "2026-05-24T13:00:00Z",
-    "decisions": {},
-    "folder_structure": {},
+    "approved_at": "2026-05-24T05:52:34.202421+00:00",
+    "decisions": {
+      "state_management": {
+        "package": "provider",
+        "version": "^6.1.0",
+        "pattern": "ChangeNotifier + ChangeNotifierProxyProvider",
+        "justification": "Existing app uses Provider. No need to change \u2014 supports all required state interactions for edit/delete budgets and goals."
+      },
+      "navigation": {
+        "package": "go_router",
+        "version": "^14.2.0",
+        "pattern": "ShellRoute + simple named routes",
+        "justification": "Existing app uses go_router with ShellRoute for tab navigation. Budget screen edits use dialogs, no new routes needed."
+      },
+      "local_storage": {
+        "package": "shared_preferences",
+        "version": "^2.2.0",
+        "justification": "Existing app uses SharedPreferences for all persistence. Budget limits and goals will extend this pattern."
+      },
+      "api_client": {
+        "package": "none",
+        "version": null,
+        "justification": "Offline-only app. No backend required."
+      },
+      "auth": {
+        "package": null,
+        "token_storage": null,
+        "justification": "Auth not required per PRD."
+      },
+      "di": {
+        "package": "provider",
+        "justification": "Provider IS the DI system via MultiProvider and ChangeNotifierProxyProvider."
+      },
+      "config": {
+        "packages": []
+      },
+      "observability": {
+        "packages": [],
+        "justification": "Small app, local-only. No remote error tracking needed."
+      }
+    },
+    "folder_structure": {
+      "lib": {
+        "main.dart": null,
+        "features": {
+          "budget_goals": {
+            "data": {
+              "budget_goals_model.dart": null,
+              "savings_goal_model.dart": null
+            },
+            "presentation": {
+              "screens": {
+                "budgets_goals_screen.dart": null
+              },
+              "widgets": {
+                "budget_category_card.dart": null,
+                "goal_card.dart": null,
+                "summary_card.dart": null,
+                "edit_budget_dialog.dart": null,
+                "savings_goal_dialog.dart": null
+              }
+            }
+          }
+        }
+      }
+    },
     "screen_file_map": [
       {
         "screen_id": "SCR-001",
-        "screen_name": "AddTransactionScreen",
-        "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-        "feature_group": "transactions"
+        "screen_name": "BudgetsGoalsScreen",
+        "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+        "feature_group": "budget_goals"
+      },
+      {
+        "screen_id": "SCR-002",
+        "name": "EditBudgetDialog",
+        "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
+        "feature_group": "budget_goals"
+      },
+      {
+        "screen_id": "SCR-003",
+        "name": "SavingsGoalDialog",
+        "file_path": "lib/features/budget_goals/presentation/widgets/savings_goal_dialog.dart",
+        "feature_group": "budget_goals"
       }
     ],
     "api_contracts": [],
-    "dependencies": {},
+    "dependencies": {
+      "flutter_version": ">=3.19.0",
+      "packages": [
+        {
+          "name": "provider",
+          "version": "^6.1.0",
+          "purpose": "State management",
+          "dev_only": false
+        },
+        {
+          "name": "go_router",
+          "version": "^14.2.0",
+          "purpose": "Navigation",
+          "dev_only": false
+        },
+        {
+          "name": "shared_preferences",
+          "version": "^2.2.0",
+          "purpose": "Local storage",
+          "dev_only": false
+        },
+        {
+          "name": "equatable",
+          "version": "^2.0.5",
+          "purpose": "Value equality",
+          "dev_only": false
+        },
+        {
+          "name": "flutter_test",
+          "version": "sdk",
+          "purpose": "Testing",
+          "dev_only": true
+        }
+      ]
+    },
     "open_questions": []
   },
   "tickets": [
     {
       "id": "T-001",
-      "title": "Fix AddTransactionScreen submit button visibility",
-      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-      "feature_group": "transactions",
-      "layer": "presentation",
-      "type": "bugfix",
-      "points": 2,
-      "status": "reviewed",
-      "depends_on": [],
+      "title": "Add SavingsGoalModel for multiple savings goals with SharedPreferences persistence",
+      "file_path": "lib/features/budget_goals/data/savings_goal_model.dart",
+      "feature_group": "budget_goals",
+      "layer": "data",
+      "type": "model",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ],
+      "description": "ChangeNotifier for managing multiple savings goals persisted to SharedPreferences.",
       "inputs": [
-        "FEA-001"
+        "FEA-004: Multiple savings goals feature"
       ],
       "acceptance_criteria": [
-        "Spacer removed",
-        "Button after keypad",
-        "Content scrollable",
+        "SavingsGoalModel extends ChangeNotifier",
+        "Fields: List of SavingsGoal items with id, name, targetAmount, currentAmount",
+        "CRUD: addGoal, removeGoal, updateGoal, loadGoals, saveGoals",
+        "Persistence via SharedPreferences as JSON"
+      ],
+      "coder_notes": "Store goals as JSON list under key 'savings_goals'. Each goal has id (timestamp-based), name (String), targetAmount (double), currentAmount (double)."
+    },
+    {
+      "id": "T-002",
+      "title": "Update BudgetGoalsModel to support edit/delete/add budget categories",
+      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
+      "feature_group": "budget_goals",
+      "layer": "data",
+      "type": "model",
+      "points": 5,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ],
+      "description": "Extend BudgetGoalsModel to support editing category names/limits, deleting custom categories, and adding new categories. Makes category limits dynamic.",
+      "inputs": [
+        "FEA-001",
+        "FEA-002",
+        "FEA-003"
+      ],
+      "acceptance_criteria": [
+        "updateCategoryLimit, removeCategory, addCategory methods",
+        "Categories persisted to SharedPreferences",
+        "Default categories cannot be deleted",
+        "notifyListeners() after any mutation",
+        "ActiveGoal replaced by goals from SavingsGoalModel"
+      ],
+      "coder_notes": "Keep allCategoryNames but make _defaultLimits mutable via Map from SharedPreferences."
+    },
+    {
+      "id": "T-003",
+      "title": "Create EditBudgetDialog widget",
+      "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
+      "feature_group": "budget_goals",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-002"
+      ],
+      "description": "Reusable dialog for adding/editing budget categories.",
+      "inputs": [
+        "SCR-002",
+        "FEA-001",
+        "FEA-003"
+      ],
+      "acceptance_criteria": [
+        "TextFormField for name (pre-filled when editing)",
+        "TextFormField for limit (numeric, numeric keyboard)",
+        "Save validates: name not empty, not duplicate, limit > 0",
+        "Cancel dismisses",
+        "Returns result via Navigator.pop",
+        "isAdd flag controls dialog title"
+      ],
+      "coder_notes": "AlertDialog with SingleChildScrollView + Form validation."
+    },
+    {
+      "id": "T-004",
+      "title": "Create SavingsGoalDialog widget",
+      "file_path": "lib/features/budget_goals/presentation/widgets/savings_goal_dialog.dart",
+      "feature_group": "budget_goals",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-001"
+      ],
+      "description": "Reusable dialog for adding/editing savings goals.",
+      "inputs": [
+        "SCR-003",
+        "FEA-004"
+      ],
+      "acceptance_criteria": [
+        "TextFormField for goal name",
+        "TextFormField for target amount (numeric)",
+        "Save validates: name not empty, target > 0",
+        "Cancel dismisses",
+        "Returns result via Navigator.pop",
+        "isAdd flag controls dialog title"
+      ],
+      "coder_notes": "Same pattern as EditBudgetDialog."
+    },
+    {
+      "id": "T-005",
+      "title": "Redesign BudgetCategoryCard as compact card",
+      "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart",
+      "feature_group": "budget_goals",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-002",
+        "T-003"
+      ],
+      "description": "Redesign BudgetCategoryCard to be compact with reduced padding and inline edit/delete actions.",
+      "inputs": [
+        "FEA-005"
+      ],
+      "acceptance_criteria": [
+        "Padding EdgeInsets.all(12) instead of 24",
+        "Icon size 20 instead of 24",
+        "Progress bar height 4 instead of 8",
+        "Edit and delete action buttons on card",
+        "Over-limit badge smaller"
+      ],
+      "coder_notes": "Same data display but compressed layout."
+    },
+    {
+      "id": "T-006",
+      "title": "Redesign GoalCard for compact display with delete support",
+      "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart",
+      "feature_group": "budget_goals",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 2,
+      "status": "done",
+      "depends_on": [
+        "T-001",
+        "T-004"
+      ],
+      "description": "Redesign GoalCard to be compact, support multiple goals in list, allow delete.",
+      "inputs": [
+        "FEA-004",
+        "FEA-005"
+      ],
+      "acceptance_criteria": [
+        "Compacts padding (12 instead of 24)",
+        "Delete icon on each goal card",
+        "Shows name, current/target, progress",
+        "Empty state when no goals"
+      ],
+      "coder_notes": "Replace ActiveGoal usage with SavingsGoal from T-001."
+    },
+    {
+      "id": "T-007",
+      "title": "Update BudgetsGoalsScreen with edit/delete/add and compact layout",
+      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+      "feature_group": "budget_goals",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 5,
+      "status": "done",
+      "depends_on": [
+        "T-001",
+        "T-002",
+        "T-003",
+        "T-004",
+        "T-005",
+        "T-006"
+      ],
+      "description": "Update main budget screen wiring up all actions and compact cards.",
+      "inputs": [
+        "SCR-001",
+        "FEA-001 through FEA-005"
+      ],
+      "acceptance_criteria": [
+        "New Budget button opens EditBudgetDialog (add mode)",
+        "Edit/delete action buttons on each budget category card",
+        "Delete on default categories not available",
+        "Savings goals section shows all goals from SavingsGoalModel",
+        "Add goal button opens SavingsGoalDialog",
+        "Delete goal with confirmation"
+      ],
+      "coder_notes": "Wire SavingsGoalModel in Consumer. Wire dialog results to model methods."
+    },
+    {
+      "id": "T-008",
+      "title": "Update main.dart to add SavingsGoalModel to MultiProvider",
+      "file_path": "lib/main.dart",
+      "feature_group": "budget_goals",
+      "layer": "config",
+      "type": "config",
+      "points": 1,
+      "status": "done",
+      "depends_on": [
+        "T-001",
+        "T-002"
+      ],
+      "description": "Register SavingsGoalModel in MultiProvider.",
+      "inputs": [
+        "T-001"
+      ],
+      "acceptance_criteria": [
+        "SavingsGoalModel in MultiProvider providers list",
         "No analyzer errors"
-      ]
+      ],
+      "coder_notes": "ChangeNotifierProvider(create: (_) => SavingsGoalModel())"
+    }
+  ],
+  "sequence": [
+    {
+      "step": 1,
+      "tickets": [
+        "T-001"
+      ],
+      "parallel": false
+    },
+    {
+      "step": 2,
+      "tickets": [
+        "T-002"
+      ],
+      "parallel": false
+    },
+    {
+      "step": 3,
+      "tickets": [
+        "T-003",
+        "T-004",
+        "T-008"
+      ],
+      "parallel": true,
+      "parallel_group": "P-01"
+    },
+    {
+      "step": 4,
+      "tickets": [
+        "T-005",
+        "T-006"
+      ],
+      "parallel": true,
+      "parallel_group": "P-02"
+    },
+    {
+      "step": 5,
+      "tickets": [
+        "T-007"
+      ],
+      "parallel": false
     }
   ],
   "reviews": {
     "T-001": {
       "ticket_id": "T-001",
-      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-      "reviewed_at": "2026-05-24T13:05:00Z",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -135,24 +642,20 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "Spacer widget is removed from the layout",
-            "status": "pass",
-            "reason": null
+            "criterion": "SavingsGoalModel extends ChangeNotifier",
+            "status": "pass"
           },
           {
-            "criterion": "Submit button appears directly after keypad",
-            "status": "pass",
-            "reason": null
+            "criterion": "Fields: List of SavingsGoal items with id, name, targetAmount, currentAmount",
+            "status": "pass"
           },
           {
-            "criterion": "Content is wrapped in SingleChildScrollView for scrollability",
-            "status": "pass",
-            "reason": null
+            "criterion": "CRUD: addGoal, removeGoal, updateGoal, loadGoals, saveGoals",
+            "status": "pass"
           },
           {
-            "criterion": "No analyzer errors after the change",
-            "status": "pass",
-            "reason": null
+            "criterion": "Persistence via SharedPreferences as JSON",
+            "status": "pass"
           }
         ]
       },
@@ -161,13 +664,392 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
+            "status": "pass"
           },
           {
             "check_id": "PRD-002",
-            "status": "pass",
-            "reason": "No out-of-scope features"
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-002": {
+      "ticket_id": "T-002",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "updateCategoryLimit, removeCategory, addCategory methods",
+            "status": "pass"
+          },
+          {
+            "criterion": "Categories persisted to SharedPreferences",
+            "status": "pass"
+          },
+          {
+            "criterion": "Default categories cannot be deleted",
+            "status": "pass"
+          },
+          {
+            "criterion": "notifyListeners() after any mutation",
+            "status": "pass"
+          },
+          {
+            "criterion": "ActiveGoal replaced by goals from SavingsGoalModel",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-003": {
+      "ticket_id": "T-003",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "TextFormField for name (pre-filled when editing)",
+            "status": "pass"
+          },
+          {
+            "criterion": "TextFormField for limit (numeric, numeric keyboard)",
+            "status": "pass"
+          },
+          {
+            "criterion": "Save validates: name not empty, not duplicate, limit > 0",
+            "status": "pass"
+          },
+          {
+            "criterion": "Cancel dismisses",
+            "status": "pass"
+          },
+          {
+            "criterion": "Returns result via Navigator.pop",
+            "status": "pass"
+          },
+          {
+            "criterion": "isAdd flag controls dialog title",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-004": {
+      "ticket_id": "T-004",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "TextFormField for goal name",
+            "status": "pass"
+          },
+          {
+            "criterion": "TextFormField for target amount (numeric)",
+            "status": "pass"
+          },
+          {
+            "criterion": "Save validates: name not empty, target > 0",
+            "status": "pass"
+          },
+          {
+            "criterion": "Cancel dismisses",
+            "status": "pass"
+          },
+          {
+            "criterion": "Returns result via Navigator.pop",
+            "status": "pass"
+          },
+          {
+            "criterion": "isAdd flag controls dialog title",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-005": {
+      "ticket_id": "T-005",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "Padding EdgeInsets.all(12) instead of 24",
+            "status": "pass"
+          },
+          {
+            "criterion": "Icon size 20 instead of 24",
+            "status": "pass"
+          },
+          {
+            "criterion": "Progress bar height 4 instead of 8",
+            "status": "pass"
+          },
+          {
+            "criterion": "Edit and delete action buttons on card",
+            "status": "pass"
+          },
+          {
+            "criterion": "Over-limit badge smaller",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-006": {
+      "ticket_id": "T-006",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "Compact padding (12 instead of 24)",
+            "status": "pass"
+          },
+          {
+            "criterion": "Delete icon on each goal card",
+            "status": "pass"
+          },
+          {
+            "criterion": "Shows name, current/target, progress",
+            "status": "pass"
+          },
+          {
+            "criterion": "Empty state when no goals",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-007": {
+      "ticket_id": "T-007",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "New Budget button opens EditBudgetDialog (add mode)",
+            "status": "pass"
+          },
+          {
+            "criterion": "Edit/delete action buttons on each budget category card",
+            "status": "pass"
+          },
+          {
+            "criterion": "Delete on default categories not available",
+            "status": "pass"
+          },
+          {
+            "criterion": "Savings goals section shows all goals from SavingsGoalModel",
+            "status": "pass"
+          },
+          {
+            "criterion": "Add goal button opens SavingsGoalDialog",
+            "status": "pass"
+          },
+          {
+            "criterion": "Delete goal with confirmation",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    },
+    "T-008": {
+      "ticket_id": "T-008",
+      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "SavingsGoalModel in MultiProvider providers list",
+            "status": "pass"
+          },
+          {
+            "criterion": "No analyzer errors",
+            "status": "pass"
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass"
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass"
           }
         ]
       },
@@ -180,48 +1062,18 @@
       }
     }
   },
-  "tests": {
-    "T-001": {
-      "ticket_id": "T-001",
-      "passed": true,
-      "test_count": 64,
-      "failures": []
-    }
-  },
-  "phase_summary": {
-    "prd": {
-      "approved": true,
-      "approved_at": "2026-05-24T13:00:00Z"
+  "build": {
+    "built_at": "2026-05-24T07:16:37.539460+00:00",
+    "flutter_version": "3.19.0+",
+    "build_number": 1,
+    "outputs": {
+      "apk": {
+        "path": "build/app/outputs/flutter-apk/app-release.apk",
+        "ready": true,
+        "size_mb": 49.6
+      }
     },
-    "architecture": {
-      "approved": true,
-      "approved_at": "2026-05-24T13:00:00Z"
-    },
-    "tickets": {
-      "total": 1,
-      "done": 1,
-      "in_review": 0,
-      "failed": 0
-    },
-    "code": {
-      "total_files": 1,
-      "generated": 1
-    },
-    "review": {
-      "passed": 1,
-      "failed": 0,
-      "retries": 0
-    },
-    "tests": {
-      "total": 64,
-      "passed": 64,
-      "coverage_pct": 85
-    },
-    "build": {
-      "apk_ready": true,
-      "ipa_ready": false
-    }
-  },
-  "last_action": {"action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T13:15:00Z", "tag": "v2.10.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.10.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.10.0/app-release.apk"},
-  "last_error": null
+    "apk_ready": true,
+    "ipa_ready": false
+  }
 }

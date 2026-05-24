@@ -1,139 +1,121 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../data/budget_goals_model.dart';
+import '../../data/savings_goal_model.dart';
 
-/// A card showing the active savings goal with progress.
+/// A compact card showing a single savings goal with progress.
 class GoalCard extends StatelessWidget {
   const GoalCard({
     super.key,
     required this.goal,
+    this.onDelete,
   });
 
-  final ActiveGoal goal;
+  final SavingsGoal goal;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
-    final barWidth =
-        (goal.percentComplete / 100).clamp(0.0, 1.0);
+    final barWidth = (goal.percentComplete / 100).clamp(0.0, 1.0);
 
     return Container(
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: FortunaColors.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: FortunaColors.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: FortunaColors.outlineVariant.withValues(alpha: 0.15),
+        ),
       ),
-      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
-          const SizedBox(height: 12),
-          Text(
-            goal.name,
-            style: FortunaTextStyles.titleMd.copyWith(
-              color: FortunaColors.primaryFixed,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Target: \$${_formatAmount(goal.targetAmount)}',
-            style: FortunaTextStyles.bodySm.copyWith(
-              color: FortunaColors.onPrimaryContainer,
-            ),
-          ),
-          const SizedBox(height: 24),
-          _buildProgressBar(barWidth),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(
-          Icons.savings,
-          color: FortunaColors.tertiaryFixedDim,
-          size: 32,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: FortunaColors.onTertiaryFixedVariant,
-            borderRadius: BorderRadius.circular(9999),
-          ),
-          child: Text(
-            'Active Goal',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.2,
-              color: FortunaColors.tertiaryFixed,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProgressBar(double barWidth) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              '\$${_formatAmount(goal.currentAmount)}',
-              style: FortunaTextStyles.numericDisplay.copyWith(
-                color: FortunaColors.primaryFixed,
-              ),
-            ),
-            Text(
-              '${goal.percentComplete}%',
-              style: FortunaTextStyles.bodySm.copyWith(
-                color: FortunaColors.primaryFixedDim,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          width: double.infinity,
-          height: 6,
-          child: Stack(
+          Row(
             children: [
-              Container(
-                width: double.infinity,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: FortunaColors.surfaceContainerLowest
-                      .withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(9999),
+              Icon(Icons.savings, color: FortunaColors.tertiaryFixedDim, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  goal.name,
+                  style: FortunaTextStyles.titleSm.copyWith(
+                    color: FortunaColors.primaryFixed,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              FractionallySizedBox(
-                widthFactor: barWidth,
-                child: Container(
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: FortunaColors.tertiaryFixedDim,
-                    borderRadius: BorderRadius.circular(9999),
-                  ),
+              if (onDelete != null)
+                IconButton(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_outline),
+                  iconSize: 18,
+                  color: FortunaColors.error.withValues(alpha: 0.7),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\$${_formatAmount(goal.currentAmount)}',
+                style: FortunaTextStyles.numericMd.copyWith(
+                  color: FortunaColors.primaryFixed,
+                ),
+              ),
+              Text(
+                'of \$${_formatAmount(goal.targetAmount)}',
+                style: FortunaTextStyles.bodyXs.copyWith(
+                  color: FortunaColors.primaryFixedDim,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          SizedBox(
+            width: double.infinity,
+            height: 4,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: FortunaColors.surfaceContainerLowest.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(9999),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: barWidth,
+                  child: Container(
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: FortunaColors.tertiaryFixedDim,
+                      borderRadius: BorderRadius.circular(9999),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${goal.percentComplete.round()}% complete',
+                style: FortunaTextStyles.bodyXs.copyWith(
+                  color: FortunaColors.primaryFixedDim,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

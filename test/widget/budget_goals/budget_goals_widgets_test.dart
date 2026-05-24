@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:budget_app/features/budget_goals/data/budget_goals_model.dart';
+import 'package:budget_app/features/budget_goals/data/savings_goal_model.dart';
 import 'package:budget_app/features/budget_goals/presentation/screens/budgets_goals_screen.dart';
 import 'package:budget_app/features/budget_goals/presentation/widgets/budget_category_card.dart';
 import 'package:budget_app/features/budget_goals/presentation/widgets/summary_card.dart';
@@ -13,6 +14,7 @@ void main() {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BudgetModel()),
+        ChangeNotifierProvider(create: (_) => SavingsGoalModel()),
         ChangeNotifierProxyProvider<BudgetModel, BudgetGoalsModel>(
           create: (context) => BudgetGoalsModel(
             budgetModel: context.read<BudgetModel>(),
@@ -37,7 +39,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2400, 1600));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(buildTestApp());
-      await tester.pumpAndSettle();
+      await tester.pump();
       expect(find.text('Budgets & Goals'), findsOneWidget);
     });
 
@@ -45,36 +47,64 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(2400, 1600));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(buildTestApp());
-      await tester.pumpAndSettle();
+      await tester.pump();
       expect(find.text('Add transactions to start tracking your budget!'), findsOneWidget);
+    });
+
+    testWidgets('shows New Budget button', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(2400, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(buildTestApp());
+      await tester.pump();
+      expect(find.text('New Budget'), findsOneWidget);
+    });
+
+    testWidgets('shows Active Categories section', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(2400, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(buildTestApp());
+      await tester.pump();
+      expect(find.text('Active Categories'), findsOneWidget);
+    });
+
+    testWidgets('shows Savings Goals section', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(2400, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(buildTestApp());
+      await tester.pump();
+      expect(find.text('Savings Goals'), findsOneWidget);
     });
   });
 
   group('BudgetCategoryCard', () {
-    Widget buildCard(BudgetCategory category) {
+    Widget buildCard(BudgetCategory category, {VoidCallback? onEdit, VoidCallback? onDelete}) {
       return MaterialApp(
         home: Scaffold(
           body: SizedBox(
             width: 500,
             child: SingleChildScrollView(
-              child: BudgetCategoryCard(category: category),
+              child: BudgetCategoryCard(
+                category: category,
+                onEdit: onEdit,
+                onDelete: onDelete,
+              ),
             ),
           ),
         ),
       );
     }
 
-    testWidgets('renders category name and description', (tester) async {
+    testWidgets('renders category name', (tester) async {
       const cat = BudgetCategory(
         name: 'Food & Dining',
         description: 'Groceries & restaurants',
         icon: Icons.restaurant,
         spent: 452.20,
         limit: 800.0,
+        isDefault: true,
       );
       await tester.pumpWidget(buildCard(cat));
       expect(find.text('Food & Dining'), findsOneWidget);
-      expect(find.text('Groceries & restaurants'), findsOneWidget);
     });
 
     testWidgets('renders spent and limit amounts', (tester) async {
@@ -84,61 +114,81 @@ void main() {
         icon: Icons.restaurant,
         spent: 452.20,
         limit: 800.0,
+        isDefault: false,
       );
       await tester.pumpWidget(buildCard(cat));
       expect(find.text('\$452.20'), findsOneWidget);
       expect(find.text('of \$800'), findsOneWidget);
     });
 
-    testWidgets('shows Under budget for healthy category', (tester) async {
+    testWidgets('shows On track for healthy category', (tester) async {
       const cat = BudgetCategory(
         name: 'Food & Dining',
         description: 'Test',
         icon: Icons.restaurant,
         spent: 452.20,
         limit: 800.0,
+        isDefault: false,
       );
       await tester.pumpWidget(buildCard(cat));
-      expect(find.text('Under budget'), findsOneWidget);
+      expect(find.text('On track'), findsOneWidget);
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
-    testWidgets('shows Careful for warning category', (tester) async {
+    testWidgets('shows percentage used for warning category', (tester) async {
       const cat = BudgetCategory(
         name: 'Entertainment',
         description: 'Test',
         icon: Icons.movie,
         spent: 210.0,
         limit: 250.0,
+        isDefault: false,
       );
       await tester.pumpWidget(buildCard(cat));
-      expect(find.textContaining('Careful'), findsOneWidget);
+      expect(find.textContaining('% used'), findsOneWidget);
       expect(find.byIcon(Icons.warning), findsOneWidget);
     });
 
-    testWidgets('shows Over Limit for critical category', (tester) async {
+    testWidgets('shows over limit amount for critical category', (tester) async {
       const cat = BudgetCategory(
         name: 'Other',
         description: 'Test',
         icon: Icons.shopping_cart,
         spent: 325.40,
         limit: 300.0,
+        isDefault: false,
       );
       await tester.pumpWidget(buildCard(cat));
-      expect(find.text('Over Limit'), findsWidgets);
+      expect(find.text('Over'), findsWidgets);
       expect(find.byIcon(Icons.error), findsOneWidget);
     });
 
-    testWidgets('renders more_vert icon button', (tester) async {
+    testWidgets('shows edit and delete buttons for custom category', (tester) async {
       const cat = BudgetCategory(
-        name: 'Test',
+        name: 'Gaming',
         description: 'Test',
-        icon: Icons.category,
+        icon: Icons.sports_esports,
         spent: 100,
         limit: 200,
+        isDefault: false,
       );
-      await tester.pumpWidget(buildCard(cat));
-      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      await tester.pumpWidget(buildCard(cat, onEdit: () {}, onDelete: () {}));
+      expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+    });
+
+    testWidgets('does not show delete button for default category', (tester) async {
+      const cat = BudgetCategory(
+        name: 'Food & Dining',
+        description: 'Test',
+        icon: Icons.restaurant,
+        spent: 100,
+        limit: 200,
+        isDefault: true,
+      );
+      await tester.pumpWidget(buildCard(cat, onEdit: () {}, onDelete: null));
+      expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.delete_outline), findsNothing);
     });
   });
 
@@ -171,66 +221,83 @@ void main() {
   });
 
   group('GoalCard', () {
-    Widget buildCard(ActiveGoal goal) {
+    Widget buildCard(SavingsGoal goal, {VoidCallback? onDelete}) {
       return MaterialApp(
         home: Scaffold(
           body: SizedBox(
             width: 300,
             height: 250,
-            child: GoalCard(goal: goal),
+            child: GoalCard(goal: goal, onDelete: onDelete),
           ),
         ),
       );
     }
 
     testWidgets('renders goal name', (tester) async {
-      const goal = ActiveGoal(
-        name: 'Savings Goal',
+      const goal = SavingsGoal(
+        id: '1',
+        name: 'Vacation Fund',
         targetAmount: 10000,
         currentAmount: 5000,
       );
       await tester.pumpWidget(buildCard(goal));
-      expect(find.text('Savings Goal'), findsOneWidget);
+      expect(find.text('Vacation Fund'), findsOneWidget);
     });
 
-    testWidgets('renders Active Goal badge', (tester) async {
-      const goal = ActiveGoal(
-        name: 'Test',
-        targetAmount: 1000,
-        currentAmount: 500,
-      );
-      await tester.pumpWidget(buildCard(goal));
-      expect(find.text('Active Goal'), findsOneWidget);
-    });
-
-    testWidgets('renders target amount', (tester) async {
-      const goal = ActiveGoal(
-        name: 'Test',
-        targetAmount: 10000,
-        currentAmount: 5000,
-      );
-      await tester.pumpWidget(buildCard(goal));
-      expect(find.text('Target: \$10000'), findsOneWidget);
-    });
-
-    testWidgets('renders current saved amount', (tester) async {
-      const goal = ActiveGoal(
+    testWidgets('renders current and target amounts', (tester) async {
+      const goal = SavingsGoal(
+        id: '1',
         name: 'Test',
         targetAmount: 10000,
         currentAmount: 5000,
       );
       await tester.pumpWidget(buildCard(goal));
       expect(find.text('\$5000'), findsOneWidget);
+      expect(find.text('of \$10000'), findsOneWidget);
+    });
+
+    testWidgets('renders percent complete', (tester) async {
+      const goal = SavingsGoal(
+        id: '1',
+        name: 'Test',
+        targetAmount: 10000,
+        currentAmount: 5000,
+      );
+      await tester.pumpWidget(buildCard(goal));
+      expect(find.text('50% complete'), findsOneWidget);
     });
 
     testWidgets('renders savings icon', (tester) async {
-      const goal = ActiveGoal(
+      const goal = SavingsGoal(
+        id: '1',
         name: 'Test',
         targetAmount: 1000,
         currentAmount: 500,
       );
       await tester.pumpWidget(buildCard(goal));
       expect(find.byIcon(Icons.savings), findsOneWidget);
+    });
+
+    testWidgets('shows delete button when onDelete provided', (tester) async {
+      const goal = SavingsGoal(
+        id: '1',
+        name: 'Test',
+        targetAmount: 1000,
+        currentAmount: 500,
+      );
+      await tester.pumpWidget(buildCard(goal, onDelete: () {}));
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+    });
+
+    testWidgets('hides delete button when onDelete is null', (tester) async {
+      const goal = SavingsGoal(
+        id: '1',
+        name: 'Test',
+        targetAmount: 1000,
+        currentAmount: 500,
+      );
+      await tester.pumpWidget(buildCard(goal));
+      expect(find.byIcon(Icons.delete_outline), findsNothing);
     });
   });
 }

@@ -4,12 +4,16 @@ import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../data/budget_goals_model.dart';
+import '../../data/savings_goal_model.dart';
 import '../widgets/budget_category_card.dart';
 import '../widgets/summary_card.dart';
 import '../widgets/goal_card.dart';
+import '../widgets/edit_budget_dialog.dart';
+import '../widgets/savings_goal_dialog.dart';
 
 /// Budgets & Goals screen — displays budget categories, summary stats,
-/// and active savings goals. All data computed from real transactions.
+/// and savings goals. Users can edit/delete/add budgets and goals.
+/// All data computed from real transactions.
 class BudgetsGoalsScreen extends StatelessWidget {
   const BudgetsGoalsScreen({super.key});
 
@@ -32,20 +36,22 @@ class BudgetsGoalsScreen extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 1200),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: isDesktop ? 48 : 20,
+                      horizontal: isDesktop ? 48 : 16,
                       vertical: 8,
                     ),
-                    child: Consumer2<BudgetGoalsModel, BudgetModel>(
-                      builder: (context, model, budgetModel, _) {
+                    child: Consumer3<BudgetGoalsModel, BudgetModel, SavingsGoalModel>(
+                      builder: (context, model, budgetModel, goalsModel, _) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8),
-                            _buildHeroSection(budgetModel),
-                            const SizedBox(height: 40),
+                            _buildHeroSection(context, budgetModel),
+                            const SizedBox(height: 24),
                             _buildStatsSection(model, isDesktop),
-                            const SizedBox(height: 40),
-                            _buildCategoriesSection(model, isDesktop),
+                            const SizedBox(height: 24),
+                            _buildCategoriesSection(context, model, isDesktop),
+                            const SizedBox(height: 24),
+                            _buildGoalsSection(context, goalsModel),
                             const SizedBox(height: 100),
                           ],
                         );
@@ -67,16 +73,16 @@ class BudgetsGoalsScreen extends StatelessWidget {
       child: SafeArea(
         bottom: false,
         child: Container(
-          height: 64,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
                       color: FortunaColors.secondaryContainer,
                       shape: BoxShape.circle,
@@ -84,15 +90,15 @@ class BudgetsGoalsScreen extends StatelessWidget {
                     child: const Icon(
                       Icons.person,
                       color: FortunaColors.primary,
-                      size: 20,
+                      size: 18,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Text(
                     'Fortuna',
-                    style: FortunaTextStyles.headlineLg.copyWith(
+                    style: FortunaTextStyles.headlineSm.copyWith(
                       color: FortunaColors.primary,
-                      fontSize: 24,
+                      fontSize: 22,
                     ),
                   ),
                 ],
@@ -109,8 +115,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection(BudgetModel budgetModel) {
-    final netBalance = budgetModel.netBalance;
+  Widget _buildHeroSection(BuildContext context, BudgetModel budgetModel) {
     final monthlySpending = budgetModel.monthlySpending;
     final monthlyIncome = budgetModel.totalIncome;
     final savingsThisMonth = monthlyIncome - monthlySpending;
@@ -126,51 +131,44 @@ class BudgetsGoalsScreen extends StatelessWidget {
       subtitle = 'You\'re \$${_formatAmount(savingsThisMonth.abs())} over budget this month.';
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Budgets & Goals',
-                    style: FortunaTextStyles.headlineLgMobile.copyWith(
-                      color: FortunaColors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: FortunaTextStyles.bodyLg.copyWith(
-                      color: FortunaColors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add_circle, size: 20),
-              label: const Text('New Budget'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: FortunaColors.primary,
-                foregroundColor: FortunaColors.onPrimary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Budgets & Goals',
+                style: FortunaTextStyles.headlineMd.copyWith(
+                  color: FortunaColors.primary,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 4,
               ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: FortunaTextStyles.bodyMd.copyWith(
+                  color: FortunaColors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
+        ElevatedButton.icon(
+          onPressed: () => _showAddBudgetDialog(context),
+          icon: const Icon(Icons.add_circle, size: 18),
+          label: const Text('New Budget'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: FortunaColors.primary,
+            foregroundColor: FortunaColors.onPrimary,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
+            elevation: 2,
+          ),
         ),
       ],
     );
@@ -188,12 +186,19 @@ class BudgetsGoalsScreen extends StatelessWidget {
               totalSpent: model.totalSpent,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             flex: 1,
             child: SizedBox(
-              height: 280,
-              child: GoalCard(goal: model.activeGoal),
+              height: 200,
+              child: GoalCard(
+                goal: const SavingsGoal(
+                  id: '__placeholder__',
+                  name: 'No goals yet',
+                  targetAmount: 1,
+                  currentAmount: 0,
+                ),
+              ),
             ),
           ),
         ],
@@ -206,13 +211,12 @@ class BudgetsGoalsScreen extends StatelessWidget {
           totalLimit: model.totalMonthlyLimit,
           totalSpent: model.totalSpent,
         ),
-        const SizedBox(height: 16),
-        GoalCard(goal: model.activeGoal),
       ],
     );
   }
 
   Widget _buildCategoriesSection(
+    BuildContext context,
     BudgetGoalsModel model,
     bool isDesktop,
   ) {
@@ -225,76 +229,260 @@ class BudgetsGoalsScreen extends StatelessWidget {
             color: FortunaColors.primary,
           ),
         ),
-        const SizedBox(height: 16),
-        _buildCategoriesGrid(model.categories, isDesktop),
+        const SizedBox(height: 12),
+        _buildCategoriesGrid(context, model, isDesktop),
       ],
     );
   }
 
   Widget _buildCategoriesGrid(
-    List<BudgetCategory> categories,
+    BuildContext context,
+    BudgetGoalsModel model,
     bool isDesktop,
   ) {
     if (isDesktop) {
       return Wrap(
-        spacing: 16,
-        runSpacing: 16,
+        spacing: 12,
+        runSpacing: 12,
         children: [
-          ...categories.map(
+          ...model.categories.map(
             (cat) => SizedBox(
-              width: 280,
-              child: BudgetCategoryCard(category: cat),
+              width: 300,
+              child: BudgetCategoryCard(
+                category: cat,
+                onEdit: () => _showEditBudgetDialog(context, cat),
+                onDelete: cat.isDefault
+                    ? null
+                    : () => _confirmDeleteCategory(context, cat),
+              ),
             ),
           ),
-          _buildAddCategoryButton(),
+          _buildAddCategoryButton(context),
         ],
       );
     }
 
     return Column(
       children: [
-        ...categories.map(
+        ...model.categories.map(
           (cat) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: BudgetCategoryCard(category: cat),
+            padding: const EdgeInsets.only(bottom: 8),
+            child: BudgetCategoryCard(
+              category: cat,
+              onEdit: () => _showEditBudgetDialog(context, cat),
+              onDelete: cat.isDefault
+                  ? null
+                  : () => _confirmDeleteCategory(context, cat),
+            ),
           ),
         ),
-        _buildAddCategoryButton(),
+        _buildAddCategoryButton(context),
       ],
     );
   }
 
-  Widget _buildAddCategoryButton() {
+  Widget _buildGoalsSection(BuildContext context, SavingsGoalModel goalsModel) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Savings Goals',
+              style: FortunaTextStyles.titleMd.copyWith(
+                color: FortunaColors.primary,
+              ),
+            ),
+            IconButton(
+              onPressed: () => _showAddGoalDialog(context),
+              icon: const Icon(Icons.add_circle),
+              color: FortunaColors.primary,
+              iconSize: 28,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (!goalsModel.hasGoals)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: FortunaColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: FortunaColors.outlineVariant.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.savings,
+                    size: 40,
+                    color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                const SizedBox(height: 8),
+                Text(
+                  'No savings goals yet',
+                  style: FortunaTextStyles.bodyMd.copyWith(
+                    color: FortunaColors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Tap the + button to add one',
+                  style: FortunaTextStyles.bodySm.copyWith(
+                    color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          ...goalsModel.goals.map(
+            (goal) => GoalCard(
+              goal: goal,
+              onDelete: () => _confirmDeleteGoal(context, goal),
+            ),
+          ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildAddCategoryButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => _showAddBudgetDialog(context),
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        width: 120,
+        height: 80,
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
             color: FortunaColors.outlineVariant,
             style: BorderStyle.solid,
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.add_circle,
-              size: 40,
+              Icons.add_circle_outline,
+              size: 24,
               color: FortunaColors.onSurfaceVariant,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
-              'Add Category',
-              style: FortunaTextStyles.titleMd.copyWith(
+              'Add',
+              style: FortunaTextStyles.bodySm.copyWith(
                 color: FortunaColors.onSurfaceVariant,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // --- Dialog handlers ---
+
+  void _showAddBudgetDialog(BuildContext context) {
+    final model = context.read<BudgetGoalsModel>();
+    showDialog<EditBudgetResult>(
+      context: context,
+      builder: (_) => EditBudgetDialog(
+        isAdd: true,
+        existingNames: model.categories.map((c) => c.name).toList(),
+      ),
+    ).then((result) {
+      if (result != null) {
+        model.addCategory(result.name, limit: result.limit);
+      }
+    });
+  }
+
+  void _showEditBudgetDialog(BuildContext context, BudgetCategory category) {
+    final model = context.read<BudgetGoalsModel>();
+    showDialog<EditBudgetResult>(
+      context: context,
+      builder: (_) => EditBudgetDialog(
+        isAdd: false,
+        initialName: category.name,
+        initialLimit: category.limit,
+        existingNames: model.categories.map((c) => c.name).toList(),
+      ),
+    ).then((result) {
+      if (result != null) {
+        model.updateCategoryLimit(result.name, result.limit);
+      }
+    });
+  }
+
+  void _confirmDeleteCategory(BuildContext context, BudgetCategory category) {
+    showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Category'),
+        content: Text('Delete "${category.name}"? This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.read<BudgetGoalsModel>().removeCategory(category.name);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: FortunaColors.error,
+              foregroundColor: FortunaColors.onError,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddGoalDialog(BuildContext context) {
+    final model = context.read<SavingsGoalModel>();
+    showDialog<SavingsGoalResult>(
+      context: context,
+      builder: (_) => SavingsGoalDialog(
+        isAdd: true,
+        existingNames: model.goals.map((g) => g.name).toList(),
+      ),
+    ).then((result) {
+      if (result != null) {
+        model.addGoal(name: result.name, targetAmount: result.targetAmount);
+      }
+    });
+  }
+
+  void _confirmDeleteGoal(BuildContext context, SavingsGoal goal) {
+    showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Goal'),
+        content: Text('Delete "${goal.name}"? This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.read<SavingsGoalModel>().removeGoal(goal.id);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: FortunaColors.error,
+              foregroundColor: FortunaColors.onError,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }

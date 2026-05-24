@@ -75,4 +75,56 @@ class FortunaTextStyles {
     color: FortunaColors.onSurface,
     height: 16 / 12,
   );
+
+  // --- Additional compact styles ---
+
+  static const TextStyle headlineMd = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 28,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.01,
+    color: FortunaColors.onSurface,
+    height: 36 / 28,
+  );
+
+  static const TextStyle headlineSm = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.01,
+    color: FortunaColors.onSurface,
+    height: 32 / 24,
+  );
+
+  static const TextStyle numericMd = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: FortunaColors.onSurface,
+    height: 28 / 20,
+  );
+
+  static const TextStyle titleSm = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: FortunaColors.onSurface,
+    height: 24 / 16,
+  );
+
+  static const TextStyle bodyMd = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: FortunaColors.onSurface,
+    height: 22 / 15,
+  );
+
+  static const TextStyle bodyXs = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: FortunaColors.onSurface,
+    height: 16 / 12,
+  );
 }

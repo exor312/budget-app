@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'features/transactions/data/budget_model.dart';
 import 'features/budget_goals/data/budget_goals_model.dart';
+import 'features/budget_goals/data/savings_goal_model.dart';
 import 'features/settings/data/category_settings_model.dart';
 import 'features/settings/data/account_settings_model.dart';
 import 'router/app_router.dart';
@@ -20,6 +21,7 @@ class FortunaApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BudgetModel()),
+        ChangeNotifierProvider(create: (_) => SavingsGoalModel()),
         ChangeNotifierProvider(create: (_) => CategorySettingsModel()),
         ChangeNotifierProvider(create: (_) => AccountSettingsModel()),
         ChangeNotifierProxyProvider<BudgetModel, BudgetGoalsModel>(
