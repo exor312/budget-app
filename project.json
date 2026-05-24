@@ -475,22 +475,16 @@
     ]
   },
   "build": {
-    "built_at": "2026-05-24T21:35:00.000000+00:00",
-    "flutter_version": "3.44.0",
-    "build_number": 1,
     "apk_ready": true,
-    "ipa_ready": false,
-    "apk_size_mb": 52.1,
-    "apk_path": "build/app/outputs/flutter-apk/app-release.apk"
+    "ipa_ready": false
   },
   "last_action": {
-    "type": "RELEASE",
-    "version": "v2.15.0",
-    "release_id": 328538651,
-    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.15.0",
-    "apk_download_url": "https://github.com/exor312/budget-app/releases/download/v2.15.0/app-release.apk",
-    "at": "2026-05-24T21:45:00.000000+00:00",
-    "tag": "v2.15.0"
+    "action": "RELEASE",
+    "version": "v2.16.0",
+    "tag": "v2.16.0",
+    "url": "https://github.com/exor312/budget-app/releases/tag/v2.16.0",
+    "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.16.0/app-release.apk",
+    "released_at": "2026-05-25T00:00:00.000000+00:00"
   },
   "last_error": null
 }
