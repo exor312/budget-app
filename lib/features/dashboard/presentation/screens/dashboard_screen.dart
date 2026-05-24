@@ -10,6 +10,7 @@ import '../widgets/budget_progress_card.dart';
 import '../widgets/spending_categories_card.dart';
 import '../widgets/quick_insights_card.dart';
 import '../widgets/security_health_card.dart';
+import '../widgets/account_balances_card.dart';
 
 /// Main Dashboard screen — bento grid layout matching the Fortuna reference design.
 class DashboardScreen extends StatefulWidget {
@@ -39,8 +40,8 @@ class _DashboardScreenState extends State<DashboardScreen>
     // Scroll shadow listener
     _scrollController.addListener(_onScroll);
 
-    // Initialize staggered animations for 6 cards
-    _controllers = List.generate(6, (index) {
+    // Initialize staggered animations for 7 cards
+    _controllers = List.generate(7, (index) {
       return AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 500),
@@ -334,6 +335,13 @@ class _DashboardScreenState extends State<DashboardScreen>
             ),
           ],
         ),
+        const SizedBox(height: 16),
+        _AnimatedCard(
+          index: 5,
+          slideAnimation: _slideAnimations[5],
+          fadeAnimation: _fadeAnimations[5],
+          child: const AccountBalancesCard(),
+        ),
         const SizedBox(height: 100),
       ],
     );
@@ -387,6 +395,13 @@ class _DashboardScreenState extends State<DashboardScreen>
           child: SecurityHealthCard(
             score: securityScore,
           ),
+        ),
+        const SizedBox(height: 16),
+        _AnimatedCard(
+          index: 5,
+          slideAnimation: _slideAnimations[5],
+          fadeAnimation: _fadeAnimations[5],
+          child: const AccountBalancesCard(),
         ),
         const SizedBox(height: 100),
       ],

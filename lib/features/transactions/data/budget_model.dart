@@ -30,6 +30,16 @@ class BudgetModel extends ChangeNotifier {
         .fold(0, (sum, t) => sum + t.amount.abs());
   }
 
+  /// Compute balance per account from transactions.
+  /// Returns a map of accountId -> sum of transaction amounts.
+  Map<String, double> getBalancePerAccount() {
+    final Map<String, double> balances = {};
+    for (final t in _transactions) {
+      balances[t.accountId] = (balances[t.accountId] ?? 0) + t.amount;
+    }
+    return balances;
+  }
+
   /// Group expenses by stored category for spending categories display.
   /// Uses the transaction's category field directly — no keyword re-categorization.
   List<SpendingCategory> get spendingCategories {

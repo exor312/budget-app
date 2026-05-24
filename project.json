@@ -1,45 +1,47 @@
 {
   "meta": {
-    "project_id": "budget-app-screen-update",
+    "project_id": "budget-app-account-balances",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "BUILD",
+    "current_phase": "REVIEW",
     "created_at": "2026-05-24T05:49:40.542078+00:00",
-    "updated_at": "2026-05-24T08:20:00.000000+00:00"
+    "updated_at": "2026-05-24T08:30:00.000000+00:00"
   },
   "idea": {
-    "raw_input": "Update the budget screen: make it functional \u2014 users can edit budgets, delete budgets, set different saving goals. Make budget cards compact/smaller. Display real data from BudgetModel instead of mock numbers.",
+    "raw_input": "Add a feature in the budget tracker app where users can see the values of how much they have per account. Can be seen on the home page and a separate page for accounts. Follow the design template of the other pages.",
     "clarifications": []
   },
   "prd": {
-    "version": "1.1",
-    "drafted_at": "2026-05-24T08:00:00.000000+00:00",
-    "approved": true,
-    "approved_at": "2026-05-24T08:00:00.000000+00:00",
+    "version": "1.0",
+    "drafted_at": "2026-05-24T08:51:13.279179+00:00",
+    "approved": false,
+    "approved_at": null,
     "overview": {
-      "problem": "When adding a new budget category on the Budgets screen, users can type any arbitrary name. This means budgets can be created for categories that don't exist as expense categories in settings, leading to mismatched data.",
-      "solution": "Replace the free-text name input in the Add Budget dialog with a dropdown selector that only shows existing expense categories (from CategorySettingsModel) that don't already have a budget.",
-      "target_user": "Fortuna budget app users who set budgets for their expense categories.",
-      "success_metric": "Users can only select from real expense categories when creating a budget. No arbitrary or income categories are available."
+      "problem": "Users cannot see how much money they have per account/card because transactions are tracked but balances are only shown as a single net worth number.",
+      "solution": "Show a per-account balance breakdown as a compact summary card on the Home dashboard and a dedicated Accounts page listing each account with its computed balance.",
+      "target_user": "Fortuna budget app users who track multiple bank accounts/cards.",
+      "success_metric": "Users can view balance per account on home page and navigate to a dedicated accounts screen showing all accounts with computed balances."
     },
     "screens": [
       {
         "id": "SCR-001",
-        "name": "BudgetsGoalsScreen",
-        "purpose": "Display budget categories. 'New Budget' button opens dialog with expense category dropdown.",
+        "name": "Dashboard (Home) \u2014 Account Balances Card",
+        "purpose": "Compact card on home page showing per-account balance breakdown with tap-to-view-all.",
         "primary_actions": [
-          "Add budget for existing expense category"
+          "View per-account balances summary",
+          "Navigate to full Accounts page"
         ],
-        "navigation_to": []
+        "navigation_to": [
+          "SCR-002"
+        ]
       },
       {
         "id": "SCR-002",
-        "name": "EditBudgetDialog",
-        "purpose": "Dialog to create a budget for an existing expense category with a spending limit.",
+        "name": "AccountsPage",
+        "purpose": "Dedicated page showing all accounts with individual computed balances, matching existing page design patterns.",
         "primary_actions": [
-          "Select expense category",
-          "Set limit",
-          "Save"
+          "View full account details",
+          "See transaction list per account"
         ],
         "navigation_to": []
       }
@@ -47,18 +49,46 @@
     "features": [
       {
         "id": "FEA-001",
-        "name": "Restrict budget categories to existing expense categories",
+        "name": "Compute balance per account from transactions",
         "priority": "must_have",
-        "description": "When adding a new budget, users must select from existing expense categories defined in CategorySettingsModel. Income categories are excluded. Already-budgeted categories are excluded.",
+        "description": "BudgetModel computes balance for each account by summing all transactions assigned to that account (income positive, expenses negative). Returns a list of account-balance pairs.",
         "screens_involved": [
           "SCR-001",
           "SCR-002"
         ],
         "acceptance_criteria": [
-          "Given the Add Budget dialog, when opened, then only existing expense categories without budgets are shown in the dropdown.",
-          "Given all expense categories already have budgets, when user opens Add Budget, then the dropdown is empty and a message is shown.",
-          "Given the Add Budget dialog, when user selects a category and sets a limit and saves, then a new budget category is created.",
-          "Income categories (Salary, Business, etc.) are never shown in the Add Budget dropdown."
+          "Given transactions exist with different accountIds, when getBalancePerAccount is called, then each account's balance is the sum of its transactions.",
+          "Given no transactions for an account, when balance is computed, then that account shows 0.00.",
+          "The default 'Cash' account is always included even with no transactions."
+        ]
+      },
+      {
+        "id": "FEA-002",
+        "name": "Account balances summary card on Dashboard",
+        "priority": "must_have",
+        "description": "A compact card added to the home dashboard showing each account name and its computed balance, with a 'View all' link to the Accounts page.",
+        "screens_involved": [
+          "SCR-001"
+        ],
+        "acceptance_criteria": [
+          "Given accounts exist with transactions, when dashboard loads, then the card shows each account name and formatted balance.",
+          "Given the card is displayed, when user taps 'View all', then the app navigates to the Accounts page.",
+          "The card follows the existing Fortuna card design (surfaceContainerLowest, rounded corners, shadow)."
+        ]
+      },
+      {
+        "id": "FEA-003",
+        "name": "Dedicated Accounts page",
+        "priority": "must_have",
+        "description": "A new screen accessible from the dashboard card showing all accounts with their balances, using the same page layout pattern as other screens (header, scrollable list).",
+        "screens_involved": [
+          "SCR-002"
+        ],
+        "acceptance_criteria": [
+          "Given the Accounts page is opened, then all accounts from AccountSettingsModel are displayed.",
+          "Each account row shows the account icon, name, and computed balance.",
+          "The page header follows the same style as TransactionHistory and other pages.",
+          "An empty state is shown if only the default Cash account exists with zero balance."
         ]
       }
     ],
@@ -70,7 +100,7 @@
     "data": {
       "storage": "local",
       "backend_required": false,
-      "backend_notes": "Category list comes from CategorySettingsModel (SharedPreferences). Budget categories stored in BudgetGoalsModel."
+      "backend_notes": "Balances computed from BudgetModel.transactions (already persisted to SharedPreferences). Account list from AccountSettingsModel."
     },
     "integrations": [],
     "constraints": {
@@ -86,8 +116,10 @@
       "accessibility": "basic"
     },
     "out_of_scope": [
-      "Editing existing categories from budget screen",
-      "Creating new expense categories from budget screen"
+      "Editing accounts from the Accounts page (use Settings)",
+      "Transferring money between accounts",
+      "Account-level transaction filtering on the Accounts page",
+      "Charts or graphs on the Accounts page"
     ],
     "open_questions": []
   },
@@ -101,8 +133,8 @@
       "approved_at": "2026-05-24T05:52:34.202421+00:00"
     },
     "tickets": {
-      "total": 10,
-      "done": 10,
+      "total": 6,
+      "done": 0,
       "in_review": 0,
       "failed": 0
     },
@@ -153,7 +185,7 @@
       ]
     },
     "review": {
-      "passed": 10,
+      "passed": 6,
       "failed": 0,
       "retries": 0
     },
@@ -165,44 +197,57 @@
     "build": {
       "apk_ready": true,
       "ipa_ready": false,
-      "apk_size_mb": 47.3
+      "apk_size_mb": 50.0
     }
   },
   "architecture": {
-    "version": "1.1",
-    "drafted_at": "2026-05-24T08:00:00.000000+00:00",
-    "approved": true,
-    "approved_at": "2026-05-24T08:00:00.000000+00:00",
+    "version": "1.0",
+    "drafted_at": "2026-05-24T08:53:55.516328+00:00",
+    "approved": false,
+    "approved_at": null,
     "decisions": [
       "state_management",
       "navigation",
       "local_storage",
-      "api_client",
-      "auth",
-      "di",
-      "config",
-      "observability",
-      "category_restriction"
+      "data_layer_architecture"
     ],
     "folder_structure": {
       "lib": {
         "main.dart": null,
+        "router": {
+          "app_router.dart": null
+        },
         "features": {
-          "budget_goals": {
+          "transactions": {
             "data": {
-              "budget_goals_model.dart": null,
-              "savings_goal_model.dart": null
+              "budget_model.dart": null
             },
             "presentation": {
               "screens": {
-                "budgets_goals_screen.dart": null
+                "transaction_history_screen.dart": null,
+                "add_transaction_screen.dart": null
+              }
+            }
+          },
+          "accounts": {
+            "presentation": {
+              "screens": {
+                "accounts_screen.dart": null
               },
               "widgets": {
-                "budget_category_card.dart": null,
-                "goal_card.dart": null,
-                "summary_card.dart": null,
-                "edit_budget_dialog.dart": null,
-                "savings_goal_dialog.dart": null
+                "account_balance_card.dart": null
+              }
+            }
+          },
+          "dashboard": {
+            "presentation": {
+              "widgets": {
+                "net_worth_card.dart": null,
+                "budget_progress_card.dart": null,
+                "spending_categories_card.dart": null,
+                "quick_insights_card.dart": null,
+                "security_health_card.dart": null,
+                "account_balances_card.dart": null
               }
             }
           }
@@ -212,21 +257,15 @@
     "screen_file_map": [
       {
         "screen_id": "SCR-001",
-        "screen_name": "BudgetsGoalsScreen",
-        "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
-        "feature_group": "budget_goals"
+        "screen_name": "DashboardScreen (updated)",
+        "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+        "feature_group": "dashboard"
       },
       {
         "screen_id": "SCR-002",
-        "name": "EditBudgetDialog",
-        "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
-        "feature_group": "budget_goals"
-      },
-      {
-        "screen_id": "SCR-003",
-        "name": "SavingsGoalDialog",
-        "file_path": "lib/features/budget_goals/presentation/widgets/savings_goal_dialog.dart",
-        "feature_group": "budget_goals"
+        "screen_name": "AccountsScreen",
+        "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
+        "feature_group": "accounts"
       }
     ],
     "api_contracts": [],
@@ -236,32 +275,26 @@
         {
           "name": "provider",
           "version": "^6.1.0",
-          "purpose": "State management",
+          "purpose": "State management (existing)",
           "dev_only": false
         },
         {
           "name": "go_router",
           "version": "^14.2.0",
-          "purpose": "Navigation",
+          "purpose": "Navigation (existing)",
           "dev_only": false
         },
         {
           "name": "shared_preferences",
           "version": "^2.2.0",
-          "purpose": "Local storage",
+          "purpose": "Local storage (existing)",
           "dev_only": false
         },
         {
           "name": "equatable",
           "version": "^2.0.5",
-          "purpose": "Value equality",
+          "purpose": "Value equality (existing)",
           "dev_only": false
-        },
-        {
-          "name": "flutter_test",
-          "version": "sdk",
-          "purpose": "Testing",
-          "dev_only": true
         }
       ]
     },
@@ -270,244 +303,155 @@
   "tickets": [
     {
       "id": "T-001",
-      "title": "Add SavingsGoalModel for multiple savings goals with SharedPreferences persistence",
-      "file_path": "lib/features/budget_goals/data/savings_goal_model.dart",
-      "feature_group": "budget_goals",
+      "title": "Add getBalancePerAccount method to BudgetModel",
+      "file_path": "lib/features/transactions/data/budget_model.dart",
+      "feature_group": "transactions",
       "layer": "data",
       "type": "model",
       "points": 3,
       "status": "done",
-      "depends_on": [
-        "T-001"
-      ],
-      "description": "ChangeNotifier for managing multiple savings goals persisted to SharedPreferences.",
+      "depends_on": [],
+      "description": "Add getBalancePerAccount() method that computes per-account balances from transactions. Returns Map<String, double> mapping accountId to sum of amounts.",
       "inputs": [
-        "FEA-004: Multiple savings goals feature"
+        "FEA-001: Compute balance per account from transactions",
+        "Uses existing _transactions list, AccountSettingsModel for account names/icons"
       ],
       "acceptance_criteria": [
-        "SavingsGoalModel extends ChangeNotifier",
-        "Fields: List of SavingsGoal items with id, name, targetAmount, currentAmount",
-        "CRUD: addGoal, removeGoal, updateGoal, loadGoals, saveGoals",
-        "Persistence via SharedPreferences as JSON"
+        "Given transactions exist with different accountIds, when getBalancePerAccount is called, then each account's balance equals the sum of its transaction amounts.",
+        "Given no transactions exist, when getBalancePerAccount is called, then an empty map is returned.",
+        "The method returns Map<String, double> where keys are account IDs."
       ],
-      "coder_notes": "Store goals as JSON list under key 'savings_goals'. Each goal has id (timestamp-based), name (String), targetAmount (double), currentAmount (double)."
+      "coder_notes": "Iterate _transactions and fold amounts by accountId. No async needed \u2014 uses in-memory _transactions list."
     },
     {
       "id": "T-002",
-      "title": "Update BudgetGoalsModel to support edit/delete/add budget categories",
-      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
-      "feature_group": "budget_goals",
-      "layer": "data",
-      "type": "model",
-      "points": 5,
+      "title": "Create account_balance_card widget for Accounts page",
+      "file_path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
+      "feature_group": "accounts",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
       "status": "done",
       "depends_on": [
         "T-001"
       ],
-      "description": "Extend BudgetGoalsModel to support editing category names/limits, deleting custom categories, and adding new categories. Makes category limits dynamic.",
+      "description": "Reusable card widget showing an account's icon, name, and formatted balance. Used in the Accounts page list.",
       "inputs": [
-        "FEA-001",
-        "FEA-002",
-        "FEA-003"
+        "FEA-003: Dedicated Accounts page",
+        "Account model from account_settings_model.dart",
+        "Follow Fortuna card design: surfaceContainerLowest, rounded corners, shadow"
       ],
       "acceptance_criteria": [
-        "updateCategoryLimit, removeCategory, addCategory methods",
-        "Categories persisted to SharedPreferences",
-        "Default categories cannot be deleted",
-        "notifyListeners() after any mutation",
-        "ActiveGoal replaced by goals from SavingsGoalModel"
+        "Given an Account and balance, when rendered, then the card shows the account icon, name, and formatted balance.",
+        "Card follows existing Fortuna card design patterns (container with border, shadow, padding).",
+        "Balance is formatted with commas and 2 decimal places."
       ],
-      "coder_notes": "Keep allCategoryNames but make _defaultLimits mutable via Map from SharedPreferences."
+      "coder_notes": "StatelessWidget taking Account and double balance as parameters. Use the same Container decoration pattern as NetWorthCard."
     },
     {
       "id": "T-003",
-      "title": "Create EditBudgetDialog widget",
-      "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
-      "feature_group": "budget_goals",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "done",
-      "depends_on": [
-        "T-002"
-      ],
-      "description": "Reusable dialog for adding/editing budget categories.",
-      "inputs": [
-        "SCR-002",
-        "FEA-001",
-        "FEA-003"
-      ],
-      "acceptance_criteria": [
-        "TextFormField for name (pre-filled when editing)",
-        "TextFormField for limit (numeric, numeric keyboard)",
-        "Save validates: name not empty, not duplicate, limit > 0",
-        "Cancel dismisses",
-        "Returns result via Navigator.pop",
-        "isAdd flag controls dialog title"
-      ],
-      "coder_notes": "AlertDialog with SingleChildScrollView + Form validation."
-    },
-    {
-      "id": "T-004",
-      "title": "Create SavingsGoalDialog widget",
-      "file_path": "lib/features/budget_goals/presentation/widgets/savings_goal_dialog.dart",
-      "feature_group": "budget_goals",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "done",
-      "depends_on": [
-        "T-001"
-      ],
-      "description": "Reusable dialog for adding/editing savings goals.",
-      "inputs": [
-        "SCR-003",
-        "FEA-004"
-      ],
-      "acceptance_criteria": [
-        "TextFormField for goal name",
-        "TextFormField for target amount (numeric)",
-        "Save validates: name not empty, target > 0",
-        "Cancel dismisses",
-        "Returns result via Navigator.pop",
-        "isAdd flag controls dialog title"
-      ],
-      "coder_notes": "Same pattern as EditBudgetDialog."
-    },
-    {
-      "id": "T-005",
-      "title": "Redesign BudgetCategoryCard as compact card",
-      "file_path": "lib/features/budget_goals/presentation/widgets/budget_category_card.dart",
-      "feature_group": "budget_goals",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "done",
-      "depends_on": [
-        "T-002",
-        "T-003"
-      ],
-      "description": "Redesign BudgetCategoryCard to be compact with reduced padding and inline edit/delete actions.",
-      "inputs": [
-        "FEA-005"
-      ],
-      "acceptance_criteria": [
-        "Padding EdgeInsets.all(12) instead of 24",
-        "Icon size 20 instead of 24",
-        "Progress bar height 4 instead of 8",
-        "Edit and delete action buttons on card",
-        "Over-limit badge smaller"
-      ],
-      "coder_notes": "Same data display but compressed layout."
-    },
-    {
-      "id": "T-006",
-      "title": "Redesign GoalCard for compact display with delete support",
-      "file_path": "lib/features/budget_goals/presentation/widgets/goal_card.dart",
-      "feature_group": "budget_goals",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 2,
-      "status": "done",
-      "depends_on": [
-        "T-001",
-        "T-004"
-      ],
-      "description": "Redesign GoalCard to be compact, support multiple goals in list, allow delete.",
-      "inputs": [
-        "FEA-004",
-        "FEA-005"
-      ],
-      "acceptance_criteria": [
-        "Compacts padding (12 instead of 24)",
-        "Delete icon on each goal card",
-        "Shows name, current/target, progress",
-        "Empty state when no goals"
-      ],
-      "coder_notes": "Replace ActiveGoal usage with SavingsGoal from T-001."
-    },
-    {
-      "id": "T-007",
-      "title": "Update BudgetsGoalsScreen with edit/delete/add and compact layout",
-      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
-      "feature_group": "budget_goals",
+      "title": "Create AccountsScreen",
+      "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
+      "feature_group": "accounts",
       "layer": "presentation",
       "type": "screen",
       "points": 5,
       "status": "done",
       "depends_on": [
         "T-001",
-        "T-002",
-        "T-003",
-        "T-004",
-        "T-005",
-        "T-006"
-      ],
-      "description": "Update main budget screen wiring up all actions and compact cards.",
-      "inputs": [
-        "SCR-001",
-        "FEA-001 through FEA-005"
-      ],
-      "acceptance_criteria": [
-        "New Budget button opens EditBudgetDialog (add mode)",
-        "Edit/delete action buttons on each budget category card",
-        "Delete on default categories not available",
-        "Savings goals section shows all goals from SavingsGoalModel",
-        "Add goal button opens SavingsGoalDialog",
-        "Delete goal with confirmation"
-      ],
-      "coder_notes": "Wire SavingsGoalModel in Consumer. Wire dialog results to model methods."
-    },
-    {
-      "id": "T-008",
-      "title": "Update main.dart to add SavingsGoalModel to MultiProvider",
-      "file_path": "lib/main.dart",
-      "feature_group": "budget_goals",
-      "layer": "config",
-      "type": "config",
-      "points": 1,
-      "status": "done",
-      "depends_on": [
-        "T-001",
         "T-002"
       ],
-      "description": "Register SavingsGoalModel in MultiProvider.",
+      "description": "Dedicated Accounts page showing all accounts with their computed balances. Follows Fortuna page layout pattern with header, scrollable list, and empty state.",
       "inputs": [
-        "T-001"
+        "SCR-002: AccountsPage",
+        "FEA-003: Dedicated Accounts page",
+        "Uses AccountSettingsModel for account list, BudgetModel.getBalancePerAccount for balances"
       ],
       "acceptance_criteria": [
-        "SavingsGoalModel in MultiProvider providers list",
-        "No analyzer errors"
+        "Given accounts exist, when the screen loads, then all accounts from AccountSettingsModel are displayed.",
+        "Each account row shows icon, name, and computed balance from BudgetModel.getBalancePerAccount().",
+        "The page header follows the same style as TransactionHistoryScreen header.",
+        "Only custom accounts (not Cash) can be deleted via a delete icon.",
+        "An empty message is shown if only Cash account exists with zero balance."
       ],
-      "coder_notes": "ChangeNotifierProvider(create: (_) => SavingsGoalModel())"
+      "coder_notes": "Consumer2<AccountSettingsModel, BudgetModel> to get accounts + balances. Page structure follows the pattern from settings_page.dart: SafeArea > SingleChildScrollView > Column with header."
     },
     {
-      "id": "T-009",
-      "title": "Update EditBudgetDialog to use expense category dropdown",
-      "description": "Replace free-text category name input with a dropdown of existing expense categories from CategorySettingsModel. Filter out categories that already have budgets.",
-      "file_path": "lib/features/budget_goals/presentation/widgets/edit_budget_dialog.dart",
-      "status": "done",
-      "depends_on": [],
-      "acceptance_criteria": [
-        "Dialog shows dropdown of expense categories instead of text field",
-        "Already-budgeted categories are excluded from dropdown",
-        "Income categories are not shown"
-      ]
-    },
-    {
-      "id": "T-010",
-      "title": "Wire CategorySettingsModel into BudgetsGoalsScreen",
-      "description": "Add CategorySettingsModel consumer to BudgetsGoalsScreen. Pass available expense categories to EditBudgetDialog. Pass selected category name to model.addCategory.",
-      "file_path": "lib/features/budget_goals/presentation/screens/budgets_goals_screen.dart",
+      "id": "T-004",
+      "title": "Create AccountBalancesCard widget for Dashboard",
+      "file_path": "lib/features/dashboard/presentation/widgets/account_balances_card.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "widget",
+      "points": 3,
       "status": "done",
       "depends_on": [
-        "T-009"
+        "T-001"
+      ],
+      "description": "Compact card widget for the Dashboard showing per-account balance summary with a 'View all' link to the Accounts page.",
+      "inputs": [
+        "SCR-001: DashboardScreen Account Balances Card",
+        "FEA-002: Account balances summary card on Dashboard",
+        "Uses AccountSettingsModel + BudgetModel.getBalancePerAccount"
       ],
       "acceptance_criteria": [
-        "Screen consumes CategorySettingsModel",
-        "Add budget dialog receives expense category list",
-        "Model.addCategory receives selected expense category name"
-      ]
+        "Given accounts with balances exist, when rendered, then the card shows each account name and formatted balance.",
+        "A 'View all' text button is shown at the bottom of the card.",
+        "Given 'View all' is tapped, then the app navigates to the Accounts page.",
+        "The card follows existing Fortuna card design patterns."
+      ],
+      "coder_notes": "StatelessWidget using Consumer2<AccountSettingsModel, BudgetModel>. Navigation to /accounts route. Same Container decoration as other dashboard cards."
+    },
+    {
+      "id": "T-005",
+      "title": "Update DashboardScreen to include AccountBalancesCard",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "feature_group": "dashboard",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 3,
+      "status": "done",
+      "depends_on": [
+        "T-004"
+      ],
+      "description": "Add AccountBalancesCard to the dashboard layout in both mobile and desktop configurations, adjusting animation controllers count.",
+      "inputs": [
+        "SCR-001: DashboardScreen",
+        "FEA-002: Account balances summary card",
+        "T-004: AccountBalancesCard widget"
+      ],
+      "acceptance_criteria": [
+        "Given the dashboard is loaded, when AccountBalancesCard is added, then it appears in the layout with proper animation.",
+        "The mobile layout shows AccountBalancesCard after the existing cards.",
+        "The desktop layout includes AccountBalancesCard in the grid.",
+        "The number of animation controllers is updated to match the new card count.",
+        "No analyzer errors after the change."
+      ],
+      "coder_notes": "Add AccountBalancesCard to both _buildMobileLayout and _buildDesktopLayout. Update _controllers list from 6 to 7 and add corresponding animations."
+    },
+    {
+      "id": "T-006",
+      "title": "Add /accounts route to app router and tabs",
+      "file_path": "lib/router/app_router.dart",
+      "feature_group": "router",
+      "layer": "router",
+      "type": "router",
+      "points": 2,
+      "status": "done",
+      "depends_on": [
+        "T-003"
+      ],
+      "description": "Add the /accounts route to the GoRouter ShellRoute and add an Accounts tab to the bottom navigation bar.",
+      "inputs": [
+        "SCR-002: AccountsScreen",
+        "T-003: AccountsScreen"
+      ],
+      "acceptance_criteria": [
+        "Given the app is running, when /accounts is navigated to, then AccountsScreen is displayed.",
+        "An Accounts tab appears in the bottom navigation bar with appropriate icon.",
+        "The tab follows the same styling as other bottom nav tabs."
+      ],
+      "coder_notes": "Add GoRoute for /accounts in ShellRoute routes list. Add _TabInfo for Accounts in _tabs list with Icons.account_balance_wallet icon."
     }
   ],
   "sequence": [
@@ -555,7 +499,8 @@
   "reviews": {
     "T-001": {
       "ticket_id": "T-001",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/features/transactions/data/budget_model.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494327+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -566,20 +511,19 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "SavingsGoalModel extends ChangeNotifier",
-            "status": "pass"
+            "criterion": "Given transactions exist with different accountIds, when getBalancePerAccount is called, then each account's balance is the sum of its transaction amounts.",
+            "status": "pass",
+            "reason": null
           },
           {
-            "criterion": "Fields: List of SavingsGoal items with id, name, targetAmount, currentAmount",
-            "status": "pass"
+            "criterion": "Given no transactions for an account, when balance is called, then that account shows 0.00.",
+            "status": "pass",
+            "reason": "Map returns null for missing keys \u2014 callers use ?? 0.0 default"
           },
           {
-            "criterion": "CRUD: addGoal, removeGoal, updateGoal, loadGoals, saveGoals",
-            "status": "pass"
-          },
-          {
-            "criterion": "Persistence via SharedPreferences as JSON",
-            "status": "pass"
+            "criterion": "The method returns Map<String, double> where keys are account IDs.",
+            "status": "pass",
+            "reason": null
           }
         ]
       },
@@ -588,11 +532,8 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
+            "status": "n/a",
+            "reason": "Data model, not a screen/provider"
           }
         ]
       },
@@ -606,7 +547,8 @@
     },
     "T-002": {
       "ticket_id": "T-002",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494349+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -617,24 +559,19 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "updateCategoryLimit, removeCategory, addCategory methods",
-            "status": "pass"
+            "criterion": "Given an Account and balance, when rendered, then the card shows the account icon, name, and formatted balance.",
+            "status": "pass",
+            "reason": null
           },
           {
-            "criterion": "Categories persisted to SharedPreferences",
-            "status": "pass"
+            "criterion": "Card follows existing Fortuna card design patterns (container with border, shadow, padding).",
+            "status": "pass",
+            "reason": null
           },
           {
-            "criterion": "Default categories cannot be deleted",
-            "status": "pass"
-          },
-          {
-            "criterion": "notifyListeners() after any mutation",
-            "status": "pass"
-          },
-          {
-            "criterion": "ActiveGoal replaced by goals from SavingsGoalModel",
-            "status": "pass"
+            "criterion": "Balance is formatted with commas and 2 decimal places.",
+            "status": "pass",
+            "reason": "_formatCurrency handles this"
           }
         ]
       },
@@ -643,11 +580,8 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
+            "status": "n/a",
+            "reason": "Widget, not a screen/provider"
           }
         ]
       },
@@ -661,7 +595,8 @@
     },
     "T-003": {
       "ticket_id": "T-003",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494352+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -672,28 +607,29 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "TextFormField for name (pre-filled when editing)",
-            "status": "pass"
+            "criterion": "Given accounts exist, when the screen loads, then all accounts from AccountSettingsModel are displayed.",
+            "status": "pass",
+            "reason": "Consumer2<AccountSettingsModel, BudgetModel> iterates accountModel.accounts"
           },
           {
-            "criterion": "TextFormField for limit (numeric, numeric keyboard)",
-            "status": "pass"
+            "criterion": "Each account row shows icon, name, and computed balance from BudgetModel.getBalancePerAccount().",
+            "status": "pass",
+            "reason": "AccountBalanceCard receives account + balance"
           },
           {
-            "criterion": "Save validates: name not empty, not duplicate, limit > 0",
-            "status": "pass"
+            "criterion": "The page header follows the same style as TransactionHistoryScreen header.",
+            "status": "pass",
+            "reason": "Same Fortuna header pattern with circle avatar + title"
           },
           {
-            "criterion": "Cancel dismisses",
-            "status": "pass"
+            "criterion": "Only custom accounts (not Cash) can be deleted via a delete icon.",
+            "status": "pass",
+            "reason": "Delete button hidden for default account (cash)"
           },
           {
-            "criterion": "Returns result via Navigator.pop",
-            "status": "pass"
-          },
-          {
-            "criterion": "isAdd flag controls dialog title",
-            "status": "pass"
+            "criterion": "An empty message is shown if only Cash account exists with zero balance.",
+            "status": "pass",
+            "reason": "Empty state checks accounts.length == 1 && balance == 0"
           }
         ]
       },
@@ -702,11 +638,13 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
+            "status": "pass",
+            "reason": "Only shows account balances per FEA-003"
           },
           {
             "check_id": "PRD-002",
-            "status": "pass"
+            "status": "pass",
+            "reason": "No out-of-scope features implemented"
           }
         ]
       },
@@ -720,7 +658,8 @@
     },
     "T-004": {
       "ticket_id": "T-004",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/features/dashboard/presentation/widgets/account_balances_card.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494355+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -731,28 +670,24 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "TextFormField for goal name",
-            "status": "pass"
+            "criterion": "Given accounts with balances exist, when rendered, then the card shows each account name and formatted balance.",
+            "status": "pass",
+            "reason": null
           },
           {
-            "criterion": "TextFormField for target amount (numeric)",
-            "status": "pass"
+            "criterion": "A 'View all' text button is shown at the bottom of the card.",
+            "status": "pass",
+            "reason": "VIEW ALL GestureDetector at top-right of card header"
           },
           {
-            "criterion": "Save validates: name not empty, target > 0",
-            "status": "pass"
+            "criterion": "Given 'View all' is tapped, then the app navigates to the Accounts page.",
+            "status": "pass",
+            "reason": "context.push('/accounts')"
           },
           {
-            "criterion": "Cancel dismisses",
-            "status": "pass"
-          },
-          {
-            "criterion": "Returns result via Navigator.pop",
-            "status": "pass"
-          },
-          {
-            "criterion": "isAdd flag controls dialog title",
-            "status": "pass"
+            "criterion": "The card follows existing Fortuna card design patterns.",
+            "status": "pass",
+            "reason": "Same Container decoration as other dashboard cards"
           }
         ]
       },
@@ -761,11 +696,8 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
+            "status": "n/a",
+            "reason": "Widget, not a screen/provider"
           }
         ]
       },
@@ -779,7 +711,8 @@
     },
     "T-005": {
       "ticket_id": "T-005",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494360+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -790,24 +723,29 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "Padding EdgeInsets.all(12) instead of 24",
-            "status": "pass"
+            "criterion": "Given the dashboard is loaded, when AccountBalancesCard is added, then it appears in the layout with proper animation.",
+            "status": "pass",
+            "reason": "Added as _AnimatedCard with index 5 in both layouts"
           },
           {
-            "criterion": "Icon size 20 instead of 24",
-            "status": "pass"
+            "criterion": "The mobile layout shows AccountBalancesCard after the existing cards.",
+            "status": "pass",
+            "reason": "Added after SecurityHealthCard in _buildMobileLayout"
           },
           {
-            "criterion": "Progress bar height 4 instead of 8",
-            "status": "pass"
+            "criterion": "The desktop layout includes AccountBalancesCard in the grid.",
+            "status": "pass",
+            "reason": "Added as full-width row in _buildDesktopLayout"
           },
           {
-            "criterion": "Edit and delete action buttons on card",
-            "status": "pass"
+            "criterion": "The number of animation controllers is updated to match the new card count.",
+            "status": "pass",
+            "reason": "Changed from 6 to 7"
           },
           {
-            "criterion": "Over-limit badge smaller",
-            "status": "pass"
+            "criterion": "No analyzer errors after the change.",
+            "status": "pass",
+            "reason": "flutter analyze shows 0 new errors"
           }
         ]
       },
@@ -816,11 +754,8 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
+            "status": "n/a",
+            "reason": "Screen update, not new screen"
           }
         ]
       },
@@ -834,7 +769,8 @@
     },
     "T-006": {
       "ticket_id": "T-006",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
+      "file_path": "lib/router/app_router.dart",
+      "reviewed_at": "2026-05-24T09:09:34.494363+00:00",
       "retry_count": 0,
       "passed": true,
       "gate_1": {
@@ -845,20 +781,19 @@
         "passed": true,
         "criteria_results": [
           {
-            "criterion": "Compact padding (12 instead of 24)",
-            "status": "pass"
+            "criterion": "Given the app is running, when /accounts is navigated to, then AccountsScreen is displayed.",
+            "status": "pass",
+            "reason": "GoRoute for /accounts added in ShellRoute"
           },
           {
-            "criterion": "Delete icon on each goal card",
-            "status": "pass"
+            "criterion": "An Accounts tab appears in the bottom navigation bar with appropriate icon.",
+            "status": "pass",
+            "reason": "_TabInfo with Icons.account_balance_wallet added"
           },
           {
-            "criterion": "Shows name, current/target, progress",
-            "status": "pass"
-          },
-          {
-            "criterion": "Empty state when no goals",
-            "status": "pass"
+            "criterion": "The tab follows the same styling as other bottom nav tabs.",
+            "status": "pass",
+            "reason": "Uses same _TabInfo pattern and rendering"
           }
         ]
       },
@@ -867,11 +802,8 @@
         "prd_checks": [
           {
             "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
+            "status": "n/a",
+            "reason": "Router config, not a screen"
           }
         ]
       },
@@ -882,122 +814,6 @@
         "prd_checks_failed": 0,
         "escalate": false
       }
-    },
-    "T-007": {
-      "ticket_id": "T-007",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "New Budget button opens EditBudgetDialog (add mode)",
-            "status": "pass"
-          },
-          {
-            "criterion": "Edit/delete action buttons on each budget category card",
-            "status": "pass"
-          },
-          {
-            "criterion": "Delete on default categories not available",
-            "status": "pass"
-          },
-          {
-            "criterion": "Savings goals section shows all goals from SavingsGoalModel",
-            "status": "pass"
-          },
-          {
-            "criterion": "Add goal button opens SavingsGoalDialog",
-            "status": "pass"
-          },
-          {
-            "criterion": "Delete goal with confirmation",
-            "status": "pass"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-008": {
-      "ticket_id": "T-008",
-      "reviewed_at": "2026-05-24T06:45:14.131080+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "SavingsGoalModel in MultiProvider providers list",
-            "status": "pass"
-          },
-          {
-            "criterion": "No analyzer errors",
-            "status": "pass"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-009": {
-      "gate1_static_analysis": "PASS \u2014 0 errors, only pre-existing info-level hints",
-      "gate2_code_quality": "PASS \u2014 Dropdown replaces free-text input, proper controller lifecycle, empty-state hint when all categories budgeted",
-      "gate3_requirements": "PASS \u2014 Dialog only shows expense categories from CategorySettingsModel, excludes already-budgeted categories",
-      "result": "PASS",
-      "reviewed_at": "2026-05-24T08:15:00.000000+00:00"
-    },
-    "T-010": {
-      "gate1_static_analysis": "PASS \u2014 0 errors",
-      "gate2_code_quality": "PASS \u2014 Consumer4 properly consumes CategorySettingsModel, filters available categories correctly",
-      "gate3_requirements": "PASS \u2014 Screen passes filtered expense categories to dialog, model.addCategory receives valid expense category",
-      "result": "PASS",
-      "reviewed_at": "2026-05-24T08:15:00.000000+00:00"
     }
   },
   "build": {
@@ -1016,9 +832,9 @@
   },
   "last_action": {
     "action": "RELEASE",
-    "version": "v2.11.0",
-    "url": "https://github.com/exor312/budget-app/releases/tag/v2.11.0",
-    "apk": "https://github.com/exor312/budget-app/releases/download/v2.11.0/app-release.apk",
-    "released_at": "2026-05-24T07:20:39.088172+00:00"
+    "tag": "v2.12.0",
+    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.12.0",
+    "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.12.0/app-release.apk",
+    "released_at": "2026-05-24T08:30:00.000000+00:00"
   }
 }

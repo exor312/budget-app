@@ -5,6 +5,7 @@ import '../features/transactions/presentation/screens/transaction_history_screen
 import '../features/transactions/presentation/screens/add_transaction_screen.dart';
 import '../features/budget_goals/presentation/screens/budgets_goals_screen.dart';
 import '../features/settings/presentation/screens/settings_screen.dart';
+import '../features/accounts/presentation/screens/accounts_screen.dart';
 
 /// App router configuration using go_router with ShellRoute for tab navigation.
 final GoRouter appRouter = GoRouter(
@@ -36,6 +37,11 @@ final GoRouter appRouter = GoRouter(
           name: SettingsScreen.routeName,
           builder: (context, state) => const SettingsScreen(),
         ),
+        GoRoute(
+          path: AccountsScreen.routePath,
+          name: AccountsScreen.routeName,
+          builder: (context, state) => const AccountsScreen(),
+        ),
       ],
     ),
     GoRoute(
@@ -62,6 +68,7 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
     _TabInfo(icon: Icons.home, label: 'Home', path: '/dashboard'),
     _TabInfo(icon: Icons.receipt_long, label: 'History', path: '/transactions'),
     _TabInfo(icon: Icons.add_circle, label: 'Add', path: '/add'),
+    _TabInfo(icon: Icons.account_balance_wallet, label: 'Accounts', path: '/accounts'),
     _TabInfo(icon: Icons.track_changes, label: 'Budgets', path: '/budgets'),
     _TabInfo(icon: Icons.settings, label: 'Settings', path: '/settings'),
   ];
