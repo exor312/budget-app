@@ -52,11 +52,13 @@ void main() {
     test('creates with correct fields', () {
       const category = SpendingCategory(
         name: 'Food & Dining',
+        amount: 400.0,
         percentage: 40,
         icon: Icons.restaurant,
       );
 
       expect(category.name, 'Food & Dining');
+      expect(category.amount, 400.0);
       expect(category.percentage, 40);
     });
   });

@@ -71,6 +71,7 @@ class _CategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final amountStr = '\$${_formatAmount(category.amount)}';
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -100,11 +101,22 @@ class _CategoryRow extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                '${category.percentage}%',
-                style: FortunaTextStyles.bodyLg.copyWith(
-                  color: FortunaColors.onSurfaceVariant,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    amountStr,
+                    style: FortunaTextStyles.bodyLg.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '${category.percentage}%',
+                    style: FortunaTextStyles.bodySm.copyWith(
+                      color: FortunaColors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -121,5 +133,17 @@ class _CategoryRow extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static String _formatAmount(double value) {
+    final parts = value.toStringAsFixed(2).split('.');
+    final intPart = parts[0];
+    final decPart = parts[1];
+    String formatted = '';
+    for (int i = 0; i < intPart.length; i++) {
+      if (i > 0 && (intPart.length - i) % 3 == 0) formatted += ',';
+      formatted += intPart[i];
+    }
+    return '$formatted.$decPart';
   }
 }

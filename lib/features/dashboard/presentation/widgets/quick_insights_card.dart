@@ -121,12 +121,14 @@ class QuickInsightsCard extends StatelessWidget {
   }
 
   static String _formatCurrency(double value) {
-    final intPart = value.toInt().toString();
+    final parts = value.toStringAsFixed(2).split('.');
+    final intPart = parts[0];
+    final decPart = parts[1];
     String formatted = '';
     for (int i = 0; i < intPart.length; i++) {
       if (i > 0 && (intPart.length - i) % 3 == 0) formatted += ',';
       formatted += intPart[i];
     }
-    return formatted;
+    return '$formatted.$decPart';
   }
 }

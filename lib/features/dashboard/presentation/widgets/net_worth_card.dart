@@ -105,17 +105,17 @@ class NetWorthCard extends StatelessWidget {
   }
 
   String _formatCurrency(double value) {
+    final isNegative = value < 0;
     final abs = value.abs();
     final parts = abs.toStringAsFixed(2).split('.');
     final intPart = parts[0];
     final decPart = parts[1];
-    // Add commas for thousands
     String formatted = '';
     for (int i = 0; i < intPart.length; i++) {
       if (i > 0 && (intPart.length - i) % 3 == 0) formatted += ',';
       formatted += intPart[i];
     }
-    return '$formatted.$decPart';
+    return '${isNegative ? '-' : ''}$formatted.$decPart';
   }
 }
 

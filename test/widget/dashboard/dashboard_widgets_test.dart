@@ -19,7 +19,7 @@ void main() {
       );
 
       expect(find.text('Total Net Worth'), findsOneWidget);
-      expect(find.textContaining('124,592'), findsOneWidget);
+      expect(find.textContaining('\$124,592.00'), findsOneWidget);
       expect(find.textContaining('+4.2%'), findsOneWidget);
       expect(find.byIcon(Icons.trending_up), findsOneWidget);
       expect(find.byIcon(Icons.account_balance_wallet), findsOneWidget);
@@ -33,6 +33,17 @@ void main() {
       );
 
       expect(find.text('Total Net Worth'), findsOneWidget);
+    });
+
+    testWidgets('displays negative balance with minus sign', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(body: NetWorthCard(balance: -5230.50)),
+        ),
+      );
+
+      expect(find.textContaining('5,230.50'), findsOneWidget);
+      expect(find.textContaining('-'), findsWidgets);
     });
   });
 
@@ -65,10 +76,10 @@ void main() {
   });
 
   group('SpendingCategoriesCard', () {
-    testWidgets('displays categories with progress bars', (tester) async {
+    testWidgets('displays categories with amounts and progress bars', (tester) async {
       const categories = [
-        SpendingCategory(name: 'Food & Dining', percentage: 40, icon: Icons.restaurant),
-        SpendingCategory(name: 'Transport', percentage: 20, icon: Icons.directions_car),
+        SpendingCategory(name: 'Food & Dining', amount: 400.0, percentage: 40, icon: Icons.restaurant),
+        SpendingCategory(name: 'Transport', amount: 200.0, percentage: 20, icon: Icons.directions_car),
       ];
 
       await tester.pumpWidget(
@@ -83,6 +94,8 @@ void main() {
       expect(find.text('ALL CATEGORIES'), findsOneWidget);
       expect(find.text('Food & Dining'), findsOneWidget);
       expect(find.text('Transport'), findsOneWidget);
+      expect(find.text('\$400.00'), findsOneWidget);
+      expect(find.text('\$200.00'), findsOneWidget);
       expect(find.text('40%'), findsOneWidget);
       expect(find.text('20%'), findsOneWidget);
     });

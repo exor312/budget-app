@@ -43,10 +43,10 @@ class BudgetGoalsModel extends ChangeNotifier {
             t.date.month == now.month)
         .toList();
 
-    // Group expenses by category keyword
+    // Group expenses by stored category — use the transaction's category field directly
     final Map<String, double> categorySpent = {};
     for (final t in currentMonthExpenses) {
-      final category = _categorize(t.description);
+      final category = t.category.isNotEmpty ? t.category : 'Other';
       categorySpent[category] = (categorySpent[category] ?? 0) + t.amount.abs();
     }
 
@@ -118,51 +118,6 @@ class BudgetGoalsModel extends ChangeNotifier {
     'Bills': Icons.receipt,
     'Other': Icons.category,
   };
-
-  String _categorize(String description) {
-    final lower = description.toLowerCase();
-    if (lower.contains('food') ||
-        lower.contains('restaurant') ||
-        lower.contains('grocery') ||
-        lower.contains('groceries') ||
-        lower.contains('meal')) {
-      return 'Food & Dining';
-    }
-    if (lower.contains('gas') ||
-        lower.contains('uber') ||
-        lower.contains('car') ||
-        lower.contains('transport')) {
-      return 'Transport';
-    }
-    if (lower.contains('shop') ||
-        lower.contains('buy') ||
-        lower.contains('purchase') ||
-        lower.contains('amazon')) {
-      return 'Shopping';
-    }
-    if (lower.contains('movie') ||
-        lower.contains('netflix') ||
-        lower.contains('game') ||
-        lower.contains('fun') ||
-        lower.contains('subscription') ||
-        lower.contains('subs') ||
-        lower.contains('sub')) {
-      return 'Entertainment';
-    }
-    if (lower.contains('bill') ||
-        lower.contains('rent') ||
-        lower.contains('electric') ||
-        lower.contains('water')) {
-      return 'Bills';
-    }
-    // Health/medical keywords — map to Other (no dedicated Health category yet)
-    if (lower.contains('health') ||
-        lower.contains('pharmacy') ||
-        lower.contains('medical')) {
-      return 'Other';
-    }
-    return 'Other';
-  }
 
   @override
   void dispose() {

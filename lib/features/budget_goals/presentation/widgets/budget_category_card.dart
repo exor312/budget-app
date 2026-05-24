@@ -77,37 +77,45 @@ class BudgetCategoryCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: iconBgColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                category.icon,
-                color: iconColor,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category.name,
-                  style: FortunaTextStyles.titleMd,
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconBgColor,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                Text(
-                  category.description,
-                  style: FortunaTextStyles.bodySm.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
-                  ),
+                child: Icon(
+                  category.icon,
+                  color: iconColor,
+                  size: 24,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      category.name,
+                      style: FortunaTextStyles.titleMd,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      category.description,
+                      style: FortunaTextStyles.bodySm.copyWith(
+                        color: FortunaColors.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         IconButton(
           onPressed: () {},

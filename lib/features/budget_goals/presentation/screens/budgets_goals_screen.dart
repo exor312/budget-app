@@ -192,7 +192,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
           Expanded(
             flex: 1,
             child: SizedBox(
-              height: 200,
+              height: 280,
               child: GoalCard(goal: model.activeGoal),
             ),
           ),

@@ -30,18 +30,19 @@ class BudgetModel extends ChangeNotifier {
         .fold(0, (sum, t) => sum + t.amount.abs());
   }
 
-  /// Group expenses by category keyword for spending categories display.
+  /// Group expenses by stored category for spending categories display.
+  /// Uses the transaction's category field directly — no keyword re-categorization.
   List<SpendingCategory> get spendingCategories {
     final Map<String, double> categoryTotals = {};
     final expenseTransactions = _transactions.where((t) => t.amount < 0);
 
     for (final t in expenseTransactions) {
-      final category = _categorize(t.description);
+      final category = t.category.isNotEmpty ? t.category : 'Other';
       categoryTotals[category] = (categoryTotals[category] ?? 0) + t.amount.abs();
     }
 
     final total = categoryTotals.values.fold(0.0, (sum, v) => sum + v);
-    if (total == 0) return _defaultCategories;
+    if (total == 0) return [];
 
     final icons = {
       'Food & Dining': Icons.restaurant,
@@ -55,40 +56,13 @@ class BudgetModel extends ChangeNotifier {
     return categoryTotals.entries.map((e) {
       return SpendingCategory(
         name: e.key,
+        amount: e.value,
         percentage: (e.value / total * 100).round(),
         icon: icons[e.key] ?? Icons.category,
       );
-      // Sort by percentage descending
     }).toList()
-      ..sort((a, b) => b.percentage.compareTo(a.percentage));
+      ..sort((a, b) => b.amount.compareTo(a.amount));
   }
-
-  String _categorize(String description) {
-    final lower = description.toLowerCase();
-    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('grocery') || lower.contains('groceries') || lower.contains('meal')) {
-      return 'Food & Dining';
-    }
-    if (lower.contains('gas') || lower.contains('uber') || lower.contains('car') || lower.contains('transport')) {
-      return 'Transport';
-    }
-    if (lower.contains('shop') || lower.contains('buy') || lower.contains('purchase') || lower.contains('amazon')) {
-      return 'Shopping';
-    }
-    if (lower.contains('movie') || lower.contains('netflix') || lower.contains('game') || lower.contains('fun')) {
-      return 'Entertainment';
-    }
-    if (lower.contains('bill') || lower.contains('rent') || lower.contains('electric') || lower.contains('water')) {
-      return 'Bills';
-    }
-    return 'Other';
-  }
-
-  /// Default categories when no transactions exist.
-  List<SpendingCategory> get _defaultCategories => [
-        SpendingCategory(name: 'Food & Dining', percentage: 40, icon: Icons.restaurant),
-        SpendingCategory(name: 'Transport', percentage: 20, icon: Icons.directions_car),
-        SpendingCategory(name: 'Shopping', percentage: 15, icon: Icons.shopping_bag),
-      ];
 
   Future<void> loadTransactions() async {
     final prefs = await SharedPreferences.getInstance();
@@ -178,11 +152,13 @@ class Transaction {
 /// Spending category for dashboard display.
 class SpendingCategory {
   final String name;
+  final double amount;
   final int percentage;
   final IconData icon;
 
   const SpendingCategory({
     required this.name,
+    required this.amount,
     required this.percentage,
     required this.icon,
   });

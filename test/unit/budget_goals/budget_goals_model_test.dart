@@ -65,8 +65,8 @@ void main() {
     });
 
     test('computes spent from real transactions', () async {
-      await budgetModel.addTransaction(amount: -50.0, description: 'grocery food');
-      await budgetModel.addTransaction(amount: -30.0, description: 'uber transport');
+      await budgetModel.addTransaction(amount: -50.0, description: 'grocery food', category: 'Food & Dining');
+      await budgetModel.addTransaction(amount: -30.0, description: 'uber transport', category: 'Transport');
       // Force recompute
       model = BudgetGoalsModel(budgetModel: budgetModel);
 
