@@ -3,9 +3,9 @@
     "project_id": "budget-app-account-balances",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "REVIEW",
+    "current_phase": "DONE",
     "created_at": "2026-05-24T05:49:40.542078+00:00",
-    "updated_at": "2026-05-24T08:30:00.000000+00:00"
+    "updated_at": "2026-05-24T09:19:48.532353+00:00"
   },
   "idea": {
     "raw_input": "Add a feature in the budget tracker app where users can see the values of how much they have per account. Can be seen on the home page and a separate page for accounts. Follow the design template of the other pages.",
@@ -197,7 +197,7 @@
     "build": {
       "apk_ready": true,
       "ipa_ready": false,
-      "apk_size_mb": 50.0
+      "apk_size_mb": 50.1
     }
   },
   "architecture": {
@@ -831,10 +831,12 @@
     "ipa_ready": false
   },
   "last_action": {
-    "action": "RELEASE",
-    "tag": "v2.12.0",
-    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.12.0",
-    "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.12.0/app-release.apk",
-    "released_at": "2026-05-24T08:30:00.000000+00:00"
+    "type": "RELEASE",
+    "version": "v2.13.0",
+    "release_id": 328472519,
+    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.13.0",
+    "apk_download_url": "https://github.com/exor312/budget-app/releases/download/v2.13.0/app-release.apk",
+    "at": "2026-05-24T09:19:48.532368+00:00",
+    "tag": "v2.13.0"
   }
 }
