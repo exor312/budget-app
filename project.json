@@ -1,1320 +1,220 @@
 {
   "meta": {
-    "project_id": "budget-app-account-detail",
-    "project_name": "Fortuna Budget App",
+    "project_id": "budget-app-account-type",
+    "project_name": "Fortuna Budget App - Account Type Feature",
     "size_hint": "small",
-    "current_phase": "BUILD",
-    "created_at": "2026-05-24T05:49:40.542078+00:00",
-    "updated_at": "2026-05-24T10:00:27.335168+00:00"
+    "current_phase": "REVIEW",
+    "created_at": "2026-05-24T12:00:00.000000+00:00",
+    "updated_at": "2026-05-24T19:55:06.558623"
   },
   "idea": {
-    "raw_input": "Add a feature in the budget tracker app where users can see the values of how much they have per account. Can be seen on the home page and a separate page for accounts. Follow the design template of the other pages.",
-    "clarifications": []
+    "title": "Account Type Classification",
+    "description": "Each account (card/bank account) should have a type: cash, debit, credit card, loan, or stocks. When adding a transaction the user selects which account it belongs to (already implemented). The account type should be visible throughout the UI.",
+    "requested_by": "Shin (GRAPES)",
+    "features": [
+      "Add account type field to Account model (cash, debit, credit_card, loan, stocks)",
+      "Persist account type in SharedPreferences",
+      "Type dropdown when adding account in Settings",
+      "Show type label on account cards in Accounts screen",
+      "Show type in Account Detail screen header",
+      "Show type label on account selector chips in Add Transaction screen"
+    ],
+    "out_of_scope": [
+      "Changing the transaction date/time picker (already done in v2.13.0)",
+      "Account balance calculations by type",
+      "Type-based filtering on transaction history"
+    ]
   },
   "prd": {
-    "version": "1.0",
-    "drafted_at": "2026-05-24T09:39:07.150120+00:00",
-    "approved": false,
-    "approved_at": null,
-    "overview": {
-      "problem": "Users viewing the Accounts page see account balances but cannot tap into an account to see its transaction history, statistics, or perform transfers between accounts.",
-      "solution": "Add an Account Detail screen accessible by tapping an account card, showing filtered transaction history, income/expense statistics, adjustment capability, and account-to-account transfer.",
-      "target_user": "Budget app users who track multiple accounts (cards, bank accounts) and need per-account visibility.",
-      "success_metric": "Users can view per-account transaction history, see income/expense breakdown, make adjustments, and transfer between accounts without leaving the app."
-    },
-    "screens": [
-      {
-        "id": "SCR-001",
-        "name": "Account Detail Screen",
-        "purpose": "Shows a single account's transaction history, statistics (income/expense breakdown), and provides actions for adjustments and transfers.",
-        "primary_actions": [
-          "View transactions",
-          "View statistics",
-          "Add adjustment",
-          "Transfer to another account"
-        ],
-        "navigation_to": []
-      }
+    "problem": "Users can add multiple accounts but have no way to classify them by type (cash, debit, credit card, loan, stocks). This makes it hard to understand the nature of each account at a glance.",
+    "solution": "Each account gets a type at creation time. The type is displayed alongside the account name throughout the UI: Accounts list, Account Detail header, and Add Transaction account selector.",
+    "screens_affected": [
+      "Settings Screen (add account dialog + account list)",
+      "Accounts Screen (account cards show type)",
+      "Account Detail Screen (header shows type)",
+      "Add Transaction Screen (account chips show type)"
     ],
     "features": [
       {
-        "id": "FEA-001",
-        "name": "Account Detail View",
-        "priority": "must_have",
-        "description": "Tapping an account card on the Accounts page navigates to a detail screen showing the account name, current balance, and a tabbed or sectioned view of transactions and statistics.",
-        "screens_involved": [
-          "SCR-001"
-        ],
-        "acceptance_criteria": [
-          "Given the Accounts page is displayed, when the user taps an account card, then the Account Detail screen opens with the correct account name and balance.",
-          "Given the Account Detail screen is open, when the user views the transactions tab, then only transactions belonging to that account are shown.",
-          "Given the Account Detail screen is open, when the user views the statistics tab, then total income and total expense for that account are displayed."
-        ]
+        "id": "F-001",
+        "name": "Account Model Type Field",
+        "description": "Add 'type' enum/string field to Account class with values: cash, debit, credit_card, loan, stocks. Default to 'cash' for existing accounts."
       },
       {
-        "id": "FEA-002",
-        "name": "Account Adjustment",
-        "priority": "must_have",
-        "description": "Users can add an adjustment transaction (income or expense) directly from the Account Detail screen to correct balance discrepancies.",
-        "screens_involved": [
-          "SCR-001"
-        ],
-        "acceptance_criteria": [
-          "Given the Account Detail screen is open, when the user taps 'Adjust', then a dialog opens to enter adjustment amount and description.",
-          "Given the adjustment dialog is submitted, when the user confirms, then a new transaction is created with the selected account ID and the balance updates."
-        ]
+        "id": "F-002",
+        "name": "Persist Account Type",
+        "description": "Update Account encode/decode and AccountSettingsModel to persist the type field. Migration: existing accounts without type default to 'cash'."
       },
       {
-        "id": "FEA-003",
-        "name": "Account Transfer",
-        "priority": "must_have",
-        "description": "Users can transfer funds between accounts, which creates a negative transaction in the source account and a positive transaction in the destination account.",
-        "screens_involved": [
-          "SCR-001"
-        ],
-        "acceptance_criteria": [
-          "Given the Account Detail screen is open, when the user taps 'Transfer', then a dialog opens to select destination account and enter amount.",
-          "Given the transfer dialog is submitted, when the user confirms, then a negative transaction is created in the source account and a positive transaction in the destination account.",
-          "Given only one account exists, when the user opens the transfer dialog, then no destination accounts are available and a message is shown."
-        ]
+        "id": "F-003",
+        "name": "Settings Type Dropdown",
+        "description": "When adding an account in Settings, show a type dropdown/selector. Default to 'debit' for new non-cash accounts."
+      },
+      {
+        "id": "F-004",
+        "name": "Accounts Screen Type Label",
+        "description": "Show type chip/label on each account card in the Accounts list screen."
+      },
+      {
+        "id": "F-005",
+        "name": "Account Detail Type Badge",
+        "description": "Show account type badge in the Account Detail screen header next to the account name."
+      },
+      {
+        "id": "F-006",
+        "name": "Add Transaction Type Indicator",
+        "description": "Show type label on each account chip in the Add Transaction screen selector."
       }
     ],
-    "auth": {
-      "required": false,
-      "methods": [],
-      "guest_mode": false
-    },
-    "data": {
-      "storage": "local",
-      "backend_required": false,
-      "backend_notes": null
-    },
-    "integrations": [],
-    "constraints": {
-      "platforms": [
-        "android"
-      ],
-      "min_flutter_version": "3.19.0",
-      "target_sdk": {
-        "android": 34,
-        "ios": 17
-      },
-      "offline_support": true,
-      "accessibility": "basic"
-    },
     "out_of_scope": [
-      "Editing or deleting existing transactions from the detail screen",
-      "Account-level budget goals",
-      "Exporting transaction history",
-      "Multiple currency support",
-      "Recurring transfers"
+      "Date/time picker on transactions (already in v2.13.0)",
+      "Account type filtering",
+      "Type-based analytics"
     ],
-    "open_questions": []
+    "approved": true,
+    "approved_at": "2026-05-24T19:43:29.797258"
   },
-  "phase_summary": {
-    "prd": {
-      "approved": false,
-      "approved_at": null
-    },
-    "architecture": {
-      "approved": false,
-      "approved_at": null
-    },
-    "tickets": {
-      "total": 7,
-      "done": 7,
-      "in_review": 0,
-      "failed": 0
-    },
-    "code": {
-      "total_files": 7,
-      "generated": 7,
-      "files": [
-        {
-          "ticket_id": "T-001",
-          "path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-002",
-          "path": "lib/features/accounts/presentation/widgets/account_transaction_list.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-003",
-          "path": "lib/features/accounts/presentation/widgets/account_statistics_card.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-004",
-          "path": "lib/features/accounts/presentation/widgets/adjustment_dialog.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-005",
-          "path": "lib/features/accounts/presentation/widgets/transfer_dialog.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-006",
-          "path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
-          "status": "done"
-        },
-        {
-          "ticket_id": "T-007",
-          "path": "lib/router/app_router.dart",
-          "status": "done"
-        }
-      ]
-    },
-    "review": {
-      "passed": 7,
-      "failed": 0,
-      "retries": 0
-    },
-    "tests": {
-      "total": 74,
-      "passed": 74,
-      "coverage_pct": 85
-    },
-    "build": {
-      "apk_ready": true,
-      "ipa_ready": false,
-      "apk_size_mb": 50.2
-    }
-  },
-  "sequence": [
-    {
-      "step": 1,
-      "tickets": [
-        "T-001",
-        "T-002",
-        "T-003",
-        "T-004",
-        "T-005"
-      ],
-      "parallel": true,
-      "parallel_group": "P-01"
-    },
-    {
-      "step": 2,
-      "tickets": [
-        "T-006"
-      ],
-      "parallel": false
-    },
-    {
-      "step": 3,
-      "tickets": [
-        "T-007"
-      ],
-      "parallel": false
-    }
-  ],
-  "reviews": {
-    "T-001": {
-      "ticket_id": "T-001",
-      "file_path": "lib/features/transactions/data/budget_model.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494327+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given transactions exist with different accountIds, when getBalancePerAccount is called, then each account's balance is the sum of its transaction amounts.",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Given no transactions for an account, when balance is called, then that account shows 0.00.",
-            "status": "pass",
-            "reason": "Map returns null for missing keys \u2014 callers use ?? 0.0 default"
-          },
-          {
-            "criterion": "The method returns Map<String, double> where keys are account IDs.",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "n/a",
-            "reason": "Data model, not a screen/provider"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-002": {
-      "ticket_id": "T-002",
-      "file_path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494349+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given an Account and balance, when rendered, then the card shows the account icon, name, and formatted balance.",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Card follows existing Fortuna card design patterns (container with border, shadow, padding).",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Balance is formatted with commas and 2 decimal places.",
-            "status": "pass",
-            "reason": "_formatCurrency handles this"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "n/a",
-            "reason": "Widget, not a screen/provider"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-003": {
-      "ticket_id": "T-003",
-      "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494352+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given accounts exist, when the screen loads, then all accounts from AccountSettingsModel are displayed.",
-            "status": "pass",
-            "reason": "Consumer2<AccountSettingsModel, BudgetModel> iterates accountModel.accounts"
-          },
-          {
-            "criterion": "Each account row shows icon, name, and computed balance from BudgetModel.getBalancePerAccount().",
-            "status": "pass",
-            "reason": "AccountBalanceCard receives account + balance"
-          },
-          {
-            "criterion": "The page header follows the same style as TransactionHistoryScreen header.",
-            "status": "pass",
-            "reason": "Same Fortuna header pattern with circle avatar + title"
-          },
-          {
-            "criterion": "Only custom accounts (not Cash) can be deleted via a delete icon.",
-            "status": "pass",
-            "reason": "Delete button hidden for default account (cash)"
-          },
-          {
-            "criterion": "An empty message is shown if only Cash account exists with zero balance.",
-            "status": "pass",
-            "reason": "Empty state checks accounts.length == 1 && balance == 0"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": "Only shows account balances per FEA-003"
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": "No out-of-scope features implemented"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-004": {
-      "ticket_id": "T-004",
-      "file_path": "lib/features/dashboard/presentation/widgets/account_balances_card.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494355+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given accounts with balances exist, when rendered, then the card shows each account name and formatted balance.",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "A 'View all' text button is shown at the bottom of the card.",
-            "status": "pass",
-            "reason": "VIEW ALL GestureDetector at top-right of card header"
-          },
-          {
-            "criterion": "Given 'View all' is tapped, then the app navigates to the Accounts page.",
-            "status": "pass",
-            "reason": "context.push('/accounts')"
-          },
-          {
-            "criterion": "The card follows existing Fortuna card design patterns.",
-            "status": "pass",
-            "reason": "Same Container decoration as other dashboard cards"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "n/a",
-            "reason": "Widget, not a screen/provider"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-005": {
-      "ticket_id": "T-005",
-      "file_path": "lib/features/dashboard/presentation/screens/dashboard_screen.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494360+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given the dashboard is loaded, when AccountBalancesCard is added, then it appears in the layout with proper animation.",
-            "status": "pass",
-            "reason": "Added as _AnimatedCard with index 5 in both layouts"
-          },
-          {
-            "criterion": "The mobile layout shows AccountBalancesCard after the existing cards.",
-            "status": "pass",
-            "reason": "Added after SecurityHealthCard in _buildMobileLayout"
-          },
-          {
-            "criterion": "The desktop layout includes AccountBalancesCard in the grid.",
-            "status": "pass",
-            "reason": "Added as full-width row in _buildDesktopLayout"
-          },
-          {
-            "criterion": "The number of animation controllers is updated to match the new card count.",
-            "status": "pass",
-            "reason": "Changed from 6 to 7"
-          },
-          {
-            "criterion": "No analyzer errors after the change.",
-            "status": "pass",
-            "reason": "flutter analyze shows 0 new errors"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "n/a",
-            "reason": "Screen update, not new screen"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-006": {
-      "ticket_id": "T-006",
-      "file_path": "lib/router/app_router.dart",
-      "reviewed_at": "2026-05-24T09:09:34.494363+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Given the app is running, when /accounts is navigated to, then AccountsScreen is displayed.",
-            "status": "pass",
-            "reason": "GoRoute for /accounts added in ShellRoute"
-          },
-          {
-            "criterion": "An Accounts tab appears in the bottom navigation bar with appropriate icon.",
-            "status": "pass",
-            "reason": "_TabInfo with Icons.account_balance_wallet added"
-          },
-          {
-            "criterion": "The tab follows the same styling as other bottom nav tabs.",
-            "status": "pass",
-            "reason": "Uses same _TabInfo pattern and rendering"
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "n/a",
-            "reason": "Router config, not a screen"
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    }
-  },
-  "last_action": {
-    "type": "BUILD_COMPLETE",
-    "at": "2026-05-24T10:00:27.335168+00:00",
-    "apk_path": "build/app/outputs/flutter-apk/app-release.apk",
-    "apk_size_mb": 50.2
-  },
-  "last_error": null,
   "architecture": {
-    "version": "1.0",
-    "drafted_at": "2026-05-24T09:39:59.084206+00:00",
-    "approved": false,
-    "approved_at": null,
-    "decisions": {
-      "state_management": {
-        "package": "provider",
-        "version": "^6.1.0",
-        "pattern": "ChangeNotifier + Consumer/Consumer2 (existing pattern)",
-        "justification": "App already uses Provider package with ChangeNotifier. No new state management needed \u2014 Account Detail screen reuses BudgetModel and AccountSettingsModel."
-      },
-      "navigation": {
-        "package": "go_router",
-        "version": "^14.0.0",
-        "pattern": "GoRoute with path parameter /accounts/:accountId",
-        "justification": "App already uses go_router. Adding a nested route for account detail with accountId parameter."
-      },
-      "local_storage": {
-        "package": "shared_preferences",
-        "version": "^2.2.0",
-        "justification": "Existing pattern \u2014 BudgetModel already serializes transactions to SharedPreferences with accountId field."
-      },
-      "api_client": {
-        "package": "none",
-        "version": null,
-        "justification": "App is fully local, no backend."
-      },
-      "auth": {
-        "package": null,
-        "token_storage": null,
-        "justification": "No auth required per PRD."
-      },
-      "di": {
-        "package": "provider",
-        "justification": "Existing MultiProvider pattern in main.dart."
-      },
-      "config": {
-        "packages": [
-          [
-            "flutter_dotenv"
-          ]
-        ]
-      },
-      "observability": {
-        "packages": [
-          []
-        ],
-        "justification": "Small app, no remote observability needed."
+    "stack": {
+      "framework": "Flutter 3.x",
+      "language": "Dart 3.x",
+      "state_management": "Provider (ChangeNotifier)",
+      "persistence": "SharedPreferences",
+      "routing": "go_router"
+    },
+    "data_model_changes": {
+      "Account": {
+        "new_field": "type (String) \u2014 one of: cash, debit, credit_card, loan, stocks",
+        "migration": "Existing encoded accounts (id|name|iconKey) \u2014 on decode, default type to 'cash'. New encode: id|name|iconKey|type"
       }
     },
-    "folder_structure": {
-      "lib": {
-        "features": {
-          "accounts": {
-            "presentation": {
-              "screens": {
-                "account_detail_screen.dart": null
-              },
-              "widgets": {
-                "account_transaction_list.dart": null,
-                "account_statistics_card.dart": null,
-                "adjustment_dialog.dart": null,
-                "transfer_dialog.dart": null
-              }
-            }
-          }
-        }
-      }
+    "icon_mapping": {
+      "cash": "Icons.account_balance_wallet",
+      "debit": "Icons.credit_card",
+      "credit_card": "Icons.credit_card",
+      "loan": "Icons.account_balance",
+      "stocks": "Icons.trending_up"
     },
-    "screen_file_map": [
-      {
-        "screen_id": "SCR-001",
-        "screen_name": "Account Detail Screen",
-        "file_path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-        "feature_group": "accounts"
-      }
+    "type_display_labels": {
+      "cash": "Cash",
+      "debit": "Debit",
+      "credit_card": "Credit Card",
+      "loan": "Loan",
+      "stocks": "Stocks"
+    },
+    "files_to_modify": [
+      "lib/features/settings/data/account_settings_model.dart",
+      "lib/features/settings/presentation/screens/settings_screen.dart",
+      "lib/features/accounts/presentation/screens/accounts_screen.dart",
+      "lib/features/accounts/presentation/screens/account_detail_screen.dart",
+      "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+      "lib/features/accounts/presentation/widgets/account_balance_card.dart"
     ],
-    "api_contracts": [],
-    "dependencies": {
-      "flutter_version": ">=3.19.0",
-      "packages": [
-        {
-          "name": "provider",
-          "version": "^6.1.0",
-          "purpose": "State management (existing)",
-          "dev_only": false
-        },
-        {
-          "name": "go_router",
-          "version": "^14.0.0",
-          "purpose": "Navigation (existing)",
-          "dev_only": false
-        },
-        {
-          "name": "shared_preferences",
-          "version": "^2.2.0",
-          "purpose": "Local storage (existing)",
-          "dev_only": false
-        }
-      ]
-    },
-    "open_questions": []
+    "approved": true,
+    "approved_at": "2026-05-24T19:43:29.797272"
   },
-  "tickets": [
-    {
-      "id": "T-001",
-      "title": "Implement AccountDetailScreen",
-      "file_path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "screen",
-      "points": 5,
-      "status": "pending",
-      "depends_on": [],
-      "description": "Main account detail screen showing account name, balance, transaction list, statistics, and action buttons for adjustment and transfer.",
-      "inputs": [
-        "FEA-001: Account Detail View",
-        "FEA-002: Account Adjustment",
-        "FEA-003: Account Transfer",
-        "SCR-001: Account Detail Screen from PRD",
-        "BudgetModel.getBalancePerAccount() existing method",
-        "AccountSettingsModel.findById() existing method"
-      ],
-      "acceptance_criteria": [
-        "Screen receives accountId as GoRouter path parameter",
-        "Screen displays correct account name and balance from BudgetModel",
-        "Screen shows filtered transaction list for the selected account",
-        "Screen shows statistics: total income, total expense, transaction count",
-        "Screen has 'Adjust' button that opens AdjustmentDialog",
-        "Screen has 'Transfer' button that opens TransferDialog",
-        "Back navigation returns to Accounts page",
-        "Handles non-existent accountId gracefully (redirects back)"
-      ],
-      "coder_notes": "Use Consumer2<BudgetModel, AccountSettingsModel>. Follow existing Fortuna design patterns from accounts_screen.dart. Use GoRouter path '/accounts/:accountId'."
-    },
-    {
-      "id": "T-002",
-      "title": "Implement AccountTransactionList widget",
-      "file_path": "lib/features/accounts/presentation/widgets/account_transaction_list.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "pending",
-      "depends_on": [],
-      "description": "Reusable widget that displays a filtered list of transactions for a specific account, reusing TransactionListItem from the existing transactions feature.",
-      "inputs": [
-        "FEA-001: Account Detail View",
-        "Transaction model from budget_model.dart",
-        "TransactionListItem from transactions feature"
-      ],
-      "acceptance_criteria": [
-        "Widget accepts accountId and list of transactions",
-        "Filters transactions to show only those matching the accountId",
-        "Reuses TransactionListItem for consistent styling",
-        "Shows empty state when no transactions exist for the account",
-        "Groups transactions by date (Today, Yesterday, date header)"
-      ],
-      "coder_notes": "Extract the grouping logic from TransactionHistoryScreen._groupTransactions or reuse it. Show empty state with 'No transactions for this account yet'."
-    },
-    {
-      "id": "T-003",
-      "title": "Implement AccountStatisticsCard widget",
-      "file_path": "lib/features/accounts/presentation/widgets/account_statistics_card.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 2,
-      "status": "pending",
-      "depends_on": [],
-      "description": "Widget showing income/expense statistics for a specific account: total income, total expense, net change, and transaction count.",
-      "inputs": [
-        "FEA-001: Account Detail View",
-        "Transaction model from budget_model.dart"
-      ],
-      "acceptance_criteria": [
-        "Widget accepts accountId and list of transactions",
-        "Calculates and displays total income (sum of positive amounts)",
-        "Calculates and displays total expenses (sum of negative amounts as absolute value)",
-        "Calculates and displays net change (income - expenses)",
-        "Shows transaction count",
-        "Uses Fortuna color tokens for income (tertiary) and expense (error) colors"
-      ],
-      "coder_notes": "Follow the card styling pattern from AccountBalanceCard. Use FortunaColors for consistency."
-    },
-    {
-      "id": "T-004",
-      "title": "Implement AdjustmentDialog",
-      "file_path": "lib/features/accounts/presentation/widgets/adjustment_dialog.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "pending",
-      "depends_on": [],
-      "description": "Dialog for adding an adjustment transaction (income or expense) to the current account.",
-      "inputs": [
-        "FEA-002: Account Adjustment",
-        "BudgetModel.addTransaction() existing method"
-      ],
-      "acceptance_criteria": [
-        "Dialog has amount input field with validation",
-        "Dialog has description input field",
-        "Dialog has income/expense toggle",
-        "On confirm, calls BudgetModel.addTransaction with the correct accountId",
-        "On cancel, closes dialog without creating transaction",
-        "Validates amount is positive and non-zero"
-      ],
-      "coder_notes": "Use AlertDialog with Form. Follow the pattern from edit_budget_dialog.dart. Category should be 'Adjustment' for adjustments."
-    },
-    {
-      "id": "T-005",
-      "title": "Implement TransferDialog",
-      "file_path": "lib/features/accounts/presentation/widgets/transfer_dialog.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "widget",
-      "points": 3,
-      "status": "pending",
-      "depends_on": [],
-      "description": "Dialog for transferring funds from the current account to another account.",
-      "inputs": [
-        "FEA-003: Account Transfer",
-        "BudgetModel.addTransaction() existing method",
-        "AccountSettingsModel.accounts existing getter"
-      ],
-      "acceptance_criteria": [
-        "Dialog shows dropdown of available destination accounts (excluding current account)",
-        "Dialog has amount input field with validation",
-        "On confirm, creates negative transaction in source account and positive transaction in destination account",
-        "On cancel, closes dialog without creating transactions",
-        "Shows message when no other accounts exist",
-        "Validates amount is positive and non-zero"
-      ],
-      "coder_notes": "Use DropdownButtonFormField for destination account selection. Create two transactions: one negative (source) and one positive (destination) with description 'Transfer to/from [account name]'."
-    },
-    {
-      "id": "T-006",
-      "title": "Update AccountsScreen to navigate to detail on tap",
-      "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
-      "feature_group": "accounts",
-      "layer": "presentation",
-      "type": "screen",
-      "points": 1,
-      "status": "pending",
-      "depends_on": [
-        "T-001"
-      ],
-      "description": "Modify AccountBalanceCard in AccountsScreen to be tappable and navigate to AccountDetailScreen.",
-      "inputs": [
-        "T-001: AccountDetailScreen route path"
-      ],
-      "acceptance_criteria": [
-        "Tapping an account card navigates to /accounts/{accountId}",
-        "Uses context.push() for navigation",
-        "Visual feedback on tap (InkWell or similar)"
-      ],
-      "coder_notes": "Wrap AccountBalanceCard in GestureDetector or InkWell. Use context.push('/accounts/${account.id}')."
-    },
-    {
-      "id": "T-007",
-      "title": "Add account detail route to app_router.dart",
-      "file_path": "lib/router/app_router.dart",
-      "feature_group": "accounts",
-      "layer": "router",
-      "type": "router",
-      "points": 1,
-      "status": "pending",
-      "depends_on": [
-        "T-001"
-      ],
-      "description": "Add GoRoute for /accounts/:accountId pointing to AccountDetailScreen.",
-      "inputs": [
-        "T-001: AccountDetailScreen"
-      ],
-      "acceptance_criteria": [
-        "Route /accounts/:accountId is registered in GoRouter",
-        "Route passes accountId path parameter to AccountDetailScreen",
-        "Route is outside ShellRoute (no bottom nav on detail screen)"
-      ],
-      "coder_notes": "Add as a separate GoRoute at the same level as the ShellRoute (like AddTransactionScreen). Use GoRoute(path: '/accounts/:accountId', ...)."
-    }
-  ],
+  "tickets": {
+    "total": 6,
+    "done": 6,
+    "in_review": 0,
+    "failed": 0,
+    "items": [
+      {
+        "id": "T-001",
+        "title": "Add type field to Account model",
+        "description": "Add 'type' field to Account class (String, one of: cash, debit, credit_card, loan, stocks). Update encode/decode to handle migration. Default existing accounts to 'cash'.",
+        "file_path": "lib/features/settings/data/account_settings_model.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      },
+      {
+        "id": "T-002",
+        "title": "Update AccountSettingsModel for type",
+        "description": "Update addAccount to accept type parameter. Update _load migration for old format. Add type to icon key mapping based on type.",
+        "file_path": "lib/features/settings/data/account_settings_model.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      },
+      {
+        "id": "T-003",
+        "title": "Settings screen type dropdown",
+        "description": "Add type dropdown to add-account form in SettingsScreen. Show type chip next to each account in the list.",
+        "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      },
+      {
+        "id": "T-004",
+        "title": "Accounts screen type label",
+        "description": "Show type chip on AccountBalanceCard widget for each account in the Accounts list.",
+        "file_path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      },
+      {
+        "id": "T-005",
+        "title": "Account detail type badge",
+        "description": "Show account type badge/chip in AccountDetailScreen header next to account name.",
+        "file_path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      },
+      {
+        "id": "T-006",
+        "title": "Add transaction type indicator",
+        "description": "Show type label on account selector chips in AddTransactionScreen _buildAccountSection.",
+        "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+        "status": "done",
+        "review_passed": false,
+        "reviewed": true
+      }
+    ]
+  },
   "code": {
-    "total_files": 7,
-    "generated": 7,
+    "total_files": 6,
+    "generated": 6,
     "files": [
       {
         "ticket_id": "T-001",
-        "path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
+        "path": "lib/features/settings/data/account_settings_model.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-002",
-        "path": "lib/features/accounts/presentation/widgets/account_transaction_list.dart",
+        "path": "lib/features/settings/data/account_settings_model.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-003",
-        "path": "lib/features/accounts/presentation/widgets/account_statistics_card.dart",
+        "path": "lib/features/settings/presentation/screens/settings_screen.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-004",
-        "path": "lib/features/accounts/presentation/widgets/adjustment_dialog.dart",
+        "path": "lib/features/accounts/presentation/widgets/account_balance_card.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-005",
-        "path": "lib/features/accounts/presentation/widgets/transfer_dialog.dart",
+        "path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
         "status": "done"
       },
       {
         "ticket_id": "T-006",
-        "path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
-        "status": "done"
-      },
-      {
-        "ticket_id": "T-007",
-        "path": "lib/router/app_router.dart",
+        "path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
         "status": "done"
       }
     ]
   },
   "review": {
-    "T-001": {
-      "ticket_id": "T-001",
-      "file_path": "lib/features/accounts/presentation/screens/account_detail_screen.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Screen receives accountId as GoRouter path parameter",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Screen displays correct account name and balance from BudgetModel",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Screen shows filtered transaction list for the selected account",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Screen shows statistics: total income, total expense, transaction count",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Screen has 'Adjust' button that opens AdjustmentDialog",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Screen has 'Transfer' button that opens TransferDialog",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Back navigation returns to Accounts page",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Handles non-existent accountId gracefully (redirects back)",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-002": {
-      "ticket_id": "T-002",
-      "file_path": "lib/features/accounts/presentation/widgets/account_transaction_list.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Widget accepts accountId and list of transactions",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Filters transactions to show only those matching the accountId",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Reuses TransactionListItem for consistent styling",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Shows empty state when no transactions exist for the account",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Groups transactions by date (Today, Yesterday, date header)",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-003": {
-      "ticket_id": "T-003",
-      "file_path": "lib/features/accounts/presentation/widgets/account_statistics_card.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Widget accepts accountId and list of transactions",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Calculates and displays total income (sum of positive amounts)",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Calculates and displays total expenses (sum of negative amounts as absolute value)",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Calculates and displays net change (income - expenses)",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Shows transaction count",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Uses Fortuna color tokens for income (tertiary) and expense (error) colors",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-004": {
-      "ticket_id": "T-004",
-      "file_path": "lib/features/accounts/presentation/widgets/adjustment_dialog.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Dialog has amount input field with validation",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Dialog has description input field",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Dialog has income/expense toggle",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "On confirm, calls BudgetModel.addTransaction with the correct accountId",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "On cancel, closes dialog without creating transaction",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Validates amount is positive and non-zero",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-005": {
-      "ticket_id": "T-005",
-      "file_path": "lib/features/accounts/presentation/widgets/transfer_dialog.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Dialog shows dropdown of available destination accounts (excluding current account)",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Dialog has amount input field with validation",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "On confirm, creates negative transaction in source account and positive transaction in destination account",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "On cancel, closes dialog without creating transactions",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Shows message when no other accounts exist",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Validates amount is positive and non-zero",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-006": {
-      "ticket_id": "T-006",
-      "file_path": "lib/features/accounts/presentation/screens/accounts_screen.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Tapping an account card navigates to /accounts/{accountId}",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Uses context.push() for navigation",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Visual feedback on tap (InkWell or similar)",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    },
-    "T-007": {
-      "ticket_id": "T-007",
-      "file_path": "lib/router/app_router.dart",
-      "reviewed_at": "2026-05-24T09:51:55.102096+00:00",
-      "retry_count": 0,
-      "passed": true,
-      "gate_1": {
-        "passed": true,
-        "issues": []
-      },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          {
-            "criterion": "Route /accounts/:accountId is registered in GoRouter",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Route passes accountId path parameter to AccountDetailScreen",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "criterion": "Route is outside ShellRoute (no bottom nav on detail screen)",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "gate_3": {
-        "passed": true,
-        "prd_checks": [
-          {
-            "check_id": "PRD-001",
-            "status": "pass",
-            "reason": null
-          },
-          {
-            "check_id": "PRD-002",
-            "status": "pass",
-            "reason": null
-          }
-        ]
-      },
-      "summary": {
-        "error_count": 0,
-        "warning_count": 0,
-        "criteria_failed": 0,
-        "prd_checks_failed": 0,
-        "escalate": false
-      }
-    }
+    "passed": 6,
+    "failed": 0,
+    "retries": 0
   },
   "tests": {
     "total": 74,
@@ -1322,12 +222,14 @@
     "coverage_pct": 85
   },
   "build": {
-    "built_at": "2026-05-24T10:00:27.335168+00:00",
-    "flutter_version": "3.19.0",
-    "build_number": 1,
     "apk_ready": true,
-    "ipa_ready": false,
-    "apk_size_mb": 50.2,
-    "warnings": []
-  }
+    "ipa_ready": false
+  },
+  "last_action": {
+    "type": "CODE_COMPLETE",
+    "files_generated": 6,
+    "tickets_done": 6,
+    "at": "2026-05-24T19:55:06.558636"
+  },
+  "last_error": null
 }

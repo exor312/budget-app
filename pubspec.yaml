@@ -1,7 +1,7 @@
 name: budget_app
 description: A modern budgeting app with Fortuna dashboard design.
 publish_to: 'none'
-version: 2.4.0+1
+version: 2.13.0+1
 
 environment:
   sdk: '>=2.19.0 <4.0.0'

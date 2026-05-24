@@ -33,7 +33,7 @@ class AccountDetailScreen extends StatelessWidget {
           backgroundColor: FortunaColors.surface,
           body: Column(
             children: [
-              _buildHeader(context, account.name, balance, accountModel),
+              _buildHeader(context, account, balance),
               Expanded(
                 child: SingleChildScrollView(
                   child: Center(
@@ -72,9 +72,8 @@ class AccountDetailScreen extends StatelessWidget {
 
   Widget _buildHeader(
     BuildContext context,
-    String accountName,
+    Account account,
     double balance,
-    AccountSettingsModel accountModel,
   ) {
     final isNegative = balance < 0;
 
@@ -106,13 +105,29 @@ class AccountDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    accountName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: FortunaColors.primary,
-                      letterSpacing: -0.02,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          account.name,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: FortunaColors.primary,
+                            letterSpacing: -0.02,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          accountTypeLabel(account.type),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: FortunaColors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

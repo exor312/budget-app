@@ -11,6 +11,7 @@ import '../widgets/spending_categories_card.dart';
 import '../widgets/quick_insights_card.dart';
 import '../widgets/security_health_card.dart';
 import '../widgets/account_balances_card.dart';
+import '../widgets/spending_chart_card.dart';
 
 /// Main Dashboard screen — bento grid layout matching the Fortuna reference design.
 class DashboardScreen extends StatefulWidget {
@@ -40,8 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen>
     // Scroll shadow listener
     _scrollController.addListener(_onScroll);
 
-    // Initialize staggered animations for 7 cards
-    _controllers = List.generate(7, (index) {
+    // Initialize staggered animations for 8 cards
+    _controllers = List.generate(8, (index) {
       return AnimationController(
         vsync: this,
         duration: const Duration(milliseconds: 500),
@@ -258,6 +259,17 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Column(
       children: [
         const SizedBox(height: 8),
+        // Row 0: Spending Chart (full width)
+        _AnimatedCard(
+          index: 0,
+          slideAnimation: _slideAnimations[0],
+          fadeAnimation: _fadeAnimations[0],
+          child: SpendingChartCard(
+            getDailySpending: budgetModel.getDailySpending,
+            getMonthlySpending: budgetModel.getMonthlySpending,
+          ),
+        ),
+        const SizedBox(height: 16),
         // Row 1: Net Worth (7/12) + Budget (5/12)
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,9 +277,9 @@ class _DashboardScreenState extends State<DashboardScreen>
             Expanded(
               flex: 7,
               child: _AnimatedCard(
-                index: 0,
-                slideAnimation: _slideAnimations[0],
-                fadeAnimation: _fadeAnimations[0],
+                index: 1,
+                slideAnimation: _slideAnimations[1],
+                fadeAnimation: _fadeAnimations[1],
                 child: NetWorthCard(
                   balance: budgetModel.netBalance,
                 ),
@@ -277,9 +289,9 @@ class _DashboardScreenState extends State<DashboardScreen>
             Expanded(
               flex: 5,
               child: _AnimatedCard(
-                index: 1,
-                slideAnimation: _slideAnimations[1],
-                fadeAnimation: _fadeAnimations[1],
+                index: 2,
+                slideAnimation: _slideAnimations[2],
+                fadeAnimation: _fadeAnimations[2],
                 child: SizedBox(
                   height: 280,
                   child: BudgetProgressCard(
@@ -299,9 +311,9 @@ class _DashboardScreenState extends State<DashboardScreen>
             Expanded(
               flex: 6,
               child: _AnimatedCard(
-                index: 2,
-                slideAnimation: _slideAnimations[2],
-                fadeAnimation: _fadeAnimations[2],
+                index: 3,
+                slideAnimation: _slideAnimations[3],
+                fadeAnimation: _fadeAnimations[3],
                 child: SpendingCategoriesCard(
                   categories: budgetModel.spendingCategories,
                 ),
@@ -313,9 +325,9 @@ class _DashboardScreenState extends State<DashboardScreen>
               child: Column(
                 children: [
                   _AnimatedCard(
-                    index: 3,
-                    slideAnimation: _slideAnimations[3],
-                    fadeAnimation: _fadeAnimations[3],
+                    index: 4,
+                    slideAnimation: _slideAnimations[4],
+                    fadeAnimation: _fadeAnimations[4],
                     child: QuickInsightsCard(
                       savingsAmount: savingsAmount,
                       billsDueLabel: billsDueLabel,
@@ -323,9 +335,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                   ),
                   const SizedBox(height: 16),
                   _AnimatedCard(
-                    index: 4,
-                    slideAnimation: _slideAnimations[4],
-                    fadeAnimation: _fadeAnimations[4],
+                    index: 5,
+                    slideAnimation: _slideAnimations[5],
+                    fadeAnimation: _fadeAnimations[5],
                     child: SecurityHealthCard(
                       score: securityScore,
                     ),
@@ -337,9 +349,9 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
         const SizedBox(height: 16),
         _AnimatedCard(
-          index: 5,
-          slideAnimation: _slideAnimations[5],
-          fadeAnimation: _fadeAnimations[5],
+          index: 6,
+          slideAnimation: _slideAnimations[6],
+          fadeAnimation: _fadeAnimations[6],
           child: const AccountBalancesCard(),
         ),
         const SizedBox(height: 100),
@@ -356,13 +368,23 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 0,
           slideAnimation: _slideAnimations[0],
           fadeAnimation: _fadeAnimations[0],
-          child: NetWorthCard(balance: budgetModel.netBalance),
+          child: SpendingChartCard(
+            getDailySpending: budgetModel.getDailySpending,
+            getMonthlySpending: budgetModel.getMonthlySpending,
+          ),
         ),
         const SizedBox(height: 16),
         _AnimatedCard(
           index: 1,
           slideAnimation: _slideAnimations[1],
           fadeAnimation: _fadeAnimations[1],
+          child: NetWorthCard(balance: budgetModel.netBalance),
+        ),
+        const SizedBox(height: 16),
+        _AnimatedCard(
+          index: 2,
+          slideAnimation: _slideAnimations[2],
+          fadeAnimation: _fadeAnimations[2],
           child: BudgetProgressCard(
             spentAmount: budgetGoalsModel.totalSpent,
             totalBudget: budgetGoalsModel.totalMonthlyLimit,
@@ -370,21 +392,11 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
         const SizedBox(height: 16),
         _AnimatedCard(
-          index: 2,
-          slideAnimation: _slideAnimations[2],
-          fadeAnimation: _fadeAnimations[2],
-          child: SpendingCategoriesCard(
-            categories: budgetModel.spendingCategories,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _AnimatedCard(
           index: 3,
           slideAnimation: _slideAnimations[3],
           fadeAnimation: _fadeAnimations[3],
-          child: QuickInsightsCard(
-            savingsAmount: savingsAmount,
-            billsDueLabel: billsDueLabel,
+          child: SpendingCategoriesCard(
+            categories: budgetModel.spendingCategories,
           ),
         ),
         const SizedBox(height: 16),
@@ -392,8 +404,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 4,
           slideAnimation: _slideAnimations[4],
           fadeAnimation: _fadeAnimations[4],
-          child: SecurityHealthCard(
-            score: securityScore,
+          child: QuickInsightsCard(
+            savingsAmount: savingsAmount,
+            billsDueLabel: billsDueLabel,
           ),
         ),
         const SizedBox(height: 16),
@@ -401,6 +414,15 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 5,
           slideAnimation: _slideAnimations[5],
           fadeAnimation: _fadeAnimations[5],
+          child: SecurityHealthCard(
+            score: securityScore,
+          ),
+        ),
+        const SizedBox(height: 16),
+        _AnimatedCard(
+          index: 6,
+          slideAnimation: _slideAnimations[6],
+          fadeAnimation: _fadeAnimations[6],
           child: const AccountBalancesCard(),
         ),
         const SizedBox(height: 100),

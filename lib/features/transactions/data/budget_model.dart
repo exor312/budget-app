@@ -99,11 +99,12 @@ class BudgetModel extends ChangeNotifier {
     required String description,
     String category = 'Other',
     String accountId = 'cash',
+    DateTime? date,
   }) async {
     final transaction = Transaction(
       amount: amount,
       description: description,
-      date: DateTime.now(),
+      date: date ?? DateTime.now(),
       category: category,
       accountId: accountId,
     );
@@ -125,6 +126,64 @@ class BudgetModel extends ChangeNotifier {
     _transactions.clear();
     await _saveTransactions();
     notifyListeners();
+  }
+
+  /// Get daily spending totals within a date range (for charts).
+  /// Returns a sorted list of MapEntry<date, totalSpent> for each day with expenses.
+  /// [start] and [end] are inclusive. Only days with expenses are included.
+  List<MapEntry<DateTime, double>> getDailySpending({
+    required DateTime start,
+    required DateTime end,
+  }) {
+    final normalizedStart = DateTime(start.year, start.month, start.day);
+    final normalizedEnd = DateTime(end.year, end.month, end.day);
+
+    final Map<DateTime, double> dailyTotals = {};
+    for (final t in _transactions) {
+      if (t.amount >= 0) continue; // only expenses
+      final day = DateTime(t.date.year, t.date.month, t.date.day);
+      if (day.isBefore(normalizedStart) || day.isAfter(normalizedEnd)) continue;
+      dailyTotals[day] = (dailyTotals[day] ?? 0) + t.amount.abs();
+    }
+
+    final entries = dailyTotals.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    return entries;
+  }
+
+  /// Get monthly spending totals within a date range (for charts).
+  /// Returns a sorted list of MapEntry<firstOfMonth, totalSpent> for each month with expenses.
+  List<MapEntry<DateTime, double>> getMonthlySpending({
+    required DateTime start,
+    required DateTime end,
+  }) {
+    final normalizedStart = DateTime(start.year, start.month);
+    final normalizedEnd = DateTime(end.year, end.month);
+
+    final Map<DateTime, double> monthlyTotals = {};
+    for (final t in _transactions) {
+      if (t.amount >= 0) continue;
+      final month = DateTime(t.date.year, t.date.month);
+      if (month.isBefore(normalizedStart) || month.isAfter(normalizedEnd)) continue;
+      monthlyTotals[month] = (monthlyTotals[month] ?? 0) + t.amount.abs();
+    }
+
+    final entries = monthlyTotals.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    return entries;
+  }
+
+  /// Get transactions within an inclusive date range.
+  List<Transaction> getTransactionsInRange({
+    required DateTime start,
+    required DateTime end,
+  }) {
+    final normalizedStart = DateTime(start.year, start.month, start.day);
+    final normalizedEnd = DateTime(end.year, end.month, end.day, 23, 59, 59);
+    return _transactions
+        .where((t) =>
+            !t.date.isBefore(normalizedStart) && !t.date.isAfter(normalizedEnd))
+        .toList();
   }
 }
 

@@ -20,6 +20,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _expenseController = TextEditingController();
   final TextEditingController _incomeController = TextEditingController();
   final TextEditingController _accountController = TextEditingController();
+  String _selectedAccountType = 'debit';
 
   @override
   void dispose() {
@@ -92,16 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            _buildAddRow(
-              controller: _accountController,
-              hint: 'Add account (e.g. Chase Debit)',
-              onAdd: () async {
-                final name = _accountController.text.trim();
-                if (name.isEmpty) return;
-                await model.addAccount(name: name);
-                _accountController.clear();
-              },
-            ),
+            _buildAddAccountRow(model),
             const SizedBox(height: 12),
             ...model.accounts.map((account) {
               final isDefault = account.id == 'cash';
@@ -116,12 +108,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        account.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF1C1B1F),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            account.name,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFF1C1B1F),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            accountTypeLabel(account.type),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: FortunaColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     if (!isDefault)
@@ -138,6 +143,121 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
+  }
+
+  Widget _buildAddAccountRow(AccountSettingsModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _accountController,
+                decoration: InputDecoration(
+                  hintText: 'Add account (e.g. Chase Debit)',
+                  filled: true,
+                  fillColor: FortunaColors.surfaceContainerLowest,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+                onSubmitted: (_) => _addAccount(model),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => _addAccount(model),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: FortunaColors.primary,
+                foregroundColor: FortunaColors.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              ),
+              child: const Text('Add'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Type selector
+        Row(
+          children: [
+            Text(
+              'Type: ',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: FortunaColors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _selectedAccountType,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: FortunaColors.surfaceContainerLowest,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                ),
+                items: accountTypes.map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(
+                      accountTypeLabel(type),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedAccountType = value;
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _addAccount(AccountSettingsModel model) async {
+    final name = _accountController.text.trim();
+    if (name.isEmpty) return;
+    await model.addAccount(name: name, type: _selectedAccountType);
+    _accountController.clear();
   }
 
   Widget _buildExpenseSection(BuildContext context) {

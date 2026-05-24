@@ -25,6 +25,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String _currentAmount = '0';
   String? _selectedCategory;
   String _selectedAccountId = 'cash';
+  DateTime _selectedDateTime = DateTime.now();
 
   /// Maps a category display name to its icon.
   IconData _iconForCategory(String name) {
@@ -123,6 +124,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           description: matchedCategory.categoryName,
           category: matchedCategory.categoryName,
           accountId: account.id,
+          date: _selectedDateTime,
         );
 
     if (mounted) context.pop();
@@ -156,6 +158,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             const SizedBox(height: 32),
                             _buildAmountDisplay(),
                             const SizedBox(height: 24),
+                            _buildDateTimeSection(),
+                            const SizedBox(height: 16),
                             _buildAccountSection(accountSettings),
                             const SizedBox(height: 16),
                             _buildCategorySection(categorySettings),
@@ -336,22 +340,143 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             ? FortunaColors.primary
                             : FortunaColors.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        account.name,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? FortunaColors.primary
-                              : FortunaColors.onSurfaceVariant,
-                        ),
+                      const SizedBox(width: 6),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            account.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: isSelected
+                                  ? FortunaColors.primary
+                                  : FortunaColors.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(
+                            accountTypeLabel(account.type),
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: isSelected
+                                  ? FortunaColors.primary.withValues(alpha: 0.7)
+                                  : FortunaColors.onSurfaceVariant.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               );
             },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickDateTime() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (date != null && mounted) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+      );
+      if (time != null && mounted) {
+        setState(() {
+          _selectedDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            time.hour,
+            time.minute,
+          );
+        });
+      } else {
+        // User picked date but cancelled time — still update date
+        setState(() {
+          _selectedDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            _selectedDateTime.hour,
+            _selectedDateTime.minute,
+          );
+        });
+      }
+    }
+  }
+
+  Widget _buildDateTimeSection() {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    final monthStr = months[_selectedDateTime.month - 1];
+    final dayStr = _selectedDateTime.day.toString();
+    final yearStr = _selectedDateTime.year.toString();
+    final hour = _selectedDateTime.hour;
+    final minute = _selectedDateTime.minute.toString().padLeft(2, '0');
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    final timeStr = '$displayHour:$minute $period';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            'Date & Time',
+            style: FortunaTextStyles.labelCaps.copyWith(
+              color: FortunaColors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: _pickDateTime,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: FortunaColors.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: FortunaColors.outlineVariant.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 20,
+                  color: FortunaColors.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    '$monthStr $dayStr, $yearStr  •  $timeStr',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: FortunaColors.onSurface,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.edit_outlined,
+                  size: 18,
+                  color: FortunaColors.onSurfaceVariant,
+                ),
+              ],
+            ),
           ),
         ),
       ],

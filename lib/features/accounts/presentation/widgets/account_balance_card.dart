@@ -3,7 +3,7 @@ import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../settings/data/account_settings_model.dart';
 
-/// Card widget showing an account's icon, name, and formatted balance.
+/// Card widget showing an account's icon, name, type label, and formatted balance.
 class AccountBalanceCard extends StatelessWidget {
   const AccountBalanceCard({
     super.key,
@@ -50,11 +50,24 @@ class AccountBalanceCard extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Text(
-              account.name,
-              style: FortunaTextStyles.bodyLg.copyWith(
-                color: FortunaColors.onSurface,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  account.name,
+                  style: FortunaTextStyles.bodyLg.copyWith(
+                    color: FortunaColors.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  accountTypeLabel(account.type),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: FortunaColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
           Text(
