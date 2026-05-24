@@ -51,7 +51,7 @@ class BudgetGoalsModel extends ChangeNotifier {
     }
 
     // Build categories with configurable limits and real spent amounts
-    _categories = _allCategoryNames.map((name) {
+    _categories = allCategoryNames.map((name) {
       final spent = categorySpent[name] ?? 0.0;
       final limit = _defaultLimits[name] ?? 500.0;
       return BudgetCategory(
@@ -65,7 +65,7 @@ class BudgetGoalsModel extends ChangeNotifier {
 
     // Total monthly limit = sum of all category limits
     _totalMonthlyLimit =
-        _allCategoryNames.fold(0.0, (sum, name) => sum + (_defaultLimits[name] ?? 500.0));
+        allCategoryNames.fold(0.0, (sum, name) => sum + (_defaultLimits[name] ?? 500.0));
 
     // Total spent = sum of all current-month expenses
     _totalSpent = currentMonthExpenses.fold(0.0, (sum, t) => sum + t.amount.abs());
@@ -82,7 +82,7 @@ class BudgetGoalsModel extends ChangeNotifier {
   }
 
   /// All supported category names.
-  static const List<String> _allCategoryNames = [
+  static const List<String> allCategoryNames = [
     'Food & Dining',
     'Transport',
     'Shopping',

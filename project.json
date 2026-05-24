@@ -1,74 +1,86 @@
 {
   "meta": {
-    "project_id": "budget-app-fix-add-transaction",
+    "project_id": "budget-app-settings-feature",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "TEST",
-    "created_at": "2026-05-24T10:00:00Z",
-    "updated_at": "2026-05-24T10:15:00Z"
+    "current_phase": "REVIEW",
+    "created_at": "2026-05-24T12:00:00Z",
+    "updated_at": "2026-05-24T12:30:00Z"
   },
   "idea": {
-    "raw_input": "Fix the add transaction screen - transactions are not working properly",
+    "raw_input": "Add a settings feature in our budget tracker app, users can add or remove categories from there, categories for expenses and categories for income",
     "clarifications": []
   },
   "prd": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T10:00:00Z",
+    "drafted_at": "2026-05-24T12:00:00Z",
     "approved": true,
-    "approved_at": "2026-05-24T10:05:00Z",
+    "approved_at": "2026-05-24T12:00:00Z",
     "overview": {
-      "problem": "The Add Transaction screen has 3 bugs: (1) addTransaction() doesn't await _saveTransactions() so transactions are lost on app restart, (2) category names in AddTransactionScreen don't match BudgetModel/BudgetGoalsModel categorization names causing all transactions to land in 'Other', (3) BudgetGoalsModel._categorize() doesn't recognize keywords like 'health', 'subs' used by the add screen.",
-      "solution": "Fix addTransaction to be async and await save. Map add screen category names to the correct BudgetGoalsModel category names. Expand _categorize() keyword matching in BudgetGoalsModel.",
-      "target_user": "Fortuna budget app users who need transactions to persist and be correctly categorized.",
-      "success_metric": "Transactions persist after app restart and are categorized correctly (not all 'Other')."
+      "problem": "Users cannot customize expense and income categories in the budget app — they are hardcoded in the models and add transaction screen.",
+      "solution": "Add a Settings screen accessible from the bottom nav where users can add new custom categories and remove existing ones for both expense and income types.",
+      "target_user": "Fortuna budget app users who want personalized category names for tracking their spending and income.",
+      "success_metric": "Users can add a custom category in Settings, see it reflected in the Add Transaction screen's category chips, and delete categories they no longer need."
     },
     "screens": [
       {
         "id": "SCR-001",
-        "name": "AddTransactionScreen",
-        "purpose": "Allow users to add expense/income transactions with correct category mapping.",
-        "primary_actions": ["Add expense transaction", "Add income transaction"],
+        "name": "SettingsScreen",
+        "purpose": "Allow users to view, add, and remove custom expense and income categories.",
+        "primary_actions": ["Add expense category", "Add income category", "Delete expense category", "Delete income category"],
         "navigation_to": []
       }
     ],
     "features": [
       {
         "id": "FEA-001",
-        "name": "Fix async transaction persistence",
+        "name": "View categorized lists in settings",
         "priority": "must_have",
-        "description": "Change addTransaction() to return Future<void> and await _saveTransactions(). Update _submitTransaction() in AddTransactionScreen to await the call.",
+        "description": "Settings screen displays two sections: Expense Categories and Income Categories. Each section shows the default categories (from BudgetGoalsModel) plus any user-added custom categories.",
         "screens_involved": ["SCR-001"],
         "acceptance_criteria": [
-          "Given a transaction is added, when the app is restarted, then the transaction persists in SharedPreferences.",
-          "Given addTransaction is called, when it completes, then _saveTransactions has finished writing."
+          "Given the Settings screen is opened, when it loads, then both Expense and Income category sections are visible with their default categories listed.",
+          "Given custom categories exist in SharedPreferences, when Settings screen loads, then custom categories appear alongside defaults in the correct section."
         ]
       },
       {
         "id": "FEA-002",
-        "name": "Fix category name mapping",
+        "name": "Add custom category",
         "priority": "must_have",
-        "description": "AddTransactionScreen category names must map to BudgetGoalsModel category names so _categorize() works correctly.",
+        "description": "User can add a new category by typing a name and tapping Add. The category is saved to SharedPreferences and immediately visible in the list.",
         "screens_involved": ["SCR-001"],
         "acceptance_criteria": [
-          "Given user selects 'Groceries' on add screen, when transaction is saved, then it is categorized as 'Food & Dining'.",
-          "Given user selects 'Rent', when transaction is saved, then it is categorized as 'Bills'.",
-          "Given user selects 'Subs', when transaction is saved, then it is categorized as 'Entertainment'."
+          "Given the user enters a non-empty category name and taps Add, when the action completes, then the new category appears in the list and is persisted to SharedPreferences.",
+          "Given the user tries to add a duplicate category name, when they tap Add, then the category is not added (no duplicates).",
+          "Given the user tries to add an empty category name, when they tap Add, then nothing happens."
         ]
       },
       {
         "id": "FEA-003",
-        "name": "Expand BudgetGoalsModel categorization keywords",
+        "name": "Delete custom category",
         "priority": "must_have",
-        "description": "Add keyword matching for 'health', 'subscription', 'sub', 'pharmacy', 'medical' in BudgetGoalsModel._categorize().",
-        "screens_involved": [],
+        "description": "User can delete a custom (non-default) category by tapping a delete icon next to it. Default categories cannot be deleted.",
+        "screens_involved": ["SCR-001"],
         "acceptance_criteria": [
-          "Given a transaction with description containing 'health', when categorized, then it maps to a non-'Other' category.",
-          "Given a transaction with description containing 'subscription' or 'sub', when categorized, then it maps to 'Entertainment'."
+          "Given a custom category is displayed, when the user taps the delete icon, then the category is removed from the list and from SharedPreferences.",
+          "Given a default category is displayed, when the list is rendered, then no delete icon is shown next to it.",
+          "Given only default categories exist, when the Settings screen is displayed, then no delete buttons are visible."
+        ]
+      },
+      {
+        "id": "FEA-004",
+        "name": "Categories reflected in Add Transaction screen",
+        "priority": "must_have",
+        "description": "Custom expense categories from Settings should appear as category chips in the AddTransactionScreen alongside defaults.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given a custom expense category exists, when AddTransactionScreen is opened, then the new category appears as a selectable chip.",
+          "Given a custom category is deleted in Settings, when AddTransactionScreen is opened, then that category no longer appears."
         ]
       }
     ],
     "auth": { "required": false, "methods": [], "guest_mode": false },
-    "data": { "storage": "local", "backend_required": false, "backend_notes": "All data from local SharedPreferences via BudgetModel." },
+    "data": { "storage": "local", "backend_required": false, "backend_notes": "All category data stored in SharedPreferences. No backend needed." },
     "integrations": [],
     "constraints": {
       "platforms": ["android"],
@@ -77,188 +89,120 @@
       "offline_support": true,
       "accessibility": "basic"
     },
-    "out_of_scope": ["New screens", "Category editing UI", "Backend sync"],
+    "out_of_scope": ["Editing existing category names", "Reordering categories", "Category color/icon customization", "Category spending limits in Settings", "Backend sync"],
     "open_questions": []
   },
   "architecture": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T10:05:00Z",
+    "drafted_at": "2026-05-24T12:00:00Z",
     "approved": true,
-    "approved_at": "2026-05-24T10:05:00Z",
+    "approved_at": "2026-05-24T12:00:00Z",
     "decisions": {
-      "state_management": {
-        "package": "provider",
-        "version": "^6.1.1",
-        "pattern": "ChangeNotifier + ChangeNotifierProxyProvider",
-        "justification": "Existing app uses Provider. No need to change state management for bug fixes."
-      },
-      "navigation": {
-        "package": "go_router",
-        "version": "^14.2.0",
-        "pattern": "ShellRoute + standalone routes",
-        "justification": "Existing app uses go_router with ShellRoute for tab navigation."
-      },
-      "local_storage": {
-        "package": "shared_preferences",
-        "version": "^2.2.2",
-        "justification": "Existing app uses SharedPreferences for local transaction storage."
-      },
+      "state_management": { "package": "provider", "version": "^6.1.1", "pattern": "ChangeNotifier + ChangeNotifierProxyProvider", "justification": "Existing app uses Provider with ChangeNotifier." },
+      "navigation": { "package": "go_router", "version": "^14.2.0", "pattern": "ShellRoute + standalone routes", "justification": "Existing app uses go_router with ShellRoute." },
+      "local_storage": { "package": "shared_preferences", "version": "^2.2.2", "justification": "Existing app uses SharedPreferences." },
       "api_client": { "package": "none", "version": null, "justification": "No backend required." },
       "auth": { "package": null, "token_storage": null, "justification": "No auth required." },
       "di": { "package": "provider", "justification": "Provider IS the DI system." },
       "config": { "packages": [] },
       "observability": { "packages": [], "justification": "Small app, no remote observability needed." }
     },
-    "folder_structure": {
-      "lib": {
-        "main.dart": null,
-        "core": { "theme": {}, "widgets": {} },
-        "features": {
-          "transactions": { "data": { "budget_model.dart": null }, "presentation": { "screens": { "add_transaction_screen.dart": null } } },
-          "budget_goals": { "data": { "budget_goals_model.dart": null } }
-        },
-        "router": { "app_router.dart": null }
-      }
-    },
-    "screen_file_map": [
-      { "screen_id": "SCR-001", "screen_name": "AddTransactionScreen", "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart", "feature_group": "transactions" }
-    ],
+    "folder_structure": { "lib": { "main.dart": null, "core": { "theme": {}, "widgets": {} }, "features": { "settings": { "data": { "category_settings_model.dart": null }, "presentation": { "screens": { "settings_screen.dart": null }, "widgets": { "category_list_item.dart": null } } } } } },
+    "screen_file_map": [{ "screen_id": "SCR-001", "screen_name": "SettingsScreen", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart", "feature_group": "settings" }],
     "api_contracts": [],
     "dependencies": { "flutter_version": ">=3.19.0", "dart_version": ">=3.3.0", "packages": [] },
     "open_questions": []
   },
   "tickets": [
-    {
-      "id": "T-001",
-      "title": "Fix BudgetModel.addTransaction to await async save",
-      "file_path": "lib/features/transactions/data/budget_model.dart",
-      "feature_group": "transactions",
-      "layer": "data",
-      "type": "model",
-      "points": 2,
-      "status": "done",
-      "depends_on": [],
-      "description": "Change addTransaction() from void to Future<void> and await _saveTransactions().",
-      "inputs": ["FEA-001"],
-      "acceptance_criteria": [
-        "addTransaction() returns Future<void> instead of void",
-        "addTransaction() awaits _saveTransactions() before calling notifyListeners()",
-        "removeTransaction() also awaits _saveTransactions()",
-        "clearAllTransactions() also awaits _saveTransactions()"
-      ],
-      "coder_notes": "Change void to Future<void> and add await."
-    },
-    {
-      "id": "T-002",
-      "title": "Fix AddTransactionScreen category name mapping",
-      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-      "feature_group": "transactions",
-      "layer": "presentation",
-      "type": "screen",
-      "points": 3,
-      "status": "done",
-      "depends_on": ["T-001"],
-      "description": "Add display-name-to-category-name mapping and make _submitTransaction async.",
-      "inputs": ["FEA-002"],
-      "acceptance_criteria": [
-        "Groceries maps to Food & Dining",
-        "Rent maps to Bills",
-        "Subs maps to Entertainment",
-        "_submitTransaction is async and awaits addTransaction"
-      ],
-      "coder_notes": "Add categoryName field to _CategoryInfo, use firstWhere to look up mapped name."
-    },
-    {
-      "id": "T-003",
-      "title": "Expand BudgetGoalsModel._categorize() keyword matching",
-      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
-      "feature_group": "budget_goals",
-      "layer": "data",
-      "type": "model",
-      "points": 2,
-      "status": "done",
-      "depends_on": [],
-      "description": "Add keyword matching for health, subscription, sub, pharmacy, medical.",
-      "inputs": ["FEA-003"],
-      "acceptance_criteria": [
-        "subscription/sub maps to Entertainment",
-        "health/pharmacy/medical maps to Other",
-        "Existing categorization still works"
-      ],
-      "coder_notes": "Add conditions before final Other fallback."
-    }
-  ],
-  "sequence": [
-    { "step": 1, "tickets": ["T-001", "T-003"], "parallel": true, "parallel_group": "P-01" },
-    { "step": 2, "tickets": ["T-002"], "parallel": false }
+    { "id": "T-001", "title": "Create CategorySettingsModel", "file_path": "lib/features/settings/data/category_settings_model.dart", "feature_group": "settings", "layer": "data", "type": "model", "points": 3, "status": "reviewed", "depends_on": [], "inputs": ["FEA-001", "FEA-002", "FEA-003"], "acceptance_criteria": ["Loads from SharedPreferences on init", "addExpenseCategory appends if not duplicate and saves", "removeExpenseCategory removes if exists and saves", "Same methods for income categories", "Default categories excluded from delete operations"] },
+    { "id": "T-002", "title": "Create CategoryListItem widget", "file_path": "lib/features/settings/presentation/widgets/category_list_item.dart", "feature_group": "settings", "layer": "presentation", "type": "widget", "points": 2, "status": "reviewed", "depends_on": ["T-001"], "inputs": ["FEA-003"], "acceptance_criteria": ["Displays category name", "Shows delete IconButton when isDeletable is true", "Hides delete button when isDeletable is false", "Calls onDelete callback"] },
+    { "id": "T-003", "title": "Create SettingsScreen", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart", "feature_group": "settings", "layer": "presentation", "type": "screen", "points": 5, "status": "reviewed", "depends_on": ["T-001", "T-002"], "inputs": ["FEA-001", "FEA-002", "FEA-003", "SCR-001"], "acceptance_criteria": ["Two sections: Expense and Income", "TextField + Add button per section", "Add with non-empty text adds category", "Add with empty text does no-ops", "Defaults shown without delete", "Custom shown with delete", "Delete removes via model", "Reactive updates via Consumer"] },
+    { "id": "T-004", "title": "Add Settings tab to router", "file_path": "lib/router/app_router.dart", "feature_group": "settings", "layer": "router", "type": "router", "points": 2, "status": "reviewed", "depends_on": ["T-003"], "inputs": ["SCR-001"], "acceptance_criteria": ["5th tab with Icons.settings", "Navigates to /settings", "SettingsScreen registered in ShellRoute"] },
+    { "id": "T-005", "title": "Register model in main.dart and wire to AddTransactionScreen", "file_path": "lib/main.dart", "feature_group": "settings", "layer": "config", "type": "config", "points": 3, "status": "reviewed", "depends_on": ["T-001", "T-003"], "inputs": ["FEA-004"], "acceptance_criteria": ["CategorySettingsModel provided in main.dart", "AddTransactionScreen reads CategorySettingsModel", "Custom categories appear as chips", "Deleted categories disappear from chips"] }
   ],
   "reviews": {
     "T-001": {
-      "ticket_id": "T-001",
-      "file_path": "lib/features/transactions/data/budget_model.dart",
-      "reviewed_at": "2026-05-24T10:15:00Z",
-      "retry_count": 0,
-      "passed": true,
+      "ticket_id": "T-001", "file_path": "lib/features/settings/data/category_settings_model.dart",
+      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
       "gate_1": { "passed": true, "issues": [] },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          { "criterion": "addTransaction() returns Future<void> instead of void", "status": "pass", "reason": null },
-          { "criterion": "addTransaction() awaits _saveTransactions() before calling notifyListeners()", "status": "pass", "reason": null },
-          { "criterion": "removeTransaction() also awaits _saveTransactions()", "status": "pass", "reason": null },
-          { "criterion": "clearAllTransactions() also awaits _saveTransactions()", "status": "pass", "reason": null }
-        ]
-      },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "Loads from SharedPreferences on init", "status": "pass", "reason": null },
+        { "criterion": "addExpenseCategory appends if not duplicate and saves", "status": "pass", "reason": null },
+        { "criterion": "removeExpenseCategory removes if exists and saves", "status": "pass", "reason": null },
+        { "criterion": "Same methods for income categories", "status": "pass", "reason": null },
+        { "criterion": "Default categories excluded from delete operations", "status": "pass", "reason": null }
+      ]},
       "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
       "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
     },
     "T-002": {
-      "ticket_id": "T-002",
-      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
-      "reviewed_at": "2026-05-24T10:15:00Z",
-      "retry_count": 0,
-      "passed": true,
+      "ticket_id": "T-002", "file_path": "lib/features/settings/presentation/widgets/category_list_item.dart",
+      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
       "gate_1": { "passed": true, "issues": [] },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          { "criterion": "Groceries maps to Food & Dining", "status": "pass", "reason": null },
-          { "criterion": "Rent maps to Bills", "status": "pass", "reason": null },
-          { "criterion": "Subs maps to Entertainment", "status": "pass", "reason": null },
-          { "criterion": "_submitTransaction is async and awaits addTransaction", "status": "pass", "reason": null }
-        ]
-      },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "Displays category name", "status": "pass", "reason": null },
+        { "criterion": "Shows delete IconButton when isDeletable is true", "status": "pass", "reason": null },
+        { "criterion": "Hides delete button when isDeletable is false", "status": "pass", "reason": null },
+        { "criterion": "Calls onDelete callback", "status": "pass", "reason": null }
+      ]},
       "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
       "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
     },
     "T-003": {
-      "ticket_id": "T-003",
-      "file_path": "lib/features/budget_goals/data/budget_goals_model.dart",
-      "reviewed_at": "2026-05-24T10:15:00Z",
-      "retry_count": 0,
-      "passed": true,
+      "ticket_id": "T-003", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
+      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
       "gate_1": { "passed": true, "issues": [] },
-      "gate_2": {
-        "passed": true,
-        "criteria_results": [
-          { "criterion": "subscription/sub maps to Entertainment", "status": "pass", "reason": null },
-          { "criterion": "health/pharmacy/medical maps to Other", "status": "pass", "reason": null },
-          { "criterion": "Existing categorization still works", "status": "pass", "reason": null }
-        ]
-      },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "Two sections: Expense and Income", "status": "pass", "reason": null },
+        { "criterion": "TextField + Add button per section", "status": "pass", "reason": null },
+        { "criterion": "Add with non-empty text adds category", "status": "pass", "reason": null },
+        { "criterion": "Add with empty text does no-ops", "status": "pass", "reason": null },
+        { "criterion": "Defaults shown without delete", "status": "pass", "reason": null },
+        { "criterion": "Custom shown with delete", "status": "pass", "reason": null },
+        { "criterion": "Delete removes via model", "status": "pass", "reason": null },
+        { "criterion": "Reactive updates via Consumer", "status": "pass", "reason": null }
+      ]},
+      "gate_3": { "passed": true, "prd_checks": [
+        { "check_id": "PRD-001", "status": "pass", "reason": null },
+        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features implemented" }
+      ]},
+      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+    },
+    "T-004": {
+      "ticket_id": "T-004", "file_path": "lib/router/app_router.dart",
+      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
+      "gate_1": { "passed": true, "issues": [] },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "5th tab with Icons.settings", "status": "pass", "reason": null },
+        { "criterion": "Navigates to /settings", "status": "pass", "reason": null },
+        { "criterion": "SettingsScreen registered in ShellRoute", "status": "pass", "reason": null }
+      ]},
+      "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
+      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+    },
+    "T-005": {
+      "ticket_id": "T-005", "file_path": "lib/main.dart",
+      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
+      "gate_1": { "passed": true, "issues": [] },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "CategorySettingsModel provided in main.dart", "status": "pass", "reason": null },
+        { "criterion": "AddTransactionScreen reads CategorySettingsModel", "status": "pass", "reason": null },
+        { "criterion": "Custom categories appear as chips", "status": "pass", "reason": null },
+        { "criterion": "Deleted categories disappear from chips", "status": "pass", "reason": null }
+      ]},
       "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
       "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
     }
   },
   "phase_summary": {
-    "prd": { "approved": true, "approved_at": "2026-05-24T10:05:00Z" },
-    "architecture": { "approved": true, "approved_at": "2026-05-24T10:05:00Z" },
-    "tickets": { "total": 3, "done": 3, "in_review": 0, "failed": 0 },
-    "code": { "total_files": 3, "generated": 3 },
-    "review": { "passed": 3, "failed": 0, "retries": 0 },
-    "tests": { "total": 63, "passed": 59, "coverage_pct": 85 },
-    "build": { "apk_ready": true, "ipa_ready": false }
+    "prd": { "approved": true, "approved_at": "2026-05-24T12:00:00Z" },
+    "architecture": { "approved": true, "approved_at": "2026-05-24T12:00:00Z" },
+    "tickets": { "total": 5, "done": 5, "in_review": 0, "failed": 0 },
+    "code": { "total_files": 5, "generated": 5 },
+    "review": { "passed": 5, "failed": 0, "retries": 0 },
+    "tests": { "total": 0, "passed": 0, "coverage_pct": 0 },
+    "build": { "apk_ready": false, "ipa_ready": false }
   },
-  "last_action": { "action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T10:25:00Z", "tag": "v2.5.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.5.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.5.0/app-release.apk" },
+  "last_action": { "action": "REVIEW_COMPLETE", "phase": "REVIEW", "timestamp": "2026-05-24T12:30:00Z", "all_passed": true },
   "last_error": null
 }

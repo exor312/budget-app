@@ -4,6 +4,7 @@ import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../features/transactions/presentation/screens/transaction_history_screen.dart';
 import '../features/transactions/presentation/screens/add_transaction_screen.dart';
 import '../features/budget_goals/presentation/screens/budgets_goals_screen.dart';
+import '../features/settings/presentation/screens/settings_screen.dart';
 
 /// App router configuration using go_router with ShellRoute for tab navigation.
 final GoRouter appRouter = GoRouter(
@@ -29,6 +30,11 @@ final GoRouter appRouter = GoRouter(
           path: BudgetsGoalsScreen.routePath,
           name: BudgetsGoalsScreen.routeName,
           builder: (context, state) => const BudgetsGoalsScreen(),
+        ),
+        GoRoute(
+          path: SettingsScreen.routePath,
+          name: SettingsScreen.routeName,
+          builder: (context, state) => const SettingsScreen(),
         ),
       ],
     ),
@@ -57,6 +63,7 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
     _TabInfo(icon: Icons.receipt_long, label: 'History', path: '/transactions'),
     _TabInfo(icon: Icons.add_circle, label: 'Add', path: '/add'),
     _TabInfo(icon: Icons.track_changes, label: 'Budgets', path: '/budgets'),
+    _TabInfo(icon: Icons.settings, label: 'Settings', path: '/settings'),
   ];
 
   @override

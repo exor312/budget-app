@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
+import '../../../settings/data/category_settings_model.dart';
 
 /// Full-screen Add Transaction page.
 /// Matches the reference design: expense/income toggle, custom keypad,
@@ -23,14 +24,35 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String _currentAmount = '0';
   String? _selectedCategory;
 
-  static const List<_CategoryInfo> _categories = [
-    _CategoryInfo(name: 'Groceries', icon: Icons.shopping_basket, categoryName: 'Food & Dining'),
-    _CategoryInfo(name: 'Fun', icon: Icons.sports_esports, categoryName: 'Entertainment'),
-    _CategoryInfo(name: 'Health', icon: Icons.medical_services, categoryName: 'Other'),
-    _CategoryInfo(name: 'Rent', icon: Icons.home, categoryName: 'Bills'),
-    _CategoryInfo(name: 'Transport', icon: Icons.directions_car, categoryName: 'Transport'),
-    _CategoryInfo(name: 'Subs', icon: Icons.subscriptions, categoryName: 'Entertainment'),
-  ];
+  /// Maps a category display name to its icon.
+  IconData _iconForCategory(String name) {
+    const iconMap = <String, IconData>{
+      'Groceries': Icons.shopping_basket,
+      'Fun': Icons.sports_esports,
+      'Health': Icons.medical_services,
+      'Rent': Icons.home,
+      'Transport': Icons.directions_car,
+      'Subs': Icons.subscriptions,
+      'Food & Dining': Icons.restaurant,
+      'Shopping': Icons.shopping_bag,
+      'Entertainment': Icons.movie,
+      'Bills': Icons.receipt,
+      'Other': Icons.category,
+    };
+    return iconMap[name] ?? Icons.category;
+  }
+
+  /// Build the expense category list from defaults + custom categories.
+  List<_CategoryInfo> _buildExpenseCategories(CategorySettingsModel settings) {
+    final all = settings.allExpenseCategories;
+    return all.map((name) {
+      return _CategoryInfo(
+        name: name,
+        icon: _iconForCategory(name),
+        categoryName: name,
+      );
+    }).toList();
+  }
 
   void _appendNum(String num) {
     setState(() {
@@ -53,7 +75,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     });
   }
 
-  Future<void> _submitTransaction() async {
+  Future<void> _submitTransaction(CategorySettingsModel settings) async {
     final amount = double.tryParse(_currentAmount);
     if (amount == null || amount <= 0) return;
 
@@ -61,9 +83,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     final displayCategory = _isExpense
         ? (_selectedCategory ?? 'Other')
         : 'Income';
-    // Map display name to BudgetGoalsModel category name
+    // Look up the category name from the dynamic list
+    final categories = _buildExpenseCategories(settings);
     final category = _isExpense
-        ? _categories
+        ? categories
             .firstWhere((c) => c.name == displayCategory,
                 orElse: () => _CategoryInfo(name: 'Other', icon: Icons.category, categoryName: 'Other'))
             .categoryName
@@ -82,43 +105,47 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
-    return Scaffold(
-      backgroundColor: FortunaColors.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(),
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isDesktop ? 48 : 20,
-                      vertical: 8,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 4),
-                        _buildTypeToggle(),
-                        const SizedBox(height: 32),
-                        _buildAmountDisplay(),
-                        const SizedBox(height: 24),
-                        _buildCategorySection(),
-                        const SizedBox(height: 24),
-                        _buildKeypad(),
-                        const Spacer(),
-                        _buildSubmitButton(),
-                        const SizedBox(height: 24),
-                      ],
+    return Consumer<CategorySettingsModel>(
+      builder: (context, settings, _) {
+        return Scaffold(
+          backgroundColor: FortunaColors.surface,
+          body: SafeArea(
+            child: Column(
+              children: [
+                _buildAppBar(),
+                Expanded(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isDesktop ? 48 : 20,
+                          vertical: 8,
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 4),
+                            _buildTypeToggle(),
+                            const SizedBox(height: 32),
+                            _buildAmountDisplay(),
+                            const SizedBox(height: 24),
+                            _buildCategorySection(settings),
+                            const SizedBox(height: 24),
+                            _buildKeypad(),
+                            const Spacer(),
+                            _buildSubmitButton(settings),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -216,7 +243,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildCategorySection() {
+  Widget _buildCategorySection(CategorySettingsModel settings) {
+    final categories = _buildExpenseCategories(settings);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -233,7 +261,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: _categories.map((cat) {
+            children: categories.map((cat) {
               final isSelected = _selectedCategory == cat.name;
               return Padding(
                 padding: const EdgeInsets.only(right: 16),
@@ -349,12 +377,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(CategorySettingsModel settings) {
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
-        onPressed: _submitTransaction,
+        onPressed: () => _submitTransaction(settings),
         style: ElevatedButton.styleFrom(
           backgroundColor: FortunaColors.primary,
           foregroundColor: FortunaColors.onPrimary,

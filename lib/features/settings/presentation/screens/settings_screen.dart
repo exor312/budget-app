@@ -1,0 +1,203 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../core/theme/color_tokens.dart';
+import '../../../settings/data/category_settings_model.dart';
+import '../widgets/category_list_item.dart';
+
+/// Settings screen — manage custom expense and income categories.
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  static const String routePath = '/settings';
+  static const String routeName = 'Settings';
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final TextEditingController _expenseController = TextEditingController();
+  final TextEditingController _incomeController = TextEditingController();
+
+  @override
+  void dispose() {
+    _expenseController.dispose();
+    _incomeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
+
+    return Scaffold(
+      backgroundColor: FortunaColors.surface,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 48 : 20,
+                  vertical: 16,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 24),
+                    _buildExpenseSection(context),
+                    const SizedBox(height: 32),
+                    _buildIncomeSection(context),
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Text(
+      'Settings',
+      style: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w600,
+        color: FortunaColors.primary,
+      ),
+    );
+  }
+
+  Widget _buildExpenseSection(BuildContext context) {
+    return Consumer<CategorySettingsModel>(
+      builder: (context, model, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Expense Categories',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: FortunaColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildAddRow(
+              controller: _expenseController,
+              hint: 'Add expense category',
+              onAdd: () async {
+                await model.addExpenseCategory(_expenseController.text);
+                _expenseController.clear();
+              },
+            ),
+            const SizedBox(height: 12),
+            ...model.allExpenseCategories.map((name) {
+              final isDefault = !model.customExpenseCategories.contains(name);
+              return CategoryListItem(
+                key: ValueKey('expense_$name'),
+                name: name,
+                isDeletable: !isDefault,
+                onDelete: () => model.removeExpenseCategory(name),
+              );
+            }),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildIncomeSection(BuildContext context) {
+    return Consumer<CategorySettingsModel>(
+      builder: (context, model, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Income Categories',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: FortunaColors.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildAddRow(
+              controller: _incomeController,
+              hint: 'Add income category',
+              onAdd: () async {
+                await model.addIncomeCategory(_incomeController.text);
+                _incomeController.clear();
+              },
+            ),
+            const SizedBox(height: 12),
+            ...model.allIncomeCategories.map((name) {
+              final isDefault = !model.customIncomeCategories.contains(name);
+              return CategoryListItem(
+                key: ValueKey('income_$name'),
+                name: name,
+                isDeletable: !isDefault,
+                onDelete: () => model.removeIncomeCategory(name),
+              );
+            }),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildAddRow({
+    required TextEditingController controller,
+    required String hint,
+    required VoidCallback onAdd,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hint,
+              filled: true,
+              fillColor: FortunaColors.surfaceContainerLowest,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            onSubmitted: (_) => onAdd(),
+          ),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: onAdd,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: FortunaColors.primary,
+            foregroundColor: FortunaColors.onPrimary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          ),
+          child: const Text('Add'),
+        ),
+      ],
+    );
+  }
+}
