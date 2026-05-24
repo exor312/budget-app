@@ -3,7 +3,7 @@
     "project_id": "budget-app-bugfix-button-visibility",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "BUILD",
+    "current_phase": "DONE",
     "created_at": "2026-05-24T13:00:00Z",
     "updated_at": "2026-05-24T13:10:00Z"
   },
@@ -218,10 +218,10 @@
       "coverage_pct": 85
     },
     "build": {
-      "apk_ready": false,
+      "apk_ready": true,
       "ipa_ready": false
     }
   },
-  "last_action": null,
+  "last_action": {"action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T13:15:00Z", "tag": "v2.10.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.10.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.10.0/app-release.apk"},
   "last_error": null
 }
