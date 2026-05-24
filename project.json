@@ -1,208 +1,227 @@
 {
   "meta": {
-    "project_id": "budget-app-settings-feature",
+    "project_id": "budget-app-bugfix-button-visibility",
     "project_name": "Fortuna Budget App",
     "size_hint": "small",
-    "current_phase": "REVIEW",
-    "created_at": "2026-05-24T12:00:00Z",
-    "updated_at": "2026-05-24T12:30:00Z"
+    "current_phase": "BUILD",
+    "created_at": "2026-05-24T13:00:00Z",
+    "updated_at": "2026-05-24T13:10:00Z"
   },
   "idea": {
-    "raw_input": "Add a settings feature in our budget tracker app, users can add or remove categories from there, categories for expenses and categories for income",
+    "raw_input": "Fix a bug in budget tracker app: the add transaction button in the add transaction page is not being seen, it's at the very bottom of the screen",
     "clarifications": []
   },
   "prd": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T12:00:00Z",
+    "drafted_at": "2026-05-24T13:00:00Z",
     "approved": true,
-    "approved_at": "2026-05-24T12:00:00Z",
+    "approved_at": "2026-05-24T13:00:00Z",
     "overview": {
-      "problem": "Users cannot customize expense and income categories in the budget app — they are hardcoded in the models and add transaction screen.",
-      "solution": "Add a Settings screen accessible from the bottom nav where users can add new custom categories and remove existing ones for both expense and income types.",
-      "target_user": "Fortuna budget app users who want personalized category names for tracking their spending and income.",
-      "success_metric": "Users can add a custom category in Settings, see it reflected in the Add Transaction screen's category chips, and delete categories they no longer need."
+      "problem": "On the Add Transaction screen, the submit button is pushed below the visible area.",
+      "solution": "Remove the Spacer() and wrap content in SingleChildScrollView.",
+      "target_user": "Fortuna budget app users.",
+      "success_metric": "The submit button is visible and reachable."
     },
     "screens": [
       {
         "id": "SCR-001",
-        "name": "SettingsScreen",
-        "purpose": "Allow users to view, add, and remove custom expense and income categories.",
-        "primary_actions": ["Add expense category", "Add income category", "Delete expense category", "Delete income category"],
+        "name": "AddTransactionScreen",
+        "purpose": "Add transactions",
+        "primary_actions": [
+          "Submit transaction"
+        ],
         "navigation_to": []
       }
     ],
     "features": [
       {
         "id": "FEA-001",
-        "name": "View categorized lists in settings",
+        "name": "Submit button visible after keypad",
         "priority": "must_have",
-        "description": "Settings screen displays two sections: Expense Categories and Income Categories. Each section shows the default categories (from BudgetGoalsModel) plus any user-added custom categories.",
-        "screens_involved": ["SCR-001"],
+        "description": "Submit button appears after keypad without Spacer pushing it off-screen.",
+        "screens_involved": [
+          "SCR-001"
+        ],
         "acceptance_criteria": [
-          "Given the Settings screen is opened, when it loads, then both Expense and Income category sections are visible with their default categories listed.",
-          "Given custom categories exist in SharedPreferences, when Settings screen loads, then custom categories appear alongside defaults in the correct section."
-        ]
-      },
-      {
-        "id": "FEA-002",
-        "name": "Add custom category",
-        "priority": "must_have",
-        "description": "User can add a new category by typing a name and tapping Add. The category is saved to SharedPreferences and immediately visible in the list.",
-        "screens_involved": ["SCR-001"],
-        "acceptance_criteria": [
-          "Given the user enters a non-empty category name and taps Add, when the action completes, then the new category appears in the list and is persisted to SharedPreferences.",
-          "Given the user tries to add a duplicate category name, when they tap Add, then the category is not added (no duplicates).",
-          "Given the user tries to add an empty category name, when they tap Add, then nothing happens."
-        ]
-      },
-      {
-        "id": "FEA-003",
-        "name": "Delete custom category",
-        "priority": "must_have",
-        "description": "User can delete a custom (non-default) category by tapping a delete icon next to it. Default categories cannot be deleted.",
-        "screens_involved": ["SCR-001"],
-        "acceptance_criteria": [
-          "Given a custom category is displayed, when the user taps the delete icon, then the category is removed from the list and from SharedPreferences.",
-          "Given a default category is displayed, when the list is rendered, then no delete icon is shown next to it.",
-          "Given only default categories exist, when the Settings screen is displayed, then no delete buttons are visible."
-        ]
-      },
-      {
-        "id": "FEA-004",
-        "name": "Categories reflected in Add Transaction screen",
-        "priority": "must_have",
-        "description": "Custom expense categories from Settings should appear as category chips in the AddTransactionScreen alongside defaults.",
-        "screens_involved": ["SCR-001"],
-        "acceptance_criteria": [
-          "Given a custom expense category exists, when AddTransactionScreen is opened, then the new category appears as a selectable chip.",
-          "Given a custom category is deleted in Settings, when AddTransactionScreen is opened, then that category no longer appears."
+          "Spacer removed",
+          "Button after keypad",
+          "Content scrollable",
+          "No analyzer errors"
         ]
       }
     ],
-    "auth": { "required": false, "methods": [], "guest_mode": false },
-    "data": { "storage": "local", "backend_required": false, "backend_notes": "All category data stored in SharedPreferences. No backend needed." },
+    "auth": {
+      "required": false,
+      "methods": [],
+      "guest_mode": false
+    },
+    "data": {
+      "storage": "local",
+      "backend_required": false,
+      "backend_notes": "No data changes needed."
+    },
     "integrations": [],
     "constraints": {
-      "platforms": ["android"],
+      "platforms": [
+        "android"
+      ],
       "min_flutter_version": "3.19.0",
-      "target_sdk": { "android": 34, "ios": 17 },
+      "target_sdk": {
+        "android": 34,
+        "ios": 17
+      },
       "offline_support": true,
       "accessibility": "basic"
     },
-    "out_of_scope": ["Editing existing category names", "Reordering categories", "Category color/icon customization", "Category spending limits in Settings", "Backend sync"],
+    "out_of_scope": [
+      "Changing keypad design",
+      "Changing category chips layout"
+    ],
     "open_questions": []
   },
   "architecture": {
     "version": "1.0",
-    "drafted_at": "2026-05-24T12:00:00Z",
+    "drafted_at": "2026-05-24T13:00:00Z",
     "approved": true,
-    "approved_at": "2026-05-24T12:00:00Z",
-    "decisions": {
-      "state_management": { "package": "provider", "version": "^6.1.1", "pattern": "ChangeNotifier + ChangeNotifierProxyProvider", "justification": "Existing app uses Provider with ChangeNotifier." },
-      "navigation": { "package": "go_router", "version": "^14.2.0", "pattern": "ShellRoute + standalone routes", "justification": "Existing app uses go_router with ShellRoute." },
-      "local_storage": { "package": "shared_preferences", "version": "^2.2.2", "justification": "Existing app uses SharedPreferences." },
-      "api_client": { "package": "none", "version": null, "justification": "No backend required." },
-      "auth": { "package": null, "token_storage": null, "justification": "No auth required." },
-      "di": { "package": "provider", "justification": "Provider IS the DI system." },
-      "config": { "packages": [] },
-      "observability": { "packages": [], "justification": "Small app, no remote observability needed." }
-    },
-    "folder_structure": { "lib": { "main.dart": null, "core": { "theme": {}, "widgets": {} }, "features": { "settings": { "data": { "category_settings_model.dart": null }, "presentation": { "screens": { "settings_screen.dart": null }, "widgets": { "category_list_item.dart": null } } } } } },
-    "screen_file_map": [{ "screen_id": "SCR-001", "screen_name": "SettingsScreen", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart", "feature_group": "settings" }],
+    "approved_at": "2026-05-24T13:00:00Z",
+    "decisions": {},
+    "folder_structure": {},
+    "screen_file_map": [
+      {
+        "screen_id": "SCR-001",
+        "screen_name": "AddTransactionScreen",
+        "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+        "feature_group": "transactions"
+      }
+    ],
     "api_contracts": [],
-    "dependencies": { "flutter_version": ">=3.19.0", "dart_version": ">=3.3.0", "packages": [] },
+    "dependencies": {},
     "open_questions": []
   },
   "tickets": [
-    { "id": "T-001", "title": "Create CategorySettingsModel", "file_path": "lib/features/settings/data/category_settings_model.dart", "feature_group": "settings", "layer": "data", "type": "model", "points": 3, "status": "reviewed", "depends_on": [], "inputs": ["FEA-001", "FEA-002", "FEA-003"], "acceptance_criteria": ["Loads from SharedPreferences on init", "addExpenseCategory appends if not duplicate and saves", "removeExpenseCategory removes if exists and saves", "Same methods for income categories", "Default categories excluded from delete operations"] },
-    { "id": "T-002", "title": "Create CategoryListItem widget", "file_path": "lib/features/settings/presentation/widgets/category_list_item.dart", "feature_group": "settings", "layer": "presentation", "type": "widget", "points": 2, "status": "reviewed", "depends_on": ["T-001"], "inputs": ["FEA-003"], "acceptance_criteria": ["Displays category name", "Shows delete IconButton when isDeletable is true", "Hides delete button when isDeletable is false", "Calls onDelete callback"] },
-    { "id": "T-003", "title": "Create SettingsScreen", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart", "feature_group": "settings", "layer": "presentation", "type": "screen", "points": 5, "status": "reviewed", "depends_on": ["T-001", "T-002"], "inputs": ["FEA-001", "FEA-002", "FEA-003", "SCR-001"], "acceptance_criteria": ["Two sections: Expense and Income", "TextField + Add button per section", "Add with non-empty text adds category", "Add with empty text does no-ops", "Defaults shown without delete", "Custom shown with delete", "Delete removes via model", "Reactive updates via Consumer"] },
-    { "id": "T-004", "title": "Add Settings tab to router", "file_path": "lib/router/app_router.dart", "feature_group": "settings", "layer": "router", "type": "router", "points": 2, "status": "reviewed", "depends_on": ["T-003"], "inputs": ["SCR-001"], "acceptance_criteria": ["5th tab with Icons.settings", "Navigates to /settings", "SettingsScreen registered in ShellRoute"] },
-    { "id": "T-005", "title": "Register model in main.dart and wire to AddTransactionScreen", "file_path": "lib/main.dart", "feature_group": "settings", "layer": "config", "type": "config", "points": 3, "status": "reviewed", "depends_on": ["T-001", "T-003"], "inputs": ["FEA-004"], "acceptance_criteria": ["CategorySettingsModel provided in main.dart", "AddTransactionScreen reads CategorySettingsModel", "Custom categories appear as chips", "Deleted categories disappear from chips"] }
+    {
+      "id": "T-001",
+      "title": "Fix AddTransactionScreen submit button visibility",
+      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+      "feature_group": "transactions",
+      "layer": "presentation",
+      "type": "bugfix",
+      "points": 2,
+      "status": "reviewed",
+      "depends_on": [],
+      "inputs": [
+        "FEA-001"
+      ],
+      "acceptance_criteria": [
+        "Spacer removed",
+        "Button after keypad",
+        "Content scrollable",
+        "No analyzer errors"
+      ]
+    }
   ],
   "reviews": {
     "T-001": {
-      "ticket_id": "T-001", "file_path": "lib/features/settings/data/category_settings_model.dart",
-      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
-      "gate_2": { "passed": true, "criteria_results": [
-        { "criterion": "Loads from SharedPreferences on init", "status": "pass", "reason": null },
-        { "criterion": "addExpenseCategory appends if not duplicate and saves", "status": "pass", "reason": null },
-        { "criterion": "removeExpenseCategory removes if exists and saves", "status": "pass", "reason": null },
-        { "criterion": "Same methods for income categories", "status": "pass", "reason": null },
-        { "criterion": "Default categories excluded from delete operations", "status": "pass", "reason": null }
-      ]},
-      "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
-    },
-    "T-002": {
-      "ticket_id": "T-002", "file_path": "lib/features/settings/presentation/widgets/category_list_item.dart",
-      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
-      "gate_2": { "passed": true, "criteria_results": [
-        { "criterion": "Displays category name", "status": "pass", "reason": null },
-        { "criterion": "Shows delete IconButton when isDeletable is true", "status": "pass", "reason": null },
-        { "criterion": "Hides delete button when isDeletable is false", "status": "pass", "reason": null },
-        { "criterion": "Calls onDelete callback", "status": "pass", "reason": null }
-      ]},
-      "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
-    },
-    "T-003": {
-      "ticket_id": "T-003", "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
-      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
-      "gate_2": { "passed": true, "criteria_results": [
-        { "criterion": "Two sections: Expense and Income", "status": "pass", "reason": null },
-        { "criterion": "TextField + Add button per section", "status": "pass", "reason": null },
-        { "criterion": "Add with non-empty text adds category", "status": "pass", "reason": null },
-        { "criterion": "Add with empty text does no-ops", "status": "pass", "reason": null },
-        { "criterion": "Defaults shown without delete", "status": "pass", "reason": null },
-        { "criterion": "Custom shown with delete", "status": "pass", "reason": null },
-        { "criterion": "Delete removes via model", "status": "pass", "reason": null },
-        { "criterion": "Reactive updates via Consumer", "status": "pass", "reason": null }
-      ]},
-      "gate_3": { "passed": true, "prd_checks": [
-        { "check_id": "PRD-001", "status": "pass", "reason": null },
-        { "check_id": "PRD-002", "status": "pass", "reason": "No out-of-scope features implemented" }
-      ]},
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
-    },
-    "T-004": {
-      "ticket_id": "T-004", "file_path": "lib/router/app_router.dart",
-      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
-      "gate_2": { "passed": true, "criteria_results": [
-        { "criterion": "5th tab with Icons.settings", "status": "pass", "reason": null },
-        { "criterion": "Navigates to /settings", "status": "pass", "reason": null },
-        { "criterion": "SettingsScreen registered in ShellRoute", "status": "pass", "reason": null }
-      ]},
-      "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
-    },
-    "T-005": {
-      "ticket_id": "T-005", "file_path": "lib/main.dart",
-      "reviewed_at": "2026-05-24T12:30:00Z", "retry_count": 0, "passed": true,
-      "gate_1": { "passed": true, "issues": [] },
-      "gate_2": { "passed": true, "criteria_results": [
-        { "criterion": "CategorySettingsModel provided in main.dart", "status": "pass", "reason": null },
-        { "criterion": "AddTransactionScreen reads CategorySettingsModel", "status": "pass", "reason": null },
-        { "criterion": "Custom categories appear as chips", "status": "pass", "reason": null },
-        { "criterion": "Deleted categories disappear from chips", "status": "pass", "reason": null }
-      ]},
-      "gate_3": { "passed": true, "prd_checks": [{ "check_id": "PRD-001", "status": "pass", "reason": null }] },
-      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+      "ticket_id": "T-001",
+      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+      "reviewed_at": "2026-05-24T13:05:00Z",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": {
+        "passed": true,
+        "issues": []
+      },
+      "gate_2": {
+        "passed": true,
+        "criteria_results": [
+          {
+            "criterion": "Spacer widget is removed from the layout",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Submit button appears directly after keypad",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "Content is wrapped in SingleChildScrollView for scrollability",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "criterion": "No analyzer errors after the change",
+            "status": "pass",
+            "reason": null
+          }
+        ]
+      },
+      "gate_3": {
+        "passed": true,
+        "prd_checks": [
+          {
+            "check_id": "PRD-001",
+            "status": "pass",
+            "reason": null
+          },
+          {
+            "check_id": "PRD-002",
+            "status": "pass",
+            "reason": "No out-of-scope features"
+          }
+        ]
+      },
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0,
+        "criteria_failed": 0,
+        "prd_checks_failed": 0,
+        "escalate": false
+      }
+    }
+  },
+  "tests": {
+    "T-001": {
+      "ticket_id": "T-001",
+      "passed": true,
+      "test_count": 64,
+      "failures": []
     }
   },
   "phase_summary": {
-    "prd": { "approved": true, "approved_at": "2026-05-24T12:00:00Z" },
-    "architecture": { "approved": true, "approved_at": "2026-05-24T12:00:00Z" },
-    "tickets": { "total": 5, "done": 5, "in_review": 0, "failed": 0 },
-    "code": { "total_files": 5, "generated": 5 },
-    "review": { "passed": 5, "failed": 0, "retries": 0 },
-    "tests": { "total": 64, "passed": 64, "coverage_pct": 85 },
-    "build": { "apk_ready": true, "ipa_ready": false }
+    "prd": {
+      "approved": true,
+      "approved_at": "2026-05-24T13:00:00Z"
+    },
+    "architecture": {
+      "approved": true,
+      "approved_at": "2026-05-24T13:00:00Z"
+    },
+    "tickets": {
+      "total": 1,
+      "done": 1,
+      "in_review": 0,
+      "failed": 0
+    },
+    "code": {
+      "total_files": 1,
+      "generated": 1
+    },
+    "review": {
+      "passed": 1,
+      "failed": 0,
+      "retries": 0
+    },
+    "tests": {
+      "total": 64,
+      "passed": 64,
+      "coverage_pct": 85
+    },
+    "build": {
+      "apk_ready": false,
+      "ipa_ready": false
+    }
   },
-  "last_action": { "action": "RELEASED", "phase": "DONE", "timestamp": "2026-05-24T12:45:00Z", "tag": "v2.7.0", "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.7.0", "apk_url": "https://github.com/exor312/budget-app/releases/download/v2.7.0/app-release.apk" },
+  "last_action": null,
   "last_error": null
 }

@@ -144,7 +144,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
-                      child: Padding(
+                      child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(
                           horizontal: isDesktop ? 48 : 20,
                           vertical: 8,
@@ -161,7 +161,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             _buildCategorySection(categorySettings),
                             const SizedBox(height: 24),
                             _buildKeypad(),
-                            const Spacer(),
+                            const SizedBox(height: 16),
                             _buildSubmitButton(categorySettings, accountSettings),
                             const SizedBox(height: 24),
                           ],
