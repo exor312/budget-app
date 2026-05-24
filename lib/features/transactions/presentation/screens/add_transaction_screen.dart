@@ -38,6 +38,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       'Entertainment': Icons.movie,
       'Bills': Icons.receipt,
       'Other': Icons.category,
+      'Salary': Icons.payments,
+      'Business': Icons.business_center,
+      'Investment': Icons.trending_up,
     };
     return iconMap[name] ?? Icons.category;
   }
@@ -45,6 +48,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   /// Build the expense category list from defaults + custom categories.
   List<_CategoryInfo> _buildExpenseCategories(CategorySettingsModel settings) {
     final all = settings.allExpenseCategories;
+    return all.map((name) {
+      return _CategoryInfo(
+        name: name,
+        icon: _iconForCategory(name),
+        categoryName: name,
+      );
+    }).toList();
+  }
+
+  /// Build the income category list from defaults + custom categories.
+  List<_CategoryInfo> _buildIncomeCategories(CategorySettingsModel settings) {
+    final all = settings.allIncomeCategories;
     return all.map((name) {
       return _CategoryInfo(
         name: name,
@@ -80,22 +95,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     if (amount == null || amount <= 0) return;
 
     final signedAmount = _isExpense ? -amount : amount;
-    final displayCategory = _isExpense
-        ? (_selectedCategory ?? 'Other')
-        : 'Income';
+
     // Look up the category name from the dynamic list
-    final categories = _buildExpenseCategories(settings);
-    final category = _isExpense
-        ? categories
-            .firstWhere((c) => c.name == displayCategory,
-                orElse: () => _CategoryInfo(name: 'Other', icon: Icons.category, categoryName: 'Other'))
-            .categoryName
-        : 'Income';
+    final categories = _isExpense
+        ? _buildExpenseCategories(settings)
+        : _buildIncomeCategories(settings);
+    final defaultCategory = 'Other';
+    final selectedName = _selectedCategory ?? defaultCategory;
+
+    // Verify the selected category exists in the list; fallback if not
+    final matchedCategory = categories.firstWhere(
+      (c) => c.name == selectedName,
+      orElse: () => _CategoryInfo(name: defaultCategory, icon: Icons.category, categoryName: defaultCategory),
+    );
 
     await context.read<BudgetModel>().addTransaction(
           amount: signedAmount,
-          description: category,
-          category: category,
+          description: matchedCategory.categoryName,
+          category: matchedCategory.categoryName,
         );
 
     if (mounted) context.pop();
@@ -194,14 +211,24 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             child: _TypeButton(
               label: 'Expense',
               isSelected: _isExpense,
-              onTap: () => setState(() => _isExpense = true),
+              onTap: () {
+                setState(() {
+                  _isExpense = true;
+                  _selectedCategory = null;
+                });
+              },
             ),
           ),
           Expanded(
             child: _TypeButton(
               label: 'Income',
               isSelected: !_isExpense,
-              onTap: () => setState(() => _isExpense = false),
+              onTap: () {
+                setState(() {
+                  _isExpense = false;
+                  _selectedCategory = null;
+                });
+              },
             ),
           ),
         ],
@@ -244,7 +271,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget _buildCategorySection(CategorySettingsModel settings) {
-    final categories = _buildExpenseCategories(settings);
+    final categories = _isExpense
+        ? _buildExpenseCategories(settings)
+        : _buildIncomeCategories(settings);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

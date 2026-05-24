@@ -1,0 +1,160 @@
+{
+  "meta": {
+    "project_id": "budget-app-connect-categories",
+    "project_name": "Fortuna Budget App - Connect Categories",
+    "size_hint": "small",
+    "current_phase": "TEST",
+    "created_at": "2026-05-24T14:00:00Z",
+    "updated_at": "2026-05-24T14:10:00Z"
+  },
+  "idea": {
+    "raw_input": "Connect the Add Transaction screen's category chips to the Settings screen categories. When the user toggles between Expense and Income, the category chips should dynamically show the correct categories from CategorySettingsModel. Currently only expense categories are shown regardless of the toggle.",
+    "clarifications": []
+  },
+  "prd": {
+    "version": "1.0",
+    "drafted_at": "2026-05-24T14:00:00Z",
+    "approved": true,
+    "approved_at": "2026-05-24T14:00:00Z",
+    "overview": {
+      "problem": "In AddTransactionScreen, when the user toggles to Income mode, the category chips still show expense categories. The income categories from CategorySettingsModel are never displayed. Also, when submitting an income transaction, the category is hardcoded to 'Income' instead of using the selected income category.",
+      "solution": "Update AddTransactionScreen so that: (1) When Expense mode is selected, category chips show allExpenseCategories from CategorySettingsModel (already working). (2) When Income mode is selected, category chips show allIncomeCategories from CategorySettingsModel. (3) Submitting an income transaction uses the selected income category name.",
+      "target_user": "Fortuna budget app users adding income transactions who want to categorize them (Salary, Business, Investment, etc.).",
+      "success_metric": "User adds a custom income category in Settings, switches to Income mode in AddTransactionScreen, sees the new category as a chip, selects it, and the transaction is saved with the correct category name."
+    },
+    "screens": [
+      {
+        "id": "SCR-001",
+        "name": "AddTransactionScreen (updated)",
+        "purpose": "Show expense or income category chips based on the selected toggle, pulling from CategorySettingsModel.",
+        "primary_actions": ["Toggle expense/income", "Select category chip", "Submit transaction with correct category"],
+        "navigation_to": []
+      }
+    ],
+    "features": [
+      {
+        "id": "FEA-001",
+        "name": "Dynamic category chips based on toggle",
+        "priority": "must_have",
+        "description": "When the Expense/Income toggle changes, the category section rebuilds showing the correct category list from CategorySettingsModel.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given the toggle is set to Expense, when the category section renders, then allExpenseCategories from CategorySettingsModel are shown as chips.",
+          "Given the toggle is set to Income, when the category section renders, then allIncomeCategories from CategorySettingsModel are shown as chips.",
+          "Given a custom income category exists in Settings, when Income mode is toggled, then the custom category appears as a chip."
+        ]
+      },
+      {
+        "id": "FEA-002",
+        "name": "Income transaction uses selected category",
+        "priority": "must_have",
+        "description": "When submitting an income transaction, the selected income category name is used — not a hardcoded 'Income' string.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given an income category is selected, when the transaction is submitted, then the transaction's category field matches the selected income category name.",
+          "Given no income category is selected, when the transaction is submitted, then the category defaults to 'Other' (first default income category)."
+        ]
+      },
+      {
+        "id": "FEA-003",
+        "name": "Category selection resets on toggle change",
+        "priority": "must_have",
+        "description": "When switching between Expense and Income modes, the selected category is cleared to prevent a stale selection.",
+        "screens_involved": ["SCR-001"],
+        "acceptance_criteria": [
+          "Given a category is selected in Expense mode, when the user toggles to Income, then no category is pre-selected."
+        ]
+      }
+    ],
+    "auth": { "required": false, "methods": [], "guest_mode": false },
+    "data": { "storage": "local", "backend_required": false, "backend_notes": "Uses existing CategorySettingsModel from SharedPreferences." },
+    "integrations": [],
+    "constraints": {
+      "platforms": ["android"],
+      "min_flutter_version": "3.19.0",
+      "target_sdk": { "android": 34, "ios": 17 },
+      "offline_support": true,
+      "accessibility": "basic"
+    },
+    "out_of_scope": ["New income category icons beyond defaults", "Editing income categories from the add transaction screen", "Category color customization", "Backend sync"],
+    "open_questions": []
+  },
+  "architecture": {
+    "version": "1.0",
+    "drafted_at": "2026-05-24T14:00:00Z",
+    "approved": true,
+    "approved_at": "2026-05-24T14:00:00Z",
+    "decisions": {
+      "state_management": { "package": "provider", "version": "^6.1.1", "pattern": "ChangeNotifier + Consumer", "justification": "Existing app uses Provider. AddTransactionScreen already consumes CategorySettingsModel." },
+      "navigation": { "package": "go_router", "version": "^14.2.0", "pattern": "ShellRoute + standalone routes", "justification": "Existing app uses go_router. No navigation changes needed." },
+      "local_storage": { "package": "shared_preferences", "version": "^2.2.2", "justification": "Existing CategorySettingsModel already uses SharedPreferences." },
+      "api_client": { "package": "none", "version": null, "justification": "No backend required." },
+      "auth": { "package": null, "token_storage": null, "justification": "No auth required." },
+      "di": { "package": "provider", "justification": "Provider IS the DI system." },
+      "config": { "packages": [] },
+      "observability": { "packages": [], "justification": "Small app, no remote observability needed." }
+    },
+    "folder_structure": { "lib": { "features": { "transactions": { "presentation": { "screens": { "add_transaction_screen.dart": null } } } } } },
+    "screen_file_map": [{ "screen_id": "SCR-001", "screen_name": "AddTransactionScreen", "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart", "feature_group": "transactions" }],
+    "api_contracts": [],
+    "dependencies": { "flutter_version": ">=3.19.0", "dart_version": ">=3.3.0", "packages": [] },
+    "open_questions": []
+  },
+  "tickets": [
+    {
+      "id": "T-001",
+      "title": "Update AddTransactionScreen for dynamic income/expense categories",
+      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+      "feature_group": "transactions",
+      "layer": "presentation",
+      "type": "screen",
+      "points": 3,
+      "status": "reviewed",
+      "depends_on": [],
+      "inputs": ["FEA-001", "FEA-002", "FEA-003"],
+      "acceptance_criteria": [
+        "_buildCategorySection uses allIncomeCategories when _isExpense is false",
+        "_buildCategorySection uses allExpenseCategories when _isExpense is true",
+        "Toggling between expense/income clears _selectedCategory",
+        "_submitTransaction uses the selected income category (not hardcoded 'Income')",
+        "No analyzer errors on the updated file",
+        "Income and expense categories both show icons (icons for income categories are reasonable defaults)"
+      ]
+    }
+  ],
+  "reviews": {
+    "T-001": {
+      "ticket_id": "T-001",
+      "file_path": "lib/features/transactions/presentation/screens/add_transaction_screen.dart",
+      "reviewed_at": "2026-05-24T14:10:00Z",
+      "retry_count": 0,
+      "passed": true,
+      "gate_1": { "passed": true, "issues": [] },
+      "gate_2": { "passed": true, "criteria_results": [
+        { "criterion": "_buildCategorySection uses allIncomeCategories when _isExpense is false", "status": "pass", "reason": null },
+        { "criterion": "_buildCategorySection uses allExpenseCategories when _isExpense is true", "status": "pass", "reason": null },
+        { "criterion": "Toggling between expense/income clears _selectedCategory", "status": "pass", "reason": null },
+        { "criterion": "_submitTransaction uses the selected income category (not hardcoded 'Income')", "status": "pass", "reason": null },
+        { "criterion": "No analyzer errors on the updated file", "status": "pass", "reason": null },
+        { "criterion": "Income and expense categories both show icons", "status": "pass", "reason": null }
+      ]},
+      "gate_3": { "passed": true, "prd_checks": [
+        { "check_id": "PRD-FEA-001", "status": "pass", "reason": null },
+        { "check_id": "PRD-FEA-002", "status": "pass", "reason": null },
+        { "check_id": "PRD-FEA-003", "status": "pass", "reason": null }
+      ]},
+      "summary": { "error_count": 0, "warning_count": 0, "criteria_failed": 0, "prd_checks_failed": 0, "escalate": false }
+    }
+  },
+  "phase_summary": {
+    "prd": { "approved": true, "approved_at": "2026-05-24T14:00:00Z" },
+    "architecture": { "approved": true, "approved_at": "2026-05-24T14:00:00Z" },
+    "tickets": { "total": 1, "done": 1, "in_review": 0, "failed": 0 },
+    "code": { "total_files": 1, "generated": 1 },
+    "review": { "passed": 1, "failed": 0, "retries": 0 },
+    "tests": { "total": 0, "passed": 0, "coverage_pct": 0 },
+    "build": { "apk_ready": false, "ipa_ready": false }
+  },
+  "last_action": { "action": "REVIEWED", "phase": "REVIEW", "timestamp": "2026-05-24T14:10:00Z", "ticket_id": "T-001", "result": "PASS" },
+  "last_error": null
+}
