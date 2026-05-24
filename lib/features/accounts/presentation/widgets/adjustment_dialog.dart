@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../transactions/data/budget_model.dart';
 
 /// Dialog for adding an adjustment transaction to an account.
@@ -50,15 +49,17 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return AlertDialog(
-      backgroundColor: FortunaColors.surfaceContainerLowest,
+      backgroundColor: cs.surfaceContainerLowest,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         'Adjust ${widget.accountName}',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: FortunaColors.primary,
+          color: cs.primary,
         ),
       ),
       content: Form(
@@ -69,7 +70,7 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
             // Income/Expense toggle
             Container(
               decoration: BoxDecoration(
-                color: FortunaColors.surfaceContainer,
+                color: cs.surfaceContainer,
                 borderRadius: BorderRadius.circular(9999),
               ),
               child: Row(
@@ -81,7 +82,7 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
                           color: _isIncome
-                              ? FortunaColors.onTertiaryContainer
+                              ? cs.onTertiaryContainer
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(9999),
                         ),
@@ -92,8 +93,8 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: _isIncome
-                                ? FortunaColors.surface
-                                : FortunaColors.onSurfaceVariant,
+                                ? cs.surface
+                                : cs.onSurfaceVariant,
                           ),
                         ),
                       ),
@@ -106,7 +107,7 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
                           color: !_isIncome
-                              ? FortunaColors.error
+                              ? cs.error
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(9999),
                         ),
@@ -117,8 +118,8 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: !_isIncome
-                                ? FortunaColors.surface
-                                : FortunaColors.onSurfaceVariant,
+                                ? cs.surface
+                                : cs.onSurfaceVariant,
                           ),
                         ),
                       ),
@@ -142,12 +143,12 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
-                      BorderSide(color: FortunaColors.outlineVariant),
+                      BorderSide(color: cs.outlineVariant),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
-                      BorderSide(color: FortunaColors.primary, width: 2),
+                      BorderSide(color: cs.primary, width: 2),
                 ),
               ),
               validator: (value) {
@@ -174,12 +175,12 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
-                      BorderSide(color: FortunaColors.outlineVariant),
+                      BorderSide(color: cs.outlineVariant),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
-                      BorderSide(color: FortunaColors.primary, width: 2),
+                      BorderSide(color: cs.primary, width: 2),
                 ),
               ),
             ),
@@ -191,15 +192,15 @@ class _AdjustmentDialogState extends State<AdjustmentDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style: TextStyle(color: FortunaColors.onSurfaceVariant),
+            style: TextStyle(color: cs.onSurfaceVariant),
           ),
         ),
         FilledButton(
           onPressed: _submit,
           style: FilledButton.styleFrom(
             backgroundColor: _isIncome
-                ? FortunaColors.onTertiaryContainer
-                : FortunaColors.error,
+                ? cs.onTertiaryContainer
+                : cs.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/color_tokens.dart';
 
 /// Empty state widget for lists with no data.
 class AppEmptyStateWidget extends StatelessWidget {
@@ -20,7 +19,7 @@ class AppEmptyStateWidget extends StatelessWidget {
           children: [
             Icon(
               Icons.inbox_outlined,
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: 48,
             ),
             const SizedBox(height: 16),
@@ -28,7 +27,7 @@ class AppEmptyStateWidget extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
           ],

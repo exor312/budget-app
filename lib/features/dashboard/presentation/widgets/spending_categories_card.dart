@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 
 /// Top Spending Categories card — category icons, names, percentages, progress bars.
 class SpendingCategoriesCard extends StatelessWidget {
-  const SpendingCategoriesCard({
+  SpendingCategoriesCard({
     super.key,
     required this.categories,
   });
@@ -14,15 +13,16 @@ class SpendingCategoriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -37,7 +37,7 @@ class SpendingCategoriesCard extends StatelessWidget {
               Text(
                 'Top Spending Categories',
                 style: FortunaTextStyles.titleMd.copyWith(
-                  color: FortunaColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
               TextButton(
@@ -50,7 +50,7 @@ class SpendingCategoriesCard extends StatelessWidget {
                 child: Text(
                   'ALL CATEGORIES',
                   style: FortunaTextStyles.labelCaps.copyWith(
-                    color: FortunaColors.onSecondaryContainer,
+                    color: colorScheme.onSecondaryContainer,
                   ),
                 ),
               ),
@@ -65,12 +65,13 @@ class SpendingCategoriesCard extends StatelessWidget {
 }
 
 class _CategoryRow extends StatelessWidget {
-  const _CategoryRow({required this.category});
+  _CategoryRow({required this.category});
 
   final SpendingCategory category;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final amountStr = '\$${_formatAmount(category.amount)}';
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -85,12 +86,12 @@ class _CategoryRow extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: FortunaColors.secondaryFixedDim.withValues(alpha: 0.3),
+                      color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       category.icon,
-                      color: FortunaColors.primary,
+                      color: colorScheme.primary,
                       size: 18,
                     ),
                   ),
@@ -113,7 +114,7 @@ class _CategoryRow extends StatelessWidget {
                   Text(
                     '${category.percentage}%',
                     style: FortunaTextStyles.bodySm.copyWith(
-                      color: FortunaColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -126,8 +127,8 @@ class _CategoryRow extends StatelessWidget {
             child: LinearProgressIndicator(
               value: category.percentage / 100,
               minHeight: 6,
-              backgroundColor: FortunaColors.surfaceContainer,
-              valueColor: const AlwaysStoppedAnimation<Color>(FortunaColors.primary),
+              backgroundColor: colorScheme.surfaceContainer,
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             ),
           ),
         ],

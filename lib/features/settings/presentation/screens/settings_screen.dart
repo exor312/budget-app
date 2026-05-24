@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
+
 import '../../../../core/theme/theme_model.dart';
 import '../../../settings/data/category_settings_model.dart';
 import '../../../settings/data/account_settings_model.dart';
@@ -36,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Scaffold(
-      backgroundColor: FortunaColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(),
+                    _buildHeader(context),
                     const SizedBox(height: 24),
                     _buildThemeSection(context),
                     const SizedBox(height: 32),
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
@@ -133,13 +133,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
-                  ? FortunaColors.primary
-                  : FortunaColors.outlineVariant,
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.outlineVariant,
               width: isSelected ? 2 : 1,
             ),
             color: isSelected
-                ? FortunaColors.primary.withValues(alpha: 0.05)
-                : FortunaColors.surfaceContainerLowest,
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.05)
+                : Theme.of(context).colorScheme.surfaceContainerLowest,
           ),
           child: Row(
             children: [
@@ -147,8 +147,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon,
                 size: 20,
                 color: isSelected
-                    ? FortunaColors.primary
-                    : FortunaColors.onSurfaceVariant,
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -158,8 +158,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     fontSize: 16,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                     color: isSelected
-                        ? FortunaColors.primary
-                        : FortunaColors.onSurface,
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -167,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Icon(
                   Icons.check_circle,
                   size: 20,
-                  color: FortunaColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
             ],
           ),
@@ -176,13 +176,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Text(
       'Settings',
       style: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.w600,
-        color: FortunaColors.primary,
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -198,11 +198,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
-            _buildAddAccountRow(model),
+            _buildAddAccountRow(context, model),
             const SizedBox(height: 12),
             ...model.accounts.map((account) {
               final isDefault = account.id == 'cash';
@@ -210,10 +210,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                 child: Row(
                   children: [
-                    Icon(
+                      Icon(
                       account.icon,
                       size: 20,
-                      color: FortunaColors.onSurfaceVariant,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -222,9 +222,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           Text(
                             account.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF1C1B1F),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -232,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             accountTypeLabel(account.type),
                             style: TextStyle(
                               fontSize: 12,
-                              color: FortunaColors.onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -241,7 +241,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (!isDefault)
                       IconButton(
                         onPressed: () => model.removeAccount(account.id),
-                        icon: const Icon(Icons.delete_outline, color: Color(0xFFB3261E)),
+                        icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
                         tooltip: 'Delete account',
                       ),
                   ],
@@ -254,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildAddAccountRow(AccountSettingsModel model) {
+  Widget _buildAddAccountRow(BuildContext context, AccountSettingsModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -266,18 +266,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 decoration: InputDecoration(
                   hintText: 'Add account (e.g. Chase Debit)',
                   filled: true,
-                  fillColor: FortunaColors.surfaceContainerLowest,
+                  fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -291,8 +291,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ElevatedButton(
               onPressed: () => _addAccount(model),
               style: ElevatedButton.styleFrom(
-                backgroundColor: FortunaColors.primary,
-                foregroundColor: FortunaColors.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -311,7 +311,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.onSurfaceVariant,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(width: 8),
@@ -320,18 +320,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 value: _selectedAccountType,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: FortunaColors.surfaceContainerLowest,
+                  fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -380,11 +380,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
             _buildAddRow(
+              context: context,
               controller: _expenseController,
               hint: 'Add expense category',
               onAdd: () async {
@@ -419,11 +420,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
             _buildAddRow(
+              context: context,
               controller: _incomeController,
               hint: 'Add income category',
               onAdd: () async {
@@ -448,6 +450,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildAddRow({
+    required BuildContext context,
     required TextEditingController controller,
     required String hint,
     required VoidCallback onAdd,
@@ -460,18 +463,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             decoration: InputDecoration(
               hintText: hint,
               filled: true,
-              fillColor: FortunaColors.surfaceContainerLowest,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -485,8 +488,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ElevatedButton(
           onPressed: onAdd,
           style: ElevatedButton.styleFrom(
-            backgroundColor: FortunaColors.primary,
-            foregroundColor: FortunaColors.onPrimary,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

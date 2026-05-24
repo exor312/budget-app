@@ -1,11 +1,11 @@
 {
   "meta": {
-    "project_id": "budget-app-dark-mode",
-    "project_name": "Fortuna Budget App - Dark Mode",
+    "project_id": "budget-app-dark-mode-fix",
+    "project_name": "Fortuna Budget App - Dark Mode Fix",
     "size_hint": "small",
-    "current_phase": "RELEASE",
+    "current_phase": "DONE",
     "created_at": "2026-05-24T21:00:00.000000+00:00",
-    "updated_at": "2026-05-24T21:35:00.000000+00:00"
+    "updated_at": "2026-05-25T00:00:00.000000+00:00"
   },
   "idea": {
     "title": "Dark Mode Theme",
@@ -198,52 +198,16 @@
     ]
   },
   "tickets": {
-    "total": 5,
-    "done": 5,
+    "total": 1,
+    "done": 1,
     "in_review": 0,
     "failed": 0,
     "items": [
       {
-        "id": "T-001",
-        "title": "Add dark color tokens to color_tokens.dart",
-        "description": "Add dark theme color variants to FortunaColors class. Each existing color needs a dark variant following Material 3 dark theme guidelines.",
-        "file_path": "lib/core/theme/color_tokens.dart",
-        "status": "done",
-        "review_passed": true,
-        "reviewed": true
-      },
-      {
-        "id": "T-002",
-        "title": "Add dark theme to FortunaTheme",
-        "description": "Add static ThemeData get dark method to FortunaTheme class using the new dark color tokens and ColorScheme.dark().",
-        "file_path": "lib/core/theme/app_theme.dart",
-        "status": "done",
-        "review_passed": true,
-        "reviewed": true
-      },
-      {
-        "id": "T-003",
-        "title": "Create ThemeModel with persistence",
-        "description": "Create ThemeModel (ChangeNotifier) that manages ThemeMode state (light/dark/system), persists via SharedPreferences, and loads saved preference on init.",
-        "file_path": "lib/core/theme/theme_model.dart",
-        "status": "done",
-        "review_passed": true,
-        "reviewed": true
-      },
-      {
-        "id": "T-004",
-        "title": "Wire theme into main.dart with Provider",
-        "description": "Add ThemeModel to MultiProvider in main.dart. Set MaterialApp.router theme and darkTheme properties. Support system theme via themeMode.",
-        "file_path": "lib/main.dart",
-        "status": "done",
-        "review_passed": true,
-        "reviewed": true
-      },
-      {
-        "id": "T-005",
-        "title": "Add theme selector to Settings screen",
-        "description": "Add a theme mode selector section to SettingsScreen with Light/Dark/System options. Use context.read<ThemeModel>() to change theme on selection.",
-        "file_path": "lib/features/settings/presentation/screens/settings_screen.dart",
+        "id": "T-DARK-FIX",
+        "title": "Fix dark mode - replace hardcoded FortunaColors with theme-aware ColorScheme",
+        "description": "Replace all hardcoded FortunaColors.X constants with Theme.of(context).colorScheme.X across all widget and screen files so colors adapt properly in dark mode.",
+        "file_path": "multiple files",
         "status": "done",
         "review_passed": true,
         "reviewed": true
@@ -520,9 +484,13 @@
     "apk_path": "build/app/outputs/flutter-apk/app-release.apk"
   },
   "last_action": {
-    "type": "BUILD_COMPLETE",
-    "apk_ready": true,
-    "at": "2026-05-24T21:35:00.000000+00:00"
+    "type": "RELEASE",
+    "version": "v2.15.0",
+    "release_id": 328538651,
+    "release_url": "https://github.com/exor312/budget-app/releases/tag/v2.15.0",
+    "apk_download_url": "https://github.com/exor312/budget-app/releases/download/v2.15.0/app-release.apk",
+    "at": "2026-05-24T21:45:00.000000+00:00",
+    "tag": "v2.15.0"
   },
   "last_error": null
 }

@@ -11,7 +11,7 @@ void main() {
   group('NetWorthCard', () {
     testWidgets('displays balance and trend indicator', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: NetWorthCard(balance: 124592.0, trendPercentage: 4.2),
           ),
@@ -27,7 +27,7 @@ void main() {
 
     testWidgets('displays zero balance', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(body: NetWorthCard(balance: 0)),
         ),
       );
@@ -37,7 +37,7 @@ void main() {
 
     testWidgets('displays negative balance with minus sign', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(body: NetWorthCard(balance: -5230.50)),
         ),
       );
@@ -50,7 +50,7 @@ void main() {
   group('BudgetProgressCard', () {
     testWidgets('displays title, progress bar, and button', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: BudgetProgressCard(spentAmount: 3420, totalBudget: 3750),
           ),
@@ -64,7 +64,7 @@ void main() {
 
     testWidgets('shows correct percentage', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: BudgetProgressCard(spentAmount: 1875, totalBudget: 3750),
           ),
@@ -83,7 +83,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: SpendingCategoriesCard(categories: categories),
           ),
@@ -104,7 +104,7 @@ void main() {
   group('QuickInsightsCard', () {
     testWidgets('displays savings and bills due from real data', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: QuickInsightsCard(
               savingsAmount: 3500.0,
@@ -124,7 +124,7 @@ void main() {
 
     testWidgets('displays zero savings', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: QuickInsightsCard(
               savingsAmount: 0.0,
@@ -142,7 +142,7 @@ void main() {
   group('SecurityHealthCard', () {
     testWidgets('displays computed security score', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(body: SecurityHealthCard(score: 85)),
         ),
       );
@@ -155,7 +155,7 @@ void main() {
 
     testWidgets('displays low score message', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(body: SecurityHealthCard(score: 0)),
         ),
       );
@@ -166,7 +166,7 @@ void main() {
 
     testWidgets('displays moderate score message', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(body: SecurityHealthCard(score: 50)),
         ),
       );

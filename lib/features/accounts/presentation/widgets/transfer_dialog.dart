@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../../../transactions/data/budget_model.dart';
 
@@ -66,17 +65,18 @@ class _TransferDialogState extends State<TransferDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     final destinations = _destinationAccounts;
 
     return AlertDialog(
-      backgroundColor: FortunaColors.surfaceContainerLowest,
+      backgroundColor: cs.surfaceContainerLowest,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
         'Transfer from ${widget.sourceAccountName}',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: FortunaColors.primary,
+          color: cs.primary,
         ),
       ),
       content: Form(
@@ -88,14 +88,14 @@ class _TransferDialogState extends State<TransferDialog> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: FortunaColors.surfaceContainer,
+                  color: cs.surfaceContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: FortunaColors.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -104,7 +104,7 @@ class _TransferDialogState extends State<TransferDialog> {
                         'Add another account in Settings to transfer between accounts.',
                         style: TextStyle(
                           fontSize: 13,
-                          color: FortunaColors.onSurfaceVariant,
+                          color: cs.onSurfaceVariant,
                         ),
                       ),
                     ),
@@ -123,12 +123,12 @@ class _TransferDialogState extends State<TransferDialog> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                        BorderSide(color: FortunaColors.outlineVariant),
+                        BorderSide(color: cs.outlineVariant),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                        color: FortunaColors.primary, width: 2),
+                        color: cs.primary, width: 2),
                   ),
                 ),
                 items: destinations.map((account) {
@@ -164,12 +164,12 @@ class _TransferDialogState extends State<TransferDialog> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                        BorderSide(color: FortunaColors.outlineVariant),
+                        BorderSide(color: cs.outlineVariant),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                        color: FortunaColors.primary, width: 2),
+                        color: cs.primary, width: 2),
                   ),
                 ),
                 validator: (value) {
@@ -192,14 +192,14 @@ class _TransferDialogState extends State<TransferDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style: TextStyle(color: FortunaColors.onSurfaceVariant),
+            style: TextStyle(color: cs.onSurfaceVariant),
           ),
         ),
         if (destinations.isNotEmpty)
           FilledButton(
             onPressed: _submit,
             style: FilledButton.styleFrom(
-              backgroundColor: FortunaColors.primary,
+              backgroundColor: cs.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// A summary card showing total monthly budget limit, spent, percentage,
@@ -21,19 +20,20 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final barWidth =
         (_utilizationPercent / 100).clamp(0.0, 1.0);
 
     return Container(
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: FortunaColors.outlineVariant.withValues(alpha: 0.3),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -47,43 +47,45 @@ class SummaryCard extends StatelessWidget {
                 Text(
                   'Total Monthly Limit',
                   style: FortunaTextStyles.labelCaps.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 4),
-                _buildAmountRow(),
+                _buildAmountRow(context),
                 const SizedBox(height: 24),
-                _buildProgressBar(barWidth),
+                _buildProgressBar(context, barWidth),
                 const SizedBox(height: 4),
-                _buildFooter(),
+                _buildFooter(context),
               ],
             ),
           ),
     );
   }
 
-  Widget _buildAmountRow() {
+  Widget _buildAmountRow(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           '\$${_formatAmount(totalLimit)}',
           style: FortunaTextStyles.displayLarge.copyWith(
-            color: FortunaColors.primary,
+            color: colorScheme.primary,
           ),
         ),
         const SizedBox(width: 4),
         Text(
           '/ \$${_formatAmount(totalSpent)} spent',
           style: FortunaTextStyles.titleMd.copyWith(
-            color: FortunaColors.onTertiaryContainer,
+            color: colorScheme.onTertiaryContainer,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildProgressBar(double barWidth) {
+  Widget _buildProgressBar(BuildContext context, double barWidth) {
+    final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       height: 12,
@@ -93,7 +95,7 @@ class SummaryCard extends StatelessWidget {
             width: double.infinity,
             height: 12,
             decoration: BoxDecoration(
-              color: FortunaColors.surfaceContainer,
+              color: colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(9999),
             ),
           ),
@@ -102,12 +104,12 @@ class SummaryCard extends StatelessWidget {
             child: Container(
               height: 12,
               decoration: BoxDecoration(
-                color: FortunaColors.onTertiaryContainer,
+                color: colorScheme.onTertiaryContainer,
                 borderRadius: BorderRadius.circular(9999),
                 boxShadow: [
                   BoxShadow(
                     color:
-                        FortunaColors.onTertiaryContainer
+                        colorScheme.onTertiaryContainer
                             .withValues(alpha: 0.3),
                     blurRadius: 12,
                   ),
@@ -120,20 +122,21 @@ class SummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildFooter(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           '${_utilizationPercent.round()}% utilized',
           style: FortunaTextStyles.bodySm.copyWith(
-            color: FortunaColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
         Text(
           '\$${_formatAmount(_remaining)} remaining',
           style: FortunaTextStyles.bodySm.copyWith(
-            color: FortunaColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ],

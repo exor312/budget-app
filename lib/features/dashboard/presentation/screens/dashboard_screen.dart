@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../../budget_goals/data/budget_goals_model.dart';
@@ -101,11 +100,11 @@ class _DashboardScreenState extends State<DashboardScreen>
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Scaffold(
-      backgroundColor: FortunaColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
           // Top App Bar
-          _buildTopAppBar(),
+          _buildTopAppBar(context),
           // Scrollable content
           Expanded(
             child: SingleChildScrollView(
@@ -144,8 +143,8 @@ class _DashboardScreenState extends State<DashboardScreen>
       floatingActionButton: isDesktop
           ? FloatingActionButton(
               onPressed: () => context.push('/add-transaction'),
-              backgroundColor: FortunaColors.primary,
-              foregroundColor: FortunaColors.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
               shape: const CircleBorder(),
               child: const Icon(Icons.add, size: 32),
             )
@@ -192,15 +191,15 @@ class _DashboardScreenState extends State<DashboardScreen>
     return '$billCount active';
   }
 
-  Widget _buildTopAppBar() {
+  Widget _buildTopAppBar(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        color: FortunaColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: _showScrollShadow
             ? [
                 BoxShadow(
-                  color: FortunaColors.primary.withValues(alpha: 0.08),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -223,12 +222,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: FortunaColors.secondaryContainer,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person,
-                      color: FortunaColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 20,
                     ),
                   ),
@@ -236,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Text(
                     'Fortuna',
                     style: FortunaTextStyles.headlineLg.copyWith(
-                      color: FortunaColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,
                     ),
                   ),
@@ -245,7 +244,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.notifications_none),
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ],
           ),
@@ -352,7 +351,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 6,
           slideAnimation: _slideAnimations[6],
           fadeAnimation: _fadeAnimations[6],
-          child: const AccountBalancesCard(),
+          child: AccountBalancesCard(),
         ),
         const SizedBox(height: 100),
       ],
@@ -423,7 +422,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           index: 6,
           slideAnimation: _slideAnimations[6],
           fadeAnimation: _fadeAnimations[6],
-          child: const AccountBalancesCard(),
+          child: AccountBalancesCard(),
         ),
         const SizedBox(height: 100),
       ],

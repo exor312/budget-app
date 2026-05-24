@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../data/savings_goal_model.dart';
 
@@ -16,16 +15,17 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final barWidth = (goal.percentComplete / 100).clamp(0.0, 1.0);
 
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: FortunaColors.primaryContainer.withValues(alpha: 0.5),
+        color: colorScheme.primaryContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: FortunaColors.outlineVariant.withValues(alpha: 0.15),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -33,13 +33,13 @@ class GoalCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.savings, color: FortunaColors.tertiaryFixedDim, size: 20),
+              Icon(Icons.savings, color: colorScheme.tertiary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   goal.name,
                   style: FortunaTextStyles.titleSm.copyWith(
-                    color: FortunaColors.primaryFixed,
+                    color: colorScheme.primary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -50,7 +50,7 @@ class GoalCard extends StatelessWidget {
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete_outline),
                   iconSize: 18,
-                  color: FortunaColors.error.withValues(alpha: 0.7),
+                  color: colorScheme.error.withValues(alpha: 0.7),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                 ),
@@ -64,13 +64,13 @@ class GoalCard extends StatelessWidget {
               Text(
                 '\$${_formatAmount(goal.currentAmount)}',
                 style: FortunaTextStyles.numericMd.copyWith(
-                  color: FortunaColors.primaryFixed,
+                  color: colorScheme.primary,
                 ),
               ),
               Text(
                 'of \$${_formatAmount(goal.targetAmount)}',
                 style: FortunaTextStyles.bodyXs.copyWith(
-                  color: FortunaColors.primaryFixedDim,
+                  color: colorScheme.primary,
                 ),
               ),
             ],
@@ -85,7 +85,7 @@ class GoalCard extends StatelessWidget {
                   width: double.infinity,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: FortunaColors.surfaceContainerLowest.withValues(alpha: 0.3),
+                    color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(9999),
                   ),
                 ),
@@ -94,7 +94,7 @@ class GoalCard extends StatelessWidget {
                   child: Container(
                     height: 4,
                     decoration: BoxDecoration(
-                      color: FortunaColors.tertiaryFixedDim,
+                      color: colorScheme.tertiary,
                       borderRadius: BorderRadius.circular(9999),
                     ),
                   ),
@@ -109,7 +109,7 @@ class GoalCard extends StatelessWidget {
               Text(
                 '${goal.percentComplete.round()}% complete',
                 style: FortunaTextStyles.bodyXs.copyWith(
-                  color: FortunaColors.primaryFixedDim,
+                  color: colorScheme.primary,
                 ),
               ),
             ],

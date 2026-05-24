@@ -1,12 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// Security Health card — circular progress indicator with score and status text.
 /// Score is computed from real transaction activity, passed in as a parameter.
 class SecurityHealthCard extends StatelessWidget {
-  const SecurityHealthCard({
+  SecurityHealthCard({
     super.key,
     required this.score,
   });
@@ -15,15 +14,16 @@ class SecurityHealthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -38,12 +38,12 @@ class SecurityHealthCard extends StatelessWidget {
               Text(
                 'Security Health',
                 style: FortunaTextStyles.titleMd.copyWith(
-                  color: FortunaColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
               Icon(
                 Icons.verified_user,
-                color: FortunaColors.onTertiaryContainer,
+                color: colorScheme.onTertiaryContainer,
                 size: 24,
               ),
             ],
@@ -61,15 +61,15 @@ class SecurityHealthCard extends StatelessWidget {
                       painter: _CircularProgressPainter(
                         progress: score / 100,
                         strokeWidth: 4,
-                        backgroundColor: FortunaColors.surfaceContainer,
-                        progressColor: FortunaColors.primary,
+                        backgroundColor: colorScheme.surfaceContainer,
+                        progressColor: colorScheme.primary,
                       ),
                     ),
                     Center(
                       child: Text(
                         '$score',
                         style: FortunaTextStyles.labelCaps.copyWith(
-                          color: FortunaColors.onSurface,
+                          color: colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -83,7 +83,7 @@ class SecurityHealthCard extends StatelessWidget {
                 child: Text(
                   _statusText,
                   style: FortunaTextStyles.bodySm.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),

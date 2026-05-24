@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../../../transactions/data/budget_model.dart';
 
 /// Compact card for the Dashboard showing per-account balance summary.
 class AccountBalancesCard extends StatelessWidget {
-  const AccountBalancesCard({super.key});
+  AccountBalancesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<AccountSettingsModel, BudgetModel>(
       builder: (context, accountModel, budgetModel, _) {
+        final colorScheme = Theme.of(context).colorScheme;
         final balances = budgetModel.getBalancePerAccount();
         final accounts = accountModel.accounts;
 
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: FortunaColors.surfaceContainerLowest,
+            color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+            border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
             boxShadow: [
               BoxShadow(
-                color: FortunaColors.primary.withValues(alpha: 0.05),
+                color: colorScheme.primary.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -40,7 +40,7 @@ class AccountBalancesCard extends StatelessWidget {
                   Text(
                     'Account Balances',
                     style: FortunaTextStyles.titleMd.copyWith(
-                      color: FortunaColors.primary,
+                      color: colorScheme.primary,
                     ),
                   ),
                   GestureDetector(
@@ -48,7 +48,7 @@ class AccountBalancesCard extends StatelessWidget {
                     child: Text(
                       'VIEW ALL',
                       style: FortunaTextStyles.labelCaps.copyWith(
-                        color: FortunaColors.onSecondaryContainer,
+                        color: colorScheme.onSecondaryContainer,
                       ),
                     ),
                   ),
@@ -64,14 +64,14 @@ class AccountBalancesCard extends StatelessWidget {
                       Icon(
                         account.icon,
                         size: 18,
-                        color: FortunaColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           account.name,
                           style: FortunaTextStyles.bodySm.copyWith(
-                            color: FortunaColors.onSurface,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -80,8 +80,8 @@ class AccountBalancesCard extends StatelessWidget {
                         style: FortunaTextStyles.bodySm.copyWith(
                           fontWeight: FontWeight.w600,
                           color: balance < 0
-                              ? FortunaColors.error
-                              : FortunaColors.onSurface,
+                              ? colorScheme.error
+                              : colorScheme.onSurface,
                         ),
                       ),
                     ],

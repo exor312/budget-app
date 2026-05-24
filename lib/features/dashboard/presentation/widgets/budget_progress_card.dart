@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// Monthly Budget progress card — spent vs budget with progress bar.
 class BudgetProgressCard extends StatelessWidget {
-  const BudgetProgressCard({
+  BudgetProgressCard({
     super.key,
     required this.spentAmount,
     required this.totalBudget,
@@ -15,6 +14,7 @@ class BudgetProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final progress = totalBudget > 0 ? (spentAmount / totalBudget).clamp(0.0, 1.0) : 0.0;
     final remaining = (totalBudget - spentAmount).clamp(0.0, totalBudget);
     final percentage = (progress * 100).round();
@@ -22,11 +22,11 @@ class BudgetProgressCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: FortunaColors.primaryContainer,
+        color: colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.15),
+            color: colorScheme.primary.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -45,12 +45,12 @@ class BudgetProgressCard extends StatelessWidget {
                   Text(
                     'Monthly Budget',
                     style: FortunaTextStyles.labelCaps.copyWith(
-                      color: FortunaColors.onPrimary.withValues(alpha: 0.7),
+                      color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
                     ),
                   ),
                   Icon(
                     Icons.payments,
-                    color: FortunaColors.onPrimary.withValues(alpha: 0.7),
+                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
                   ),
                 ],
               ),
@@ -61,13 +61,13 @@ class BudgetProgressCard extends StatelessWidget {
                     TextSpan(
                       text: '\$${_formatCurrency(spentAmount)}',
                       style: FortunaTextStyles.numericDisplay.copyWith(
-                        color: FortunaColors.onPrimary,
+                        color: colorScheme.onPrimaryContainer,
                       ),
                     ),
                     TextSpan(
                       text: ' of \$${_formatCurrency(totalBudget)}',
                       style: FortunaTextStyles.bodySm.copyWith(
-                        color: FortunaColors.onPrimary.withValues(alpha: 0.6),
+                        color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -79,9 +79,9 @@ class BudgetProgressCard extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 12,
-                  backgroundColor: FortunaColors.onPrimary.withValues(alpha: 0.1),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    FortunaColors.tertiaryFixedDim,
+                  backgroundColor: colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    colorScheme.tertiary,
                   ),
                 ),
               ),
@@ -92,13 +92,13 @@ class BudgetProgressCard extends StatelessWidget {
                   Text(
                     '$percentage% consumed',
                     style: FortunaTextStyles.bodySm.copyWith(
-                      color: FortunaColors.onPrimary.withValues(alpha: 0.7),
+                      color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
                     ),
                   ),
                   Text(
                     '\$${_formatCurrency(remaining)} remaining',
                     style: FortunaTextStyles.bodySm.copyWith(
-                      color: FortunaColors.tertiaryFixedDim,
+                      color: colorScheme.tertiary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -112,8 +112,8 @@ class BudgetProgressCard extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: FortunaColors.onPrimary.withValues(alpha: 0.1)),
-                backgroundColor: FortunaColors.onPrimary.withValues(alpha: 0.1),
+                side: BorderSide(color: colorScheme.onPrimaryContainer.withValues(alpha: 0.1)),
+                backgroundColor: colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -122,7 +122,7 @@ class BudgetProgressCard extends StatelessWidget {
               child: Text(
                 'VIEW BUDGET DETAILS',
                 style: FortunaTextStyles.labelCaps.copyWith(
-                  color: FortunaColors.onPrimary,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ),

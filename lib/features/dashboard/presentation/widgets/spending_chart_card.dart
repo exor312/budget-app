@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// Time range options for the spending chart.
@@ -80,6 +79,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final range = _getDateRange();
     final useDaily = _selectedRange == ChartTimeRange.week ||
         _selectedRange == ChartTimeRange.month;
@@ -94,13 +94,13 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
         border:
-            Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+            Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -115,14 +115,14 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
               Text(
                 'Spending Overview',
                 style: FortunaTextStyles.titleMd.copyWith(
-                  color: FortunaColors.onSurface,
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
                 _formatCurrency(totalSpent),
                 style: FortunaTextStyles.titleMd.copyWith(
-                  color: FortunaColors.primary,
+                  color: colorScheme.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -133,25 +133,25 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
             _rangeLabel(_selectedRange),
             style: TextStyle(
               fontSize: 12,
-              color: FortunaColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 16),
-          _buildRangeSelector(),
+          _buildRangeSelector(colorScheme),
           const SizedBox(height: 20),
           SizedBox(
             height: 180,
             child: data.isEmpty
-                ? _buildEmptyChart()
-                : _buildChart(data, useDaily, range),
+                ? _buildEmptyChart(colorScheme)
+                : _buildChart(data, useDaily, range, colorScheme),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRangeSelector() {
+  Widget _buildRangeSelector(ColorScheme colorScheme) {
     return Row(
       children: ChartTimeRange.values.map((range) {
         final isSelected = _selectedRange == range;
@@ -163,13 +163,13 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? FortunaColors.secondaryContainer
+                    ? colorScheme.secondaryContainer
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isSelected
-                      ? FortunaColors.primary.withValues(alpha: 0.3)
-                      : FortunaColors.outlineVariant.withValues(alpha: 0.2),
+                      ? colorScheme.primary.withValues(alpha: 0.3)
+                      : colorScheme.outlineVariant.withValues(alpha: 0.2),
                 ),
               ),
               child: Center(
@@ -179,8 +179,8 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: isSelected
-                        ? FortunaColors.primary
-                        : FortunaColors.onSurfaceVariant,
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -191,21 +191,21 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
     );
   }
 
-  Widget _buildEmptyChart() {
+  Widget _buildEmptyChart(ColorScheme colorScheme) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.bar_chart_outlined,
-            color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.3),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
             size: 48,
           ),
           const SizedBox(height: 8),
           Text(
             'No spending data for this period',
             style: TextStyle(
-              color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.5),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               fontSize: 13,
             ),
           ),
@@ -218,6 +218,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
     List<MapEntry<DateTime, double>> data,
     bool useDaily,
     _DateRange range,
+    ColorScheme colorScheme,
   ) {
     final spots = <FlSpot>[];
     final labels = <String>[];
@@ -285,7 +286,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
           drawVerticalLine: false,
           horizontalInterval: chartMaxY / 4,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: FortunaColors.outlineVariant.withValues(alpha: 0.15),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.15),
             strokeWidth: 1,
           ),
         ),
@@ -308,7 +309,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
                     labels[i],
                     style: TextStyle(
                       fontSize: 10,
-                      color: FortunaColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -326,7 +327,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
                   _formatCompact(value),
                   style: TextStyle(
                     fontSize: 10,
-                    color: FortunaColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 );
@@ -344,7 +345,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
             spots: spots,
             isCurved: true,
             curveSmoothness: 0.35,
-            color: FortunaColors.primary,
+            color: colorScheme.primary,
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: FlDotData(
@@ -352,7 +353,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
                   radius: spot.y > 0 ? 4 : 0,
-                  color: FortunaColors.primary,
+                  color: colorScheme.primary,
                   strokeWidth: 2,
                   strokeColor: Colors.white,
                 );
@@ -364,8 +365,8 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  FortunaColors.primary.withValues(alpha: 0.15),
-                  FortunaColors.primary.withValues(alpha: 0.02),
+                  colorScheme.primary.withValues(alpha: 0.15),
+                  colorScheme.primary.withValues(alpha: 0.02),
                 ],
               ),
             ),
@@ -373,7 +374,7 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
         ],
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => FortunaColors.surfaceContainerHigh
+            getTooltipColor: (_) => colorScheme.surfaceContainerHigh
                 .withValues(alpha: 0.95),
             tooltipRoundedRadius: 8,
             getTooltipItems: (touchedSpots) {
@@ -386,8 +387,8 @@ class _SpendingChartCardState extends State<SpendingChartCard> {
                     : '${_monthName(date.month)} ${date.year}';
                 return LineTooltipItem(
                   '$dateStr\n\$${_formatCurrency(touchedSpot.y)}',
-                  const TextStyle(
-                    color: FortunaColors.onSurface,
+                  TextStyle(
+                    color: colorScheme.onSurface,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),

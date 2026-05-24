@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../widgets/transaction_list_item.dart';
 
@@ -87,14 +86,15 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: FortunaColors.surface,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           // Sticky Header
-          _buildHeader(),
+          _buildHeader(colorScheme),
           // Search & Filter Bar
-          _buildSearchAndFilters(),
+          _buildSearchAndFilters(colorScheme),
           // Transaction List
           Expanded(
             child: Consumer<BudgetModel>(
@@ -104,7 +104,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 );
 
                 if (filtered.isEmpty) {
-                  return _buildEmptyState();
+                  return _buildEmptyState(colorScheme);
                 }
 
                 // Group by date
@@ -132,10 +132,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             children: [
                               Text(
                                 groupKey,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: FortunaColors.onSurface,
+                                  color: colorScheme.onSurface,
                                 ),
                               ),
                               if (groupKey == 'Today')
@@ -145,7 +145,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: 0.05,
-                                    color: FortunaColors.outline,
+                                    color: colorScheme.outline,
                                   ),
                                 ),
                               if (groupKey == 'Yesterday')
@@ -159,7 +159,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
                                     letterSpacing: 0.05,
-                                    color: FortunaColors.outline,
+                                    color: colorScheme.outline,
                                   ),
                                 ),
                             ],
@@ -192,9 +192,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ColorScheme colorScheme) {
     return Container(
-      color: FortunaColors.surface,
+      color: colorScheme.surface,
       child: SafeArea(
         bottom: false,
         child: Container(
@@ -209,12 +209,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: FortunaColors.secondaryContainer,
+                      color: colorScheme.secondaryContainer,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person,
-                      color: FortunaColors.primary,
+                      color: colorScheme.primary,
                       size: 16,
                     ),
                   ),
@@ -224,7 +224,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: FortunaColors.primary,
+                      color: colorScheme.primary,
                       letterSpacing: -0.02,
                     ),
                   ),
@@ -233,7 +233,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.notifications_none),
-                color: FortunaColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ],
           ),
@@ -242,7 +242,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildSearchAndFilters() {
+  Widget _buildSearchAndFilters(ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Column(
@@ -253,21 +253,21 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: 'Search transactions, merchants...',
-              hintStyle: TextStyle(color: FortunaColors.outline),
-              prefixIcon: Icon(Icons.search, color: FortunaColors.outline),
+              hintStyle: TextStyle(color: colorScheme.outline),
+              prefixIcon: Icon(Icons.search, color: colorScheme.outline),
               filled: true,
-              fillColor: FortunaColors.surfaceContainerLowest,
+              fillColor: colorScheme.surfaceContainerLowest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                borderSide: BorderSide(color: colorScheme.outlineVariant),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.outlineVariant),
+                borderSide: BorderSide(color: colorScheme.outlineVariant),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: FortunaColors.primary, width: 2),
+                borderSide: BorderSide(color: colorScheme.primary, width: 2),
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
             ),
@@ -279,13 +279,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _buildFilterChip('Filters', icon: Icons.tune),
+                _buildFilterChip('Filters', colorScheme, icon: Icons.tune),
                 const SizedBox(width: 8),
-                _buildFilterChip('This Month'),
+                _buildFilterChip('This Month', colorScheme),
                 const SizedBox(width: 8),
-                _buildFilterChip('Income'),
+                _buildFilterChip('Income', colorScheme),
                 const SizedBox(width: 8),
-                _buildFilterChip('Expense'),
+                _buildFilterChip('Expense', colorScheme),
               ],
             ),
           ),
@@ -294,7 +294,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildFilterChip(String label, {IconData? icon}) {
+  Widget _buildFilterChip(String label, ColorScheme colorScheme, {IconData? icon}) {
     final isActive = _activeFilter == label ||
         (label == 'Filters' && _activeFilter != 'All');
 
@@ -313,20 +313,20 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isActive
-              ? FortunaColors.secondaryContainer
-              : FortunaColors.surfaceContainer,
+              ? colorScheme.secondaryContainer
+              : colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(9999),
           border: Border.all(
             color: isActive
                 ? Colors.transparent
-                : FortunaColors.outlineVariant.withValues(alpha: 0.3),
+                : colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 18, color: FortunaColors.onSecondaryContainer),
+              Icon(icon, size: 18, color: colorScheme.onSecondaryContainer),
               const SizedBox(width: 4),
             ],
             Text(
@@ -336,8 +336,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.05,
                 color: isActive
-                    ? FortunaColors.onSecondaryContainer
-                    : FortunaColors.onSurfaceVariant,
+                    ? colorScheme.onSecondaryContainer
+                    : colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -346,21 +346,21 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(ColorScheme colorScheme) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.receipt_long_outlined,
-            color: FortunaColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
             size: 64,
           ),
           const SizedBox(height: 16),
           Text(
             'No transactions found',
             style: TextStyle(
-              color: FortunaColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               fontSize: 16,
             ),
           ),
@@ -368,7 +368,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           Text(
             'Try adjusting your filters or add a transaction',
             style: TextStyle(
-              color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.7),
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -452,12 +452,13 @@ class _TransactionFormContentState extends State<_TransactionFormContent> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final categories = _isIncome ? _incomeCategories : _expenseCategories;
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Form(
@@ -471,7 +472,7 @@ class _TransactionFormContentState extends State<_TransactionFormContent> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: FortunaColors.primary,
+                color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 24),
@@ -521,7 +522,7 @@ class _TransactionFormContentState extends State<_TransactionFormContent> {
                 ChoiceChip(
                   label: const Text('Income'),
                   selected: _isIncome,
-                  selectedColor: FortunaColors.secondaryContainer,
+                  selectedColor: colorScheme.secondaryContainer,
                   onSelected: (selected) {
                     setState(() {
                       _isIncome = true;
@@ -533,7 +534,7 @@ class _TransactionFormContentState extends State<_TransactionFormContent> {
                 ChoiceChip(
                   label: const Text('Expense'),
                   selected: !_isIncome,
-                  selectedColor: FortunaColors.secondaryContainer,
+                  selectedColor: colorScheme.secondaryContainer,
                   onSelected: (selected) {
                     setState(() {
                       _isIncome = false;
@@ -572,8 +573,8 @@ class _TransactionFormContentState extends State<_TransactionFormContent> {
               child: ElevatedButton(
                 onPressed: _addTransaction,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: FortunaColors.primary,
-                  foregroundColor: FortunaColors.onPrimary,
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

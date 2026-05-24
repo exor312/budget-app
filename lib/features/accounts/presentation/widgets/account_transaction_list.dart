@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../../transactions/presentation/widgets/transaction_list_item.dart';
 
 /// Displays a filtered list of transactions for a specific account,
 /// grouped by date (Today, Yesterday, date header).
 class AccountTransactionList extends StatelessWidget {
-  const AccountTransactionList({
+  AccountTransactionList({
     super.key,
     required this.accountId,
     required this.transactions,
@@ -48,6 +47,7 @@ class AccountTransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     final filtered = _filtered;
 
     if (filtered.isEmpty) {
@@ -55,24 +55,24 @@ class AccountTransactionList extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         padding: const EdgeInsets.all(40),
         decoration: BoxDecoration(
-          color: FortunaColors.surfaceContainerLowest,
+          color: cs.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(12),
           border:
-              Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+              Border.all(color: cs.outlineVariant.withValues(alpha: 0.1)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.receipt_long_outlined,
-              color: FortunaColors.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
               size: 48,
             ),
             const SizedBox(height: 12),
             Text(
               'No transactions for this account',
               style: TextStyle(
-                color: FortunaColors.onSurfaceVariant,
+                color: cs.onSurfaceVariant,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -81,7 +81,7 @@ class AccountTransactionList extends StatelessWidget {
             Text(
               'Add a transaction or make an adjustment',
               style: TextStyle(
-                color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.7),
+                color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                 fontSize: 13,
               ),
             ),
@@ -108,10 +108,10 @@ class AccountTransactionList extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16, bottom: 8),
                   child: Text(
                     groupKey,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: FortunaColors.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                       letterSpacing: 0.05,
                     ),
                   ),

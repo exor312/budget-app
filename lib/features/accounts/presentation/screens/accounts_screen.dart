@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/color_tokens.dart';
+import '../../../../core/theme/text_styles.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../widgets/account_balance_card.dart';
@@ -18,7 +18,7 @@ class AccountsScreen extends StatelessWidget {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Scaffold(
-      backgroundColor: FortunaColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
           _buildHeader(context),
@@ -29,7 +29,7 @@ class AccountsScreen extends StatelessWidget {
                 final accounts = accountModel.accounts;
 
                 if (accounts.length == 1 && (balances[accounts.first.id] ?? 0.0) == 0.0) {
-                  return _buildEmptyState();
+                  return _buildEmptyState(context);
                 }
 
                 return SingleChildScrollView(
@@ -72,7 +72,7 @@ class AccountsScreen extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      color: FortunaColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: SafeArea(
         bottom: false,
         child: Container(
@@ -87,12 +87,12 @@ class AccountsScreen extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: FortunaColors.secondaryContainer,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person,
-                      color: FortunaColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 16,
                     ),
                   ),
@@ -102,7 +102,7 @@ class AccountsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: FortunaColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       letterSpacing: -0.02,
                     ),
                   ),
@@ -115,21 +115,21 @@ class AccountsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.account_balance_wallet_outlined,
-            color: FortunaColors.onSurfaceVariant,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             size: 64,
           ),
           const SizedBox(height: 16),
           Text(
             'No accounts yet',
             style: TextStyle(
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 16,
             ),
           ),
@@ -137,7 +137,7 @@ class AccountsScreen extends StatelessWidget {
           Text(
             'Add accounts in Settings to track balances',
             style: TextStyle(
-              color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.7),
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),

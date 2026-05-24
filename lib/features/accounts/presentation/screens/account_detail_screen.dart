@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../widgets/account_transaction_list.dart';
@@ -30,7 +29,7 @@ class AccountDetailScreen extends StatelessWidget {
         final transactions = budgetModel.transactions;
 
         return Scaffold(
-          backgroundColor: FortunaColors.surface,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Column(
             children: [
               _buildHeader(context, account, balance),
@@ -75,10 +74,11 @@ class AccountDetailScreen extends StatelessWidget {
     Account account,
     double balance,
   ) {
+    final cs = Theme.of(context).colorScheme;
     final isNegative = balance < 0;
 
     return Container(
-      color: FortunaColors.surface,
+      color: cs.surface,
       child: SafeArea(
         bottom: false,
         child: Container(
@@ -94,12 +94,12 @@ class AccountDetailScreen extends StatelessWidget {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: FortunaColors.secondaryContainer,
+                        color: cs.secondaryContainer,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back,
-                        color: FortunaColors.primary,
+                        color: cs.primary,
                         size: 18,
                       ),
                     ),
@@ -114,7 +114,7 @@ class AccountDetailScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: FortunaColors.primary,
+                            color: cs.primary,
                             letterSpacing: -0.02,
                           ),
                         ),
@@ -124,7 +124,7 @@ class AccountDetailScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: FortunaColors.onSurfaceVariant,
+                            color: cs.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -141,8 +141,8 @@ class AccountDetailScreen extends StatelessWidget {
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
                     color: isNegative
-                        ? FortunaColors.error
-                        : FortunaColors.onSurface,
+                        ? cs.error
+                        : cs.onSurface,
                     letterSpacing: -0.02,
                   ),
                 ),
@@ -155,6 +155,8 @@ class AccountDetailScreen extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context, Account account) {
+    final cs = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -179,8 +181,8 @@ class AccountDetailScreen extends StatelessWidget {
               icon: const Icon(Icons.edit_outlined, size: 18),
               label: const Text('Adjust'),
               style: FilledButton.styleFrom(
-                backgroundColor: FortunaColors.surfaceContainerHighest,
-                foregroundColor: FortunaColors.onSurface,
+                backgroundColor: cs.surfaceContainerHighest,
+                foregroundColor: cs.onSurface,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -209,8 +211,8 @@ class AccountDetailScreen extends StatelessWidget {
               icon: const Icon(Icons.swap_horiz, size: 18),
               label: const Text('Transfer'),
               style: FilledButton.styleFrom(
-                backgroundColor: FortunaColors.primary,
-                foregroundColor: FortunaColors.surface,
+                backgroundColor: cs.primary,
+                foregroundColor: cs.surface,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

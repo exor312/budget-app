@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../settings/data/account_settings_model.dart';
 
 /// Card widget showing an account's icon, name, type label, and formatted balance.
 class AccountBalanceCard extends StatelessWidget {
-  const AccountBalanceCard({
+  AccountBalanceCard({
     super.key,
     required this.account,
     required this.balance,
@@ -17,17 +16,18 @@ class AccountBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isNegative = balance < 0;
+    final cs = Theme.of(context).colorScheme;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: cs.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: cs.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -39,12 +39,12 @@ class AccountBalanceCard extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: FortunaColors.secondaryContainer,
+              color: cs.secondaryContainer,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               account.icon,
-              color: FortunaColors.primary,
+              color: cs.primary,
               size: 20,
             ),
           ),
@@ -56,7 +56,7 @@ class AccountBalanceCard extends StatelessWidget {
                 Text(
                   account.name,
                   style: FortunaTextStyles.bodyLg.copyWith(
-                    color: FortunaColors.onSurface,
+                    color: cs.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -64,7 +64,7 @@ class AccountBalanceCard extends StatelessWidget {
                   accountTypeLabel(account.type),
                   style: TextStyle(
                     fontSize: 12,
-                    color: FortunaColors.onSurfaceVariant,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -73,7 +73,7 @@ class AccountBalanceCard extends StatelessWidget {
           Text(
             '\$${_formatCurrency(balance)}',
             style: FortunaTextStyles.titleMd.copyWith(
-              color: isNegative ? FortunaColors.error : FortunaColors.primary,
+              color: isNegative ? cs.error : cs.primary,
               fontWeight: FontWeight.w600,
             ),
           ),

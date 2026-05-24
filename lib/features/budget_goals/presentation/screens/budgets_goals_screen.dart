@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../../settings/data/category_settings_model.dart';
@@ -26,10 +25,10 @@ class BudgetsGoalsScreen extends StatelessWidget {
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Scaffold(
-      backgroundColor: FortunaColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
-          _buildTopAppBar(),
+          _buildTopAppBar(context),
           Expanded(
             child: SingleChildScrollView(
               child: Center(
@@ -68,9 +67,10 @@ class BudgetsGoalsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopAppBar() {
+  Widget _buildTopAppBar(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
-      color: FortunaColors.surface,
+      color: cs.surface,
       child: SafeArea(
         bottom: false,
         child: Container(
@@ -85,12 +85,12 @@ class BudgetsGoalsScreen extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: FortunaColors.secondaryContainer,
+                      color: cs.secondaryContainer,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person,
-                      color: FortunaColors.primary,
+                      color: cs.primary,
                       size: 18,
                     ),
                   ),
@@ -98,7 +98,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
                   Text(
                     'Fortuna',
                     style: FortunaTextStyles.headlineSm.copyWith(
-                      color: FortunaColors.primary,
+                      color: cs.primary,
                       fontSize: 22,
                     ),
                   ),
@@ -107,7 +107,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.notifications_none),
-                color: FortunaColors.primary,
+                color: cs.primary,
               ),
             ],
           ),
@@ -117,6 +117,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
   }
 
   Widget _buildHeroSection(BuildContext context, BudgetModel budgetModel) {
+    final cs = Theme.of(context).colorScheme;
     final monthlySpending = budgetModel.monthlySpending;
     final monthlyIncome = budgetModel.totalIncome;
     final savingsThisMonth = monthlyIncome - monthlySpending;
@@ -143,14 +144,14 @@ class BudgetsGoalsScreen extends StatelessWidget {
               Text(
                 'Budgets & Goals',
                 style: FortunaTextStyles.headlineMd.copyWith(
-                  color: FortunaColors.primary,
+                  color: cs.primary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: FortunaTextStyles.bodyMd.copyWith(
-                  color: FortunaColors.onSurfaceVariant,
+                  color: cs.onSurfaceVariant,
                 ),
               ),
             ],
@@ -162,8 +163,8 @@ class BudgetsGoalsScreen extends StatelessWidget {
           icon: const Icon(Icons.add_circle, size: 18),
           label: const Text('New Budget'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: FortunaColors.primary,
-            foregroundColor: FortunaColors.onPrimary,
+            backgroundColor: cs.primary,
+            foregroundColor: cs.onPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -221,13 +222,14 @@ class BudgetsGoalsScreen extends StatelessWidget {
     BudgetGoalsModel model,
     bool isDesktop,
   ) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Active Categories',
           style: FortunaTextStyles.titleMd.copyWith(
-            color: FortunaColors.primary,
+            color: cs.primary,
           ),
         ),
         const SizedBox(height: 12),
@@ -283,6 +285,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
   }
 
   Widget _buildGoalsSection(BuildContext context, SavingsGoalModel goalsModel) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -292,13 +295,13 @@ class BudgetsGoalsScreen extends StatelessWidget {
             Text(
               'Savings Goals',
               style: FortunaTextStyles.titleMd.copyWith(
-                color: FortunaColors.primary,
+                color: cs.primary,
               ),
             ),
             IconButton(
               onPressed: () => _showAddGoalDialog(context),
               icon: const Icon(Icons.add_circle),
-              color: FortunaColors.primary,
+              color: cs.primary,
               iconSize: 28,
             ),
           ],
@@ -309,29 +312,29 @@ class BudgetsGoalsScreen extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: FortunaColors.surfaceContainerLowest,
+              color: cs.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: FortunaColors.outlineVariant.withValues(alpha: 0.3),
+                color: cs.outlineVariant.withValues(alpha: 0.3),
               ),
             ),
             child: Column(
               children: [
                 Icon(Icons.savings,
                     size: 40,
-                    color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                    color: cs.onSurfaceVariant.withValues(alpha: 0.4)),
                 const SizedBox(height: 8),
                 Text(
                   'No savings goals yet',
                   style: FortunaTextStyles.bodyMd.copyWith(
-                    color: FortunaColors.onSurfaceVariant,
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Tap the + button to add one',
                   style: FortunaTextStyles.bodySm.copyWith(
-                    color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.7),
+                    color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -350,6 +353,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
   }
 
   Widget _buildAddCategoryButton(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => _showAddBudgetDialog(context),
       child: Container(
@@ -358,7 +362,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
-            color: FortunaColors.outlineVariant,
+            color: cs.outlineVariant,
             style: BorderStyle.solid,
             width: 2,
           ),
@@ -370,13 +374,13 @@ class BudgetsGoalsScreen extends StatelessWidget {
             Icon(
               Icons.add_circle_outline,
               size: 24,
-              color: FortunaColors.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
             ),
             const SizedBox(height: 4),
             Text(
               'Add',
               style: FortunaTextStyles.bodySm.copyWith(
-                color: FortunaColors.onSurfaceVariant,
+                color: cs.onSurfaceVariant,
               ),
             ),
           ],
@@ -426,6 +430,7 @@ class BudgetsGoalsScreen extends StatelessWidget {
   }
 
   void _confirmDeleteCategory(BuildContext context, BudgetCategory category) {
+    final cs = Theme.of(context).colorScheme;
     showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -442,8 +447,8 @@ class BudgetsGoalsScreen extends StatelessWidget {
               context.read<BudgetGoalsModel>().removeCategory(category.name);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: FortunaColors.error,
-              foregroundColor: FortunaColors.onError,
+              backgroundColor: cs.error,
+              foregroundColor: cs.onError,
             ),
             child: const Text('Delete'),
           ),
@@ -484,8 +489,8 @@ class BudgetsGoalsScreen extends StatelessWidget {
               context.read<SavingsGoalModel>().removeGoal(goal.id);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: FortunaColors.error,
-              foregroundColor: FortunaColors.onError,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             child: const Text('Delete'),
           ),

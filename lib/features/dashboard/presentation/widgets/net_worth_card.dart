@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 
 /// Total Net Worth card — large balance display with trend indicator and mini chart.
 class NetWorthCard extends StatelessWidget {
-  const NetWorthCard({
+  NetWorthCard({
     super.key,
     required this.balance,
     this.trendPercentage = 4.2,
@@ -15,17 +14,18 @@ class NetWorthCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isDesktop = MediaQuery.of(context).size.width >= 768;
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -43,7 +43,7 @@ class NetWorthCard extends StatelessWidget {
                   Text(
                     'Total Net Worth',
                     style: FortunaTextStyles.labelCaps.copyWith(
-                      color: FortunaColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -51,26 +51,26 @@ class NetWorthCard extends StatelessWidget {
                     '\$${_formatCurrency(balance)}',
                     style: isDesktop
                         ? FortunaTextStyles.displayLarge.copyWith(
-                            color: FortunaColors.primary,
+                            color: colorScheme.primary,
                             fontSize: 48,
                           )
                         : FortunaTextStyles.headlineLg.copyWith(
-                            color: FortunaColors.primary,
+                            color: colorScheme.primary,
                           ),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.trending_up,
-                        color: FortunaColors.onTertiaryContainer,
+                        color: colorScheme.onTertiaryContainer,
                         size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '+${trendPercentage.toStringAsFixed(1)}% from last month',
                         style: FortunaTextStyles.labelCaps.copyWith(
-                          color: FortunaColors.onTertiaryContainer,
+                          color: colorScheme.onTertiaryContainer,
                         ),
                       ),
                     ],
@@ -80,12 +80,12 @@ class NetWorthCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: FortunaColors.secondaryContainer,
+                  color: colorScheme.secondaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.account_balance_wallet,
-                  color: FortunaColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
             ],
@@ -96,7 +96,7 @@ class NetWorthCard extends StatelessWidget {
             height: 80,
             width: double.infinity,
             child: CustomPaint(
-              painter: _MiniAreaChartPainter(),
+              painter: _MiniAreaChartPainter(colorScheme: colorScheme),
             ),
           ),
         ],
@@ -120,6 +120,10 @@ class NetWorthCard extends StatelessWidget {
 }
 
 class _MiniAreaChartPainter extends CustomPainter {
+  _MiniAreaChartPainter({required this.colorScheme});
+
+  final ColorScheme colorScheme;
+
   @override
   void paint(Canvas canvas, Size size) {
     final gradientPaint = Paint()
@@ -127,13 +131,13 @@ class _MiniAreaChartPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          FortunaColors.primary.withValues(alpha: 0.1),
-          FortunaColors.primary.withValues(alpha: 0.0),
+          colorScheme.primary.withValues(alpha: 0.1),
+          colorScheme.primary.withValues(alpha: 0.0),
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     final linePaint = Paint()
-      ..color = FortunaColors.primary
+      ..color = colorScheme.primary
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

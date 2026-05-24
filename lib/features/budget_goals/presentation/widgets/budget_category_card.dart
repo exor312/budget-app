@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../data/budget_goals_model.dart';
 
@@ -22,18 +21,20 @@ class BudgetCategoryCard extends StatelessWidget {
     final isCritical = status == BudgetStatus.critical;
     final isWarning = status == BudgetStatus.warning;
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: isCritical
-              ? FortunaColors.error.withValues(alpha: 0.2)
-              : FortunaColors.outlineVariant.withValues(alpha: 0.15),
+              ? colorScheme.error.withValues(alpha: 0.2)
+              : colorScheme.outlineVariant.withValues(alpha: 0.15),
         ),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.04),
+            color: colorScheme.primary.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
@@ -46,35 +47,36 @@ class BudgetCategoryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(isCritical, isWarning),
+                _buildHeader(context, isCritical, isWarning),
                 const SizedBox(height: 8),
-                _buildAmounts(),
+                _buildAmounts(context),
                 const SizedBox(height: 6),
-                _buildProgressBar(status),
+                _buildProgressBar(context, status),
                 const SizedBox(height: 4),
-                _buildStatusRow(status),
+                _buildStatusRow(context, status),
               ],
             ),
           ),
-          if (isCritical) _buildOverLimitBadge(),
+          if (isCritical) _buildOverLimitBadge(context),
         ],
       ),
     );
   }
 
-  Widget _buildHeader(bool isCritical, bool isWarning) {
+  Widget _buildHeader(BuildContext context, bool isCritical, bool isWarning) {
+    final colorScheme = Theme.of(context).colorScheme;
     Color iconBgColor;
     Color iconColor;
 
     if (isCritical) {
-      iconBgColor = FortunaColors.errorContainer;
-      iconColor = FortunaColors.error;
+      iconBgColor = colorScheme.errorContainer;
+      iconColor = colorScheme.error;
     } else if (isWarning) {
       iconBgColor = const Color(0xFFFFF3E0);
       iconColor = const Color(0xFFE65100);
     } else {
-      iconBgColor = FortunaColors.onTertiaryContainer.withValues(alpha: 0.1);
-      iconColor = FortunaColors.onTertiaryContainer;
+      iconBgColor = colorScheme.onTertiaryContainer.withValues(alpha: 0.1);
+      iconColor = colorScheme.onTertiaryContainer;
     }
 
     return Row(
@@ -101,7 +103,7 @@ class BudgetCategoryCard extends StatelessWidget {
             onPressed: onEdit,
             icon: const Icon(Icons.edit_outlined),
             iconSize: 18,
-            color: FortunaColors.outline,
+            color: colorScheme.outline,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),
@@ -110,7 +112,7 @@ class BudgetCategoryCard extends StatelessWidget {
             onPressed: onDelete,
             icon: const Icon(Icons.delete_outline),
             iconSize: 18,
-            color: FortunaColors.error.withValues(alpha: 0.7),
+            color: colorScheme.error.withValues(alpha: 0.7),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),
@@ -118,7 +120,8 @@ class BudgetCategoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildAmounts() {
+  Widget _buildAmounts(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -127,35 +130,36 @@ class BudgetCategoryCard extends StatelessWidget {
           '\$${_formatAmount(category.spent)}',
           style: FortunaTextStyles.numericMd.copyWith(
             color: category.status == BudgetStatus.critical
-                ? FortunaColors.error
-                : FortunaColors.primary,
+                ? colorScheme.error
+                : colorScheme.primary,
           ),
         ),
         const SizedBox(width: 4),
         Text(
           'of \$${_formatAmount(category.limit)}',
           style: FortunaTextStyles.bodyXs.copyWith(
-            color: FortunaColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildProgressBar(BudgetStatus status) {
+  Widget _buildProgressBar(BuildContext context, BudgetStatus status) {
+    final colorScheme = Theme.of(context).colorScheme;
     final ratio = category.utilizationPercent / 100;
     final barWidth = ratio.clamp(0.0, 1.0);
 
     Color barColor;
     switch (status) {
       case BudgetStatus.healthy:
-        barColor = FortunaColors.onTertiaryContainer;
+        barColor = colorScheme.onTertiaryContainer;
         break;
       case BudgetStatus.warning:
         barColor = const Color(0xFFFF9800);
         break;
       case BudgetStatus.critical:
-        barColor = FortunaColors.error;
+        barColor = colorScheme.error;
         break;
     }
 
@@ -168,7 +172,7 @@ class BudgetCategoryCard extends StatelessWidget {
             width: double.infinity,
             height: 4,
             decoration: BoxDecoration(
-              color: FortunaColors.surfaceContainer,
+              color: colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(9999),
             ),
           ),
@@ -187,7 +191,8 @@ class BudgetCategoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusRow(BudgetStatus status) {
+  Widget _buildStatusRow(BuildContext context, BudgetStatus status) {
+    final colorScheme = Theme.of(context).colorScheme;
     IconData statusIcon;
     String statusText;
     Color textColor;
@@ -196,7 +201,7 @@ class BudgetCategoryCard extends StatelessWidget {
       case BudgetStatus.healthy:
         statusIcon = Icons.check_circle;
         statusText = 'On track';
-        textColor = FortunaColors.onTertiaryContainer;
+        textColor = colorScheme.onTertiaryContainer;
         break;
       case BudgetStatus.warning:
         statusIcon = Icons.warning;
@@ -206,7 +211,7 @@ class BudgetCategoryCard extends StatelessWidget {
       case BudgetStatus.critical:
         statusIcon = Icons.error;
         statusText = '\$${_formatAmount(category.overLimitAmount)} over';
-        textColor = FortunaColors.error;
+        textColor = colorScheme.error;
         break;
     }
 
@@ -227,14 +232,15 @@ class BudgetCategoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildOverLimitBadge() {
+  Widget _buildOverLimitBadge(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Positioned(
       top: 0,
       right: 0,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
         decoration: BoxDecoration(
-          color: FortunaColors.error,
+          color: colorScheme.error,
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(6),
             topRight: Radius.circular(10),
@@ -243,7 +249,7 @@ class BudgetCategoryCard extends StatelessWidget {
         child: Text(
           'Over',
           style: FortunaTextStyles.bodyXs.copyWith(
-            color: FortunaColors.onError,
+            color: colorScheme.onError,
             fontWeight: FontWeight.bold,
             fontSize: 9,
           ),

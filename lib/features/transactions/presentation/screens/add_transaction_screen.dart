@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 import '../../../settings/data/category_settings_model.dart';
@@ -137,11 +136,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     return Consumer2<CategorySettingsModel, AccountSettingsModel>(
       builder: (context, categorySettings, accountSettings, _) {
         return Scaffold(
-          backgroundColor: FortunaColors.surface,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: SafeArea(
             child: Column(
               children: [
-                _buildAppBar(),
+                _buildAppBar(context),
                 Expanded(
                   child: Center(
                     child: ConstrainedBox(
@@ -154,19 +153,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         child: Column(
                           children: [
                             const SizedBox(height: 4),
-                            _buildTypeToggle(),
+                            _buildTypeToggle(context),
                             const SizedBox(height: 32),
-                            _buildAmountDisplay(),
+                            _buildAmountDisplay(context),
                             const SizedBox(height: 24),
-                            _buildDateTimeSection(),
+                            _buildDateTimeSection(context),
                             const SizedBox(height: 16),
-                            _buildAccountSection(accountSettings),
+                            _buildAccountSection(context, accountSettings),
                             const SizedBox(height: 16),
-                            _buildCategorySection(categorySettings),
+                            _buildCategorySection(context, categorySettings),
                             const SizedBox(height: 24),
-                            _buildKeypad(),
+                            _buildKeypad(context),
                             const SizedBox(height: 16),
-                            _buildSubmitButton(categorySettings, accountSettings),
+                            _buildSubmitButton(context, categorySettings, accountSettings),
                             const SizedBox(height: 24),
                           ],
                         ),
@@ -182,7 +181,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(BuildContext context) {
     return Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -191,9 +190,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           IconButton(
             onPressed: () => context.pop(),
             icon: const Icon(Icons.close),
-            color: FortunaColors.onSurface,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          const Expanded(
+          Expanded(
             child: Center(
               child: Text(
                 'New Entry',
@@ -202,7 +201,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.01,
-                  color: FortunaColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -213,11 +212,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildTypeToggle() {
+  Widget _buildTypeToggle(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLow,
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(9999),
       ),
       constraints: const BoxConstraints(maxWidth: 320),
@@ -252,7 +251,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildAmountDisplay() {
+  Widget _buildAmountDisplay(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -263,14 +262,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             Text(
               '\$',
               style: FortunaTextStyles.displayLarge.copyWith(
-                color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(width: 4),
             Text(
               _currentAmount,
               style: FortunaTextStyles.displayLarge.copyWith(
-                color: FortunaColors.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
@@ -279,14 +278,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         Text(
           'Enter amount',
           style: FortunaTextStyles.bodySm.copyWith(
-            color: FortunaColors.onSurfaceVariant.withValues(alpha: 0.6),
+            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildAccountSection(AccountSettingsModel accountSettings) {
+  Widget _buildAccountSection(BuildContext context, AccountSettingsModel accountSettings) {
     final accounts = accountSettings.accounts;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,7 +295,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Text(
             'Account',
             style: FortunaTextStyles.labelCaps.copyWith(
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -320,13 +319,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? FortunaColors.secondaryContainer
-                        : FortunaColors.surfaceContainerHigh,
+                        ? Theme.of(context).colorScheme.secondaryContainer
+                        : Theme.of(context).colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
-                          ? FortunaColors.primary
-                          : FortunaColors.outlineVariant.withValues(alpha: 0.3),
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
                       width: isSelected ? 2 : 1,
                     ),
                   ),
@@ -337,8 +336,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         account.icon,
                         size: 20,
                         color: isSelected
-                            ? FortunaColors.primary
-                            : FortunaColors.onSurfaceVariant,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 6),
                       Column(
@@ -351,8 +350,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: isSelected
-                                  ? FortunaColors.primary
-                                  : FortunaColors.onSurfaceVariant,
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                           Text(
@@ -360,8 +359,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             style: TextStyle(
                               fontSize: 10,
                               color: isSelected
-                                  ? FortunaColors.primary.withValues(alpha: 0.7)
-                                  : FortunaColors.onSurfaceVariant.withValues(alpha: 0.6),
+                                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.7)
+                                  : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -414,7 +413,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     }
   }
 
-  Widget _buildDateTimeSection() {
+  Widget _buildDateTimeSection(BuildContext context) {
     final months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -436,7 +435,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Text(
             'Date & Time',
             style: FortunaTextStyles.labelCaps.copyWith(
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -446,10 +445,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              color: FortunaColors.surfaceContainerHigh,
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: FortunaColors.outlineVariant.withValues(alpha: 0.3),
+                color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
@@ -457,23 +456,23 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 Icon(
                   Icons.calendar_today_outlined,
                   size: 20,
-                  color: FortunaColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     '$monthStr $dayStr, $yearStr  •  $timeStr',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: FortunaColors.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
                 Icon(
                   Icons.edit_outlined,
                   size: 18,
-                  color: FortunaColors.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ],
             ),
@@ -483,7 +482,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildCategorySection(CategorySettingsModel settings) {
+  Widget _buildCategorySection(BuildContext context, CategorySettingsModel settings) {
     final categories = _isExpense
         ? _buildExpenseCategories(settings)
         : _buildIncomeCategories(settings);
@@ -495,7 +494,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Text(
             'Select Category',
             style: FortunaTextStyles.labelCaps.copyWith(
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -524,45 +523,45 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildKeypad() {
+  Widget _buildKeypad(BuildContext context) {
     return Column(
       children: [
         Row(
           children: [
-            _buildKeypadButton('1'),
-            _buildKeypadButton('2'),
-            _buildKeypadButton('3'),
+            _buildKeypadButton(context, '1'),
+            _buildKeypadButton(context, '2'),
+            _buildKeypadButton(context, '3'),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
-            _buildKeypadButton('4'),
-            _buildKeypadButton('5'),
-            _buildKeypadButton('6'),
+            _buildKeypadButton(context, '4'),
+            _buildKeypadButton(context, '5'),
+            _buildKeypadButton(context, '6'),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
-            _buildKeypadButton('7'),
-            _buildKeypadButton('8'),
-            _buildKeypadButton('9'),
+            _buildKeypadButton(context, '7'),
+            _buildKeypadButton(context, '8'),
+            _buildKeypadButton(context, '9'),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
-            _buildKeypadButton('.'),
-            _buildKeypadButton('0'),
-            _buildBackspaceButton(),
+            _buildKeypadButton(context, '.'),
+            _buildKeypadButton(context, '0'),
+            _buildBackspaceButton(context),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildKeypadButton(String label) {
+  Widget _buildKeypadButton(BuildContext context, String label) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -571,11 +570,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Container(
             height: 64,
             decoration: BoxDecoration(
-              color: FortunaColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: FortunaColors.primary.withValues(alpha: 0.05),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -585,7 +584,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               child: Text(
                 label,
                 style: FortunaTextStyles.numericDisplay.copyWith(
-                  color: FortunaColors.onSurface,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -595,7 +594,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildBackspaceButton() {
+  Widget _buildBackspaceButton(BuildContext context) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -604,13 +603,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           child: Container(
             height: 64,
             decoration: BoxDecoration(
-              color: FortunaColors.surfaceContainerHigh,
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Center(
+            child: Center(
               child: Icon(
                 Icons.backspace_outlined,
-                color: FortunaColors.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -620,6 +619,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget _buildSubmitButton(
+    BuildContext context,
     CategorySettingsModel settings,
     AccountSettingsModel accountSettings,
   ) {
@@ -629,10 +629,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       child: ElevatedButton(
         onPressed: () => _submitTransaction(settings, accountSettings),
         style: ElevatedButton.styleFrom(
-          backgroundColor: FortunaColors.primary,
-          foregroundColor: FortunaColors.onPrimary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           elevation: 4,
-          shadowColor: FortunaColors.primary.withValues(alpha: 0.3),
+          shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -645,7 +645,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             Text(
               'Add Transaction',
               style: FortunaTextStyles.titleMd.copyWith(
-                color: FortunaColors.onPrimary,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ],
@@ -673,12 +673,12 @@ class _TypeButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
         decoration: BoxDecoration(
-          color: isSelected ? FortunaColors.primary : Colors.transparent,
+          color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(9999),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: FortunaColors.primary.withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -690,8 +690,8 @@ class _TypeButton extends StatelessWidget {
             label,
             style: FortunaTextStyles.labelCaps.copyWith(
               color: isSelected
-                  ? FortunaColors.onPrimary
-                  : FortunaColors.onSurfaceVariant,
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -729,17 +729,17 @@ class _CategoryChip extends StatelessWidget {
             height: 64,
             decoration: BoxDecoration(
               color: isSelected
-                  ? FortunaColors.secondaryContainer
-                  : FortunaColors.surfaceContainerHigh,
+                  ? Theme.of(context).colorScheme.secondaryContainer
+                  : Theme.of(context).colorScheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? FortunaColors.primary : Colors.transparent,
+                color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
                 width: 2,
               ),
             ),
             child: Icon(
               category.icon,
-              color: FortunaColors.primaryContainer,
+              color: Theme.of(context).colorScheme.primaryContainer,
               size: 32,
             ),
           ),
@@ -747,7 +747,7 @@ class _CategoryChip extends StatelessWidget {
           Text(
             category.name,
             style: FortunaTextStyles.labelCaps.copyWith(
-              color: FortunaColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

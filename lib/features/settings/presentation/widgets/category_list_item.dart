@@ -23,16 +23,16 @@ class CategoryListItem extends StatelessWidget {
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Color(0xFF1C1B1F),
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
           if (isDeletable)
             IconButton(
               onPressed: onDelete,
-              icon: const Icon(Icons.delete_outline, color: Color(0xFFB3261E)),
+              icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
               tooltip: 'Delete category',
             ),
         ],

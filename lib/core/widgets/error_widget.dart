@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/color_tokens.dart';
 
 /// Error display widget with retry button.
 class AppErrorWidget extends StatelessWidget {
@@ -20,9 +19,9 @@ class AppErrorWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.error_outline,
-              color: FortunaColors.error,
+              color: Theme.of(context).colorScheme.error,
               size: 48,
             ),
             const SizedBox(height: 16),
@@ -30,7 +29,7 @@ class AppErrorWidget extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: FortunaColors.onErrorContainer,
+                    color: Theme.of(context).colorScheme.onErrorContainer,
                   ),
             ),
             if (onRetry != null) ...[
@@ -38,8 +37,8 @@ class AppErrorWidget extends StatelessWidget {
               ElevatedButton(
                 onPressed: onRetry,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: FortunaColors.errorContainer,
-                  foregroundColor: FortunaColors.onErrorContainer,
+                  backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                  foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
                 ),
                 child: const Text('Retry'),
               ),

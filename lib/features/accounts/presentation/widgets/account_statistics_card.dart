@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../transactions/data/budget_model.dart';
 
 /// Shows income/expense statistics for a specific account.
 class AccountStatisticsCard extends StatelessWidget {
-  const AccountStatisticsCard({
+  AccountStatisticsCard({
     super.key,
     required this.accountId,
     required this.transactions,
@@ -31,16 +30,18 @@ class AccountStatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: cs.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: FortunaColors.outlineVariant.withValues(alpha: 0.1)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: cs.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -52,7 +53,7 @@ class AccountStatisticsCard extends StatelessWidget {
           Text(
             'Statistics',
             style: FortunaTextStyles.titleMd.copyWith(
-              color: FortunaColors.onSurface,
+              color: cs.onSurface,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -63,7 +64,7 @@ class AccountStatisticsCard extends StatelessWidget {
                 child: _StatItem(
                   label: 'Income',
                   amount: _totalIncome,
-                  color: FortunaColors.onTertiaryContainer,
+                  color: cs.onTertiaryContainer,
                   icon: Icons.arrow_downward,
                 ),
               ),
@@ -71,7 +72,7 @@ class AccountStatisticsCard extends StatelessWidget {
                 child: _StatItem(
                   label: 'Expenses',
                   amount: _totalExpense,
-                  color: FortunaColors.error,
+                  color: cs.error,
                   icon: Icons.arrow_upward,
                 ),
               ),
@@ -85,8 +86,8 @@ class AccountStatisticsCard extends StatelessWidget {
                   label: 'Net Change',
                   amount: _netChange,
                   color: _netChange >= 0
-                      ? FortunaColors.onTertiaryContainer
-                      : FortunaColors.error,
+                      ? cs.onTertiaryContainer
+                      : cs.error,
                   icon: _netChange >= 0 ? Icons.trending_up : Icons.trending_down,
                 ),
               ),
@@ -94,7 +95,7 @@ class AccountStatisticsCard extends StatelessWidget {
                 child: _StatItem(
                   label: 'Transactions',
                   amount: _transactionCount.toDouble(),
-                  color: FortunaColors.onSurface,
+                  color: cs.onSurface,
                   icon: Icons.receipt_long,
                   isCount: true,
                 ),
@@ -145,7 +146,7 @@ class _StatItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: FortunaColors.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   letterSpacing: 0.05,
                 ),
               ),

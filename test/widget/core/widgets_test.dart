@@ -19,7 +19,7 @@ void main() {
   group('AppLoadingWidget', () {
     testWidgets('displays centered CircularProgressIndicator', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: Scaffold(body: AppLoadingWidget())),
+        MaterialApp(home: Scaffold(body: AppLoadingWidget())),
       );
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);

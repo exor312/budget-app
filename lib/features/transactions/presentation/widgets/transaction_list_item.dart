@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/color_tokens.dart';
 import '../../data/budget_model.dart';
 
 /// Transaction list item — matches the Fortuna reference design.
@@ -65,6 +64,7 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isIncome = transaction.amount >= 0;
     final amountStr =
         '${isIncome ? '+' : '-'}\$${transaction.amount.abs().toStringAsFixed(2)}';
@@ -72,14 +72,14 @@ class TransactionListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: FortunaColors.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: FortunaColors.outlineVariant.withValues(alpha: 0.1),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: FortunaColors.primary.withValues(alpha: 0.05),
+            color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -100,15 +100,15 @@ class TransactionListItem extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     color: isIncome
-                        ? FortunaColors.tertiaryFixed
-                        : FortunaColors.secondaryContainer.withValues(alpha: 0.5),
+                        ? colorScheme.tertiary
+                        : colorScheme.secondaryContainer.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _categoryIcon,
                     color: isIncome
-                        ? FortunaColors.onTertiaryFixedVariant
-                        : FortunaColors.onSecondaryContainer,
+                        ? colorScheme.onTertiary
+                        : colorScheme.onSecondaryContainer,
                     size: 24,
                   ),
                 ),
@@ -120,10 +120,10 @@ class TransactionListItem extends StatelessWidget {
                     children: [
                       Text(
                         transaction.description,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: FortunaColors.onSurface,
+                          color: colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -133,7 +133,7 @@ class TransactionListItem extends StatelessWidget {
                         '${_formatTime(transaction.date)} • ${_categoryLabel}',
                         style: TextStyle(
                           fontSize: 14,
-                          color: FortunaColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -149,8 +149,8 @@ class TransactionListItem extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: isIncome
-                            ? FortunaColors.onTertiaryContainer
-                            : FortunaColors.error,
+                            ? colorScheme.onTertiaryContainer
+                            : colorScheme.error,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -160,7 +160,7 @@ class TransactionListItem extends StatelessWidget {
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.05,
-                        color: FortunaColors.outline,
+                        color: colorScheme.outline,
                       ),
                     ),
                   ],
@@ -170,7 +170,7 @@ class TransactionListItem extends StatelessWidget {
                 IconButton(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete_outline),
-                  color: FortunaColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                   iconSize: 20,
                 ),
               ],
