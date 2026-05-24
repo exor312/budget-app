@@ -4,6 +4,7 @@ import '../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../features/transactions/presentation/screens/transaction_history_screen.dart';
 import '../features/transactions/presentation/screens/add_transaction_screen.dart';
 import '../features/budget_goals/presentation/screens/budgets_goals_screen.dart';
+import '../features/accounts/presentation/screens/account_detail_screen.dart';
 import '../features/settings/presentation/screens/settings_screen.dart';
 import '../features/accounts/presentation/screens/accounts_screen.dart';
 
@@ -48,6 +49,14 @@ final GoRouter appRouter = GoRouter(
       path: AddTransactionScreen.routePath,
       name: AddTransactionScreen.routeName,
       builder: (context, state) => const AddTransactionScreen(),
+    ),
+    GoRoute(
+      path: '/accounts/:accountId',
+      name: AccountDetailScreen.routeName,
+      builder: (context, state) {
+        final accountId = state.pathParameters['accountId']!;
+        return AccountDetailScreen(accountId: accountId);
+      },
     ),
   ],
 );

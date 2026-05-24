@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/color_tokens.dart';
 import '../../../settings/data/account_settings_model.dart';
 import '../../../transactions/data/budget_model.dart';
@@ -44,9 +45,14 @@ class AccountsScreen extends StatelessWidget {
                           children: [
                             ...accounts.map((account) {
                               final balance = balances[account.id] ?? 0.0;
-                              return AccountBalanceCard(
-                                account: account,
-                                balance: balance,
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push('/accounts/${account.id}');
+                                },
+                                child: AccountBalanceCard(
+                                  account: account,
+                                  balance: balance,
+                                ),
                               );
                             }),
                             const SizedBox(height: 100),
